@@ -584,11 +584,16 @@ end
 --dofile("expansions/live2017/script/proc_pendulum.lua")
 --dofile("expansions/live2017/script/proc_link.lua")
 
-dofile("script/proc_fusion.lua")
-dofile("script/proc_ritual.lua")
-dofile("script/proc_synchro.lua")
-dofile("script/proc_union.lua")
-dofile("script/proc_xyz.lua")
-dofile("script/proc_pendulum.lua")
-dofile("script/proc_link.lua")
+function loadutility(file)
+	if(loadfile("expansions/live2017mr4/script/"..file) == nil) then
+		dofile("script/"..file)
+	end
+end
+loadutility("proc_fusion.lua")
+loadutility("proc_ritual.lua")
+loadutility("proc_synchro.lua")
+loadutility("proc_union.lua")
+loadutility("proc_xyz.lua")
+loadutility("proc_pendulum.lua")
+loadutility("proc_link.lua")
 pcall(dofile,"init.lua")
