@@ -23,9 +23,12 @@ end
 function c91123920.efilter(e,te)
 	return te:IsActiveType(TYPE_SPELL)
 end
+function c91123920.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c91123920.val(e,c)
 	local tp=c:GetControler()
-	if not Duel.IsEnvironment(56433456,tp) then return 0 end
+	if not (Duel.IsExistingMatchingCard(c91123920.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil) or Duel.IsEnvironment(56433456,tp)) then return 0 end
 	local v=Duel.GetLP(tp)-Duel.GetLP(1-tp)
 	if v>0 then return v else return 0 end
 end

@@ -16,9 +16,12 @@ end
 function c91188343.filter2(c)
 	return ((c:IsSetCard(0x44) and c:GetCode()~=91188343 and c:IsType(TYPE_MONSTER)) or c:IsCode(55794644)) and c:IsAbleToHand()
 end
+function c91188343.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c91188343.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		if not Duel.IsEnvironment(56433456) then
+		if not (Duel.IsExistingMatchingCard(c91188343.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)) then
 			return Duel.IsExistingMatchingCard(c91188343.filter1,tp,LOCATION_DECK,0,1,nil) end
 		return Duel.IsExistingMatchingCard(c91188343.filter2,tp,LOCATION_DECK,0,1,nil)
 	end
@@ -27,7 +30,7 @@ end
 function c91188343.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	if not Duel.IsEnvironment(56433456) then
+	if not (Duel.IsExistingMatchingCard(c91188343.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)) then
 		g=Duel.SelectMatchingCard(tp,c91188343.filter1,tp,LOCATION_DECK,0,1,1,nil)
 	else g=Duel.SelectMatchingCard(tp,c91188343.filter2,tp,LOCATION_DECK,0,1,1,nil) end
 	if g:GetCount()>0 then

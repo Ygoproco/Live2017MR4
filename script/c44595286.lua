@@ -12,8 +12,11 @@ function c44595286.initial_effect(c)
 	e1:SetOperation(c44595286.activate)
 	c:RegisterEffect(e1)
 end
+function c44595286.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c44595286.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsEnvironment(56433456)
+	return Duel.IsExistingMatchingCard(c44595286.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)
 end
 function c44595286.cfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsDiscardable() and c:IsAbleToGraveAsCost()

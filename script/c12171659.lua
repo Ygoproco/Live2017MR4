@@ -39,5 +39,8 @@ function c12171659.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c12171659.descon(e)
-	return not Duel.IsEnvironment(56433456)
+	return not (Duel.IsExistingMatchingCard(c12171659.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456))
+end
+function c12171659.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
 end

@@ -28,8 +28,11 @@ function c91345518.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 end
+function c91345518.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c91345518.damop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsEnvironment(56433456,tp) then return end
+	if not (Duel.IsExistingMatchingCard(c91345518.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil) or Duel.IsEnvironment(56433456,tp)) then return end
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local val=Duel.GetLP(1-p)-Duel.GetLP(p)
 	if val>0 then

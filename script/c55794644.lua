@@ -23,8 +23,7 @@ function c55794644.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c55794644.spfilter(c)
-	if not c:IsSetCard(0x44) or not c:IsAbleToRemoveAsCost() or (c:IsLocation(LOCATION_MZONE) and c:IsFacedown()) then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsSetCard(0x44) and c:IsAbleToRemoveAsCost() and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
 end
 function c55794644.hspcon(e,c)
 	if c==nil then return true end
@@ -45,8 +44,11 @@ function c55794644.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
 end
+function c55794644.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c55794644.condition(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsEnvironment(56433456) then return e:GetHandler():GetFlagEffect(55794644)<2
+	if (Duel.IsExistingMatchingCard(c55794644.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)) then return e:GetHandler():GetFlagEffect(55794644)<2
 	else return e:GetHandler():GetFlagEffect(55794644)<1 end
 end
 function c55794644.costfilter(c)

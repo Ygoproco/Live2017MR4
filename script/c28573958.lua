@@ -56,8 +56,11 @@ function c28573958.atop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
+function c28573958.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c28573958.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsEnvironment(56433456)
+	return Duel.IsExistingMatchingCard(c28573958.envfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)
 end
 function c28573958.cfilter2(c)
 	return c:IsRace(RACE_FAIRY) and c:IsDiscardable()
@@ -78,7 +81,7 @@ function c28573958.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c28573958.spop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsEnvironment(56433456) then return end
+	if not (Duel.IsExistingMatchingCard(c28573958.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)

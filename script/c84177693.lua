@@ -12,8 +12,11 @@ function c84177693.initial_effect(c)
 	e1:SetOperation(c84177693.recop)
 	c:RegisterEffect(e1)
 end
+function c84177693.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c84177693.reccon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsReason(REASON_BATTLE) and Duel.IsEnvironment(56433456)
+	return not e:GetHandler():IsReason(REASON_BATTLE) and (Duel.IsExistingMatchingCard(c84177693.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456))
 end
 function c84177693.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

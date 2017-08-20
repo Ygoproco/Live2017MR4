@@ -37,6 +37,9 @@ function c12510878.initial_effect(c)
 	e5:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e5)
 end
+function c12510878.envfilter(c)
+	return c:IsFaceup() and c:IsCode(56433456)
+end
 function c12510878.spcon(e,c)
 	if c==nil then return true end
 	return Duel.CheckReleaseGroup(c:GetControler(),Card.IsCode,1,nil,18036057)
@@ -59,7 +62,7 @@ function c12510878.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function c12510878.val(e,c)
-	if not Duel.IsEnvironment(56433456) then return 0 end
+	if not (Duel.IsExistingMatchingCard(c12510878.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)) then return 0 end
 	local v=Duel.GetLP(c:GetControler())-Duel.GetLP(1-c:GetControler())
 	if v>0 then return v else return 0 end
 end
