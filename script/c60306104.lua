@@ -11,7 +11,7 @@ function c60306104.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c60306104.filter(c)
-	return c:IsAttackPos() and c:IsCanChangePosition()
+	return c:IsPosition(POS_FACEUP_ATTACK) and c:IsCanChangePosition()
 end
 function c60306104.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c60306104.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
@@ -20,5 +20,5 @@ function c60306104.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c60306104.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c60306104.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.ChangePosition(g,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,0,0)
+	Duel.ChangePosition(g,POS_FACEUP_DEFENSE)
 end
