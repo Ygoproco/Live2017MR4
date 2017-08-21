@@ -23,13 +23,19 @@ function c65844845.initial_effect(c)
 	e3:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e3)
 end
-function c65844845.cfilter(c)
-	return c:IsRace(RACE_INSECT) and c:IsAbleToRemoveAsCost()
+function c65844845.cfilter(c,tp)
+	if not c:IsRace(RACE_INSECT) or not c:IsAbleToRemoveAsCost() 
+		or not Duel.IsExistingTarget(c65844845.filter,tp,LOCATION_MZONE,0,1,c) then return false end
+	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
+		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
+	else
+		return c:IsLocation(LOCATION_GRAVE)
+	end
 end
 function c65844845.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c65844845.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c65844845.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c65844845.cfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,c65844845.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c65844845.filter(c)

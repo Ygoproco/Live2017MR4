@@ -1,3 +1,4 @@
+--絶滅の定め
 --Extinction on Schedule
 function c95676943.initial_effect(c)
 	--Activate

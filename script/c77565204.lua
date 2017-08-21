@@ -41,6 +41,8 @@ function c77565204.initial_effect(c)
 	e5:SetCondition(c77565204.descon2)
 	e5:SetOperation(c77565204.desop2)
 	c:RegisterEffect(e5)
+	if not AshBlossomTable then AshBlossomTable={} end
+	table.insert(AshBlossomTable,e2)
 end
 function c77565204.reg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -101,7 +103,7 @@ function c77565204.procfilter(c,code,e,tp)
 end
 function c77565204.procop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if not c:IsRelateToEffect(e) or Duel.GetLocationCountFromEx(tp)<=0 then return end
 	local code=e:GetLabelObject():GetLabel()
 	local mg=e:GetLabelObject():GetLabelObject()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
