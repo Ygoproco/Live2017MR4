@@ -9,8 +9,8 @@ function c10352095.initial_effect(c)
 	e2:SetValue(c10352095.value)
 	c:RegisterEffect(e2)
 end
-function c10352095.target(e,tp,eg,ep,ev,re,r,rp,tc,chk)
-	if chk==0 then return true end
+function c10352095.target(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
 	Duel.Hint(HINT_SELECTMSG,tp,563)
 	local rc=Duel.AnnounceAttribute(tp,1,0xff-tc:GetAttribute())
 	e:GetHandler():RegisterFlagEffect(10352095,RESET_EVENT+0x1fe0000,0,1,rc)

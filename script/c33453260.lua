@@ -34,8 +34,7 @@ end
 function c33453260.condition(e,tp,eg,ep,ev,re,r,rp,chk)
 	return Duel.IsExistingMatchingCard(c33453260.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
-function c33453260.target(e,tp,eg,ep,ev,re,r,rp,tc,chk)
-	if chk==0 then return true end
+function c33453260.target(e,tp,eg,ep,ev,re,r,rp,tc)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,tc,1,0,0)
 end
 function c33453260.eqlimit(e,c)
