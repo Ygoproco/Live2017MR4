@@ -40,7 +40,7 @@ end
 function c31829185.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
+	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741))
 		and Duel.IsExistingMatchingCard(c31829185.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,nil)
 end
 function c31829185.spop(e,tp,eg,ep,ev,re,r,rp,c)
@@ -65,6 +65,7 @@ function c31829185.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
 end
 function c31829185.eqlimit(e,c)
 	return e:GetOwner()==c
