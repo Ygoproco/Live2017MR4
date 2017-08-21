@@ -28,13 +28,33 @@ function c60879050.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_EARTH)
 end
 function c60879050.rmfilter(c)
-	return c:IsRace(RACE_MACHINE) and c:IsLevelAbove(10) and c:IsAbleToRemoveAsCost()
+	if not c:IsRace(RACE_MACHINE) or not c:IsLevelAbove(10) or not c:IsAbleToRemoveAsCost() then return false end
+	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
+		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
+	else
+		return c:IsLocation(LOCATION_GRAVE)
+	end
+end
+function c60879050.filterchk(c,g,sg)
+	sg:AddCard(c)
+	local res
+	if sg:GetCount()<2 then
+		res=g:IsExists(c60879050.filterchk,1,sg,g,sg)
+	else
+		res=Duel.IsExistingTarget(c60879050.filter,0,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+	end
+	sg:RemoveCard(c)
+	return res
 end
 function c60879050.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c60879050.rmfilter,tp,LOCATION_GRAVE,0,2,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c60879050.rmfilter,tp,LOCATION_GRAVE,0,2,2,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	local g=Duel.GetMatchingGroup(c60879050.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	if chk==0 then return g:IsExists(c60879050.filterchk,1,nil,g,Group.CreateGroup()) end
+	local rg=Group.CreateGroup()
+	while rg:GetCount()<2 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local sg=g:FilterSelect(tp,c60879050.filterchk,1,1,rg,g,rg)
+		rg:Merge(sg)
+	end
 end
 function c60879050.value(e,c)
 	return c:GetBaseAttack()*2
