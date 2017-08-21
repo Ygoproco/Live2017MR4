@@ -17,7 +17,7 @@ function c62868900.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c62868900.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc==eg:GetFirst() end
-	if chk==0 then return eg:GetFirst():IsCanBeEffectTarget(e) end
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) and eg:GetFirst():IsCanBeEffectTarget(e) end
 	Duel.SetTargetCard(eg)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
@@ -25,7 +25,7 @@ function c62868900.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsLocation(LOCATION_SZONE) then return end
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
 		Duel.Equip(tp,c,tc)
 		c:CancelToGrave()
