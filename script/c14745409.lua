@@ -1,7 +1,7 @@
 --聖剣ガラティーン
 function c14745409.initial_effect(c)
 	c:SetUniqueOnField(1,0,14745409)
-	aux.AddEquipProcedure(c,nil,c14745409.eqfilter1)
+	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR))
 	--Atk up
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)
@@ -27,11 +27,8 @@ function c14745409.initial_effect(c)
 	e5:SetCountLimit(1,14745409)
 	e5:SetCondition(c14745409.eqcon)
 	e5:SetTarget(c14745409.eqtg)
-	e5:SetOperation(c14745409.operation)
+	e5:SetOperation(c14745409.eqop)
 	c:RegisterEffect(e5)
-end
-function c14745409.eqfilter1(c)
-	return c:IsRace(RACE_WARRIOR)
 end
 function c14745409.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
@@ -55,10 +52,10 @@ function c14745409.atkop(e,tp,eg,ep,ev,re,r,rp)
 		pe:SetValue(ct*-200)
 	end
 end
-function c14745409.operation(e,tp,eg,ep,ev,re,r,rp)
+function c14745409.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() and c:CheckUniqueOnField(tp) then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and c:CheckUniqueOnField(tp) then
 		Duel.Equip(tp,c,tc)
 	end
 end

@@ -1,7 +1,7 @@
 --天命の聖剣
 function c7452945.initial_effect(c)
 	c:SetUniqueOnField(1,0,7452945)
-	aux.AddEquipProcedure(c,nil,c7452945.eqfilter1)
+	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR))
 	--cannot be destroyed
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)
@@ -19,16 +19,13 @@ function c7452945.initial_effect(c)
 	e4:SetCountLimit(1,7452945)
 	e4:SetCondition(c7452945.eqcon)
 	e4:SetTarget(c7452945.eqtg)
-	e4:SetOperation(c7452945.operation)
+	e4:SetOperation(c7452945.eqop)
 	c:RegisterEffect(e4)
 end
-function c7452945.eqfilter1(c)
-	return c:IsRace(RACE_WARRIOR)
-end
-function c7452945.operation(e,tp,eg,ep,ev,re,r,rp)
+function c7452945.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() and c:CheckUniqueOnField(tp) then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and c:CheckUniqueOnField(tp) then
 		Duel.Equip(tp,c,tc)
 	end
 end
