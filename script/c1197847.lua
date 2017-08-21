@@ -1,7 +1,5 @@
 --幻煌龍の螺旋波
 --Spiral Wave of the Mythic Radiance Dragon
---Script by nekrozar
---fixed by MLD
 function c1197847.initial_effect(c)
 	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsType,TYPE_NORMAL))
 	--indestructable

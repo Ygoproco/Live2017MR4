@@ -8,7 +8,7 @@ function c77565204.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Turn 1
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DECKDES)
+	e2:SetCategory(CATEGORY_TOGRAVE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -87,8 +87,10 @@ function c77565204.tgop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,tc)
 		local code=tc:GetCode()
 		local mat=Duel.SelectFusionMaterial(tp,tc,mg)
-		Duel.SendtoGrave(mat,REASON_EFFECT)
+		mat:KeepAlive()
+		Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 		e:SetLabel(code)
+		e:SetLabelObject(mat)
 	end
 end
 function c77565204.proccon(e,tp,eg,ep,ev,re,r,rp)
@@ -99,12 +101,14 @@ function c77565204.procfilter(c,code,e,tp)
 end
 function c77565204.procop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) or Duel.GetLocationCountFromEx(tp)<=0 then return end
+	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local code=e:GetLabelObject():GetLabel()
+	local mg=e:GetLabelObject():GetLabelObject()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c77565204.procfilter,tp,LOCATION_EXTRA,0,1,1,nil,code,e,tp)
 	local tc=g:GetFirst()
 	if not tc then return end
+	if mg and mg:GetCount()>0 then tc:SetMaterial(mg) end
 	Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 	tc:CompleteProcedure()
 	c:SetCardTarget(tc)

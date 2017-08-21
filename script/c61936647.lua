@@ -37,7 +37,7 @@ function c61936647.initial_effect(c)
 	e6:SetCode(EVENT_FREE_CHAIN)
 	e6:SetRange(LOCATION_GRAVE)
 	e6:SetCountLimit(1,61936647)
-	e6:SetCost(c61936647.spcost)
+	e6:SetCost(aux.bfgcost)
 	e6:SetTarget(c61936647.sptg)
 	e6:SetOperation(c61936647.spop)
 	c:RegisterEffect(e6)
@@ -45,15 +45,12 @@ end
 function c61936647.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
-function c61936647.target(e,tp,eg,ep,ev,re,r,rp,tc)
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,tc,1,0,0)
-end
 function c61936647.repfilter(c,e)
 	return aux.PersistentTargetFilter(e,c) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function c61936647.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable(e) and eg:IsExists(c61936647.repfilter,1,nil,e) end
-	return Duel.SelectYesNo(tp,aux.Stringid(61936647,0))
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end
 function c61936647.repval(e,c)
 	return c61936647.repfilter(c,e)
@@ -70,10 +67,6 @@ end
 function c61936647.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 end
-function c61936647.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
 function c61936647.spfilter(c,e,tp)
 	return c:IsSetCard(0x10db) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
@@ -88,7 +81,7 @@ end
 function c61936647.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)

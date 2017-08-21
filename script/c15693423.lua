@@ -1,6 +1,5 @@
 --拮抗勝負
 --Struggling Battle
---Scripted by Eerie Code
 function c15693423.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)
@@ -34,7 +33,7 @@ function c15693423.activate(e,tp,eg,ep,ev,re,r,rp)
 	if ct>0 then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_REMOVE)
 		local sg=g:FilterSelect(1-tp,Card.IsAbleToRemove,ct,ct,nil,nil,POS_FACEDOWN)
-		Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
+		Duel.Remove(sg,POS_FACEDOWN,REASON_RULE)
 	end
 end
 function c15693423.handcon(e)
