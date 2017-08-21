@@ -31,8 +31,9 @@ end
 function c32919136.eqlimit(e,c)
 	return e:GetHandlerPlayer()~=c:GetControler() or e:GetHandler():GetEquipTarget()==c
 end
-function c32919136.target(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SetOperationInfo(0,CATEGORY_CONTROL,Duel.GetFirstTarget(),1,0,0)
+function c32919136.target(e,tp,eg,ep,ev,re,r,rp,tc,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,tc,1,0,0)
 end
 function c32919136.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer()
