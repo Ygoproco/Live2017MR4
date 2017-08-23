@@ -1,7 +1,7 @@
 --エアークラック・ストーム
 --Aircrack Storm
---Scripted by sahim
 function c98864751.initial_effect(c)
+	--Activate
 	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(Card.IsRace,RACE_MACHINE))
 	--extra attack
 	local e3=Effect.CreateEffect(c)

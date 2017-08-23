@@ -15,7 +15,7 @@ function c99788587.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(Card.IsOnSameColumn,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,e:GetHandler(),false)==3
 end
 function c99788587.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) end
 	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(Card.IsOnSameColumn,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,c,false)
 	g:AddCard(c)

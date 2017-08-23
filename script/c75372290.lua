@@ -17,6 +17,14 @@ function c75372290.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_DEFENSE_ATTACK)
 	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(75372290)
+	e4:SetCondition(c75372290.dacon)
+	c:RegisterEffect(e4)
+end
+function c75372290.dacon(e)
+	return e:GetHandler():IsDefensePos()
 end
 function c75372290.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return e:GetHandler():IsAttackPos() end
