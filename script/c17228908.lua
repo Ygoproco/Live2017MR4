@@ -87,7 +87,7 @@ function c17228908.tglimit(e,c)
 	return not c:IsType(TYPE_TOKEN)
 end
 function c17228908.repfilter(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsLocation(LOCATION_MZONE)
+	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsLocation(LOCATION_MZONE) and not c:IsReason(REASON_REPLACE)
 		and c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:GetFlagEffect(17228908)==0
 end
 function c17228908.desfilter(c,e)
