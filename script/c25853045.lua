@@ -38,9 +38,10 @@ function c25853045.atkval(e,c)
 	return c:GetOverlayCount()*200
 end
 function c25853045.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
-	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
-		local g=e:GetHandler():GetOverlayGroup()
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
+	if Duel.SelectEffectYesNo(tp,c,96) then
+		local g=c:GetOverlayGroup()
 		Duel.SendtoGrave(g,REASON_EFFECT)
 		return true
 	else return false end
@@ -57,7 +58,7 @@ function c25853045.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c25853045.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

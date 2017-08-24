@@ -46,7 +46,7 @@ function c61936647.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c61936647.repfilter(c,e)
-	return aux.PersistentTargetFilter(e,c) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
+	return aux.PersistentTargetFilter(e,c) and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function c61936647.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDestructable(e) and eg:IsExists(c61936647.repfilter,1,nil,e) end

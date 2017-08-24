@@ -62,7 +62,7 @@ end
 function c52665542.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
@@ -76,7 +76,7 @@ function c52665542.acop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x5,1)
 end
 function c52665542.dfilter(c,tp)
-	return c:IsFaceup() and c:IsLocation(LOCATION_ONFIELD)
+	return c:IsFaceup() and c:IsLocation(LOCATION_ONFIELD) and not c:IsReason(REASON_REPLACE) 
 		and c:IsSetCard(0x38) and c:IsControler(tp) and c:IsReason(REASON_EFFECT)
 end
 function c52665542.destg(e,tp,eg,ep,ev,re,r,rp,chk)

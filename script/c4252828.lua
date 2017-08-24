@@ -45,7 +45,7 @@ end
 function c4252828.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) then
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
 			if not Duel.Equip(tp,tc,c,false) then return end
 			--Add Equip limit
@@ -71,7 +71,8 @@ function c4252828.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local ec=e:GetLabelObject():GetLabelObject()
 	if chk==0 then return ec and ec:IsHasCardTarget(c) and ec:GetFlagEffect(4252828)~=0
-		and ec:IsDestructable(e) and not ec:IsStatus(STATUS_DESTROY_CONFIRMED) end
+		and ec:IsDestructable(e) and not ec:IsStatus(STATUS_DESTROY_CONFIRMED) 
+		and not c:IsReason(REASON_REPLACE) and end
 	return Duel.SelectEffectYesNo(tp,c,96)
 end
 function c4252828.desrepop(e,tp,eg,ep,ev,re,r,rp)
