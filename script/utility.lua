@@ -585,8 +585,11 @@ end
 --dofile("expansions/live2017/script/proc_link.lua")
 
 function loadutility(file)
-	if(loadfile("expansions/live2017mr4/script/"..file) == nil) then
+	local f = loadfile("expansions/live2017mr4/script/"..file)
+	if(f == nil) then
 		dofile("script/"..file)
+	else
+		f()
 	end
 end
 loadutility("proc_fusion.lua")

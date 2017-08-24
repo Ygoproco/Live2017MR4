@@ -26,8 +26,9 @@ function c60181553.indtg(e,c)
 	return c:IsFaceup() and c:IsLevelBelow(4)
 end
 function c60181553.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
-	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
+	return Duel.SelectEffectYesNo(tp,c,96)
 end
 function c60181553.repop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_EFFECT)
