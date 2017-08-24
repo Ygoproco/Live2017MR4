@@ -11,7 +11,7 @@ function c14507213.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c14507213.filter(c)
-	return c:IsFaceup() and c:IsCanBeSynchroMaterial()
+	return c:IsFaceup() and c:IsCanBeSynchroMaterial() and not c:IsHasEffect(EFFECT_SYNCHRO_MATERIAL)
 end
 function c14507213.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 end
