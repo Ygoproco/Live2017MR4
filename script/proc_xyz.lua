@@ -559,7 +559,7 @@ function Auxiliary.XyzTarget(f,lv,minc,maxc,mustbemat,exchk)
 							if ct>=minc and (not matg:IsExists(Card.IsHasEffect,1,nil,91110378) or Auxiliary.MatNumChkF(matg)) then
 								cancel=true
 							else
-								cancel=not og and Duel.GetCurrentChain()<=0
+								cancel=not og and Duel.GetCurrentChain()<=0 and sg:GetCount()==0
 							end
 						end
 						sg:KeepAlive()
@@ -633,13 +633,12 @@ function Auxiliary.XyzTarget2(alterf,op)
 end	
 function Auxiliary.XyzOperation2(alterf,op)
 	return	function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
-				local g=e:GetLabelObject()
-				local mg2=g:GetFirst():GetOverlayGroup()
+				local oc=e:GetLabelObject()
+				local mg2=oc:GetOverlayGroup()
 				if mg2:GetCount()~=0 then
 					Duel.Overlay(c,mg2)
 				end
-				c:SetMaterial(g)
-				Duel.Overlay(c,g)
-				g:DeleteGroup()
+				c:SetMaterial(Group.FromCards(oc))
+				Duel.Overlay(c,oc)
 			end
 end

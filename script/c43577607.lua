@@ -72,7 +72,8 @@ function c43577607.atktg(e,c)
 	return c:IsSetCard(0x9e)
 end
 function c43577607.repfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x9e) and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
+	return c:IsFaceup() and c:IsSetCard(0x9e) and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) 
+		and not c:IsReason(REASON_REPLACE)
 end
 function c43577607.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(c43577607.repfilter,1,nil,tp) end

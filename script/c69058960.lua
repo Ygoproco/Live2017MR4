@@ -29,11 +29,18 @@ function c69058960.initial_effect(c)
 	c:RegisterEffect(e3)
 	--reflect
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_REFLECT_BATTLE_DAMAGE)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 	e4:SetCondition(c69058960.refcon)
-	e4:SetValue(1)
+	e4:SetOperation(c69058960.refop)
 	c:RegisterEffect(e4)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+	e5:SetCode(511002571)
+	e5:SetLabelObject(e1)
+	e5:SetLabel(c:GetOriginalCode())
+	c:RegisterEffect(e5)
 end
 c69058960.xyz_number=13
 function c69058960.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -77,5 +84,9 @@ function c69058960.indcon(e)
 end
 function c69058960.refcon(e)
 	return Duel.IsExistingMatchingCard(c69058960.filter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
-		and Duel.GetAttackTarget()==e:GetHandler()
+		and Duel.GetAttackTarget()==e:GetHandler() and Duel.GetBattleDamage(tp)>0
+end
+function c69058960.refop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(1-tp,Duel.GetBattleDamage(1-tp)+Duel.GetBattleDamage(tp),false)
+	Duel.ChangeBattleDamage(tp,0)
 end
