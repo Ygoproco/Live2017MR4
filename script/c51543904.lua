@@ -43,16 +43,13 @@ function c51543904.ovfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x107f)
 end
 function c51543904.xyzop(e,tp,chk,mc)
-	if chk==0 then return mc or Duel.IsExistingMatchingCard(c51543904.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	if chk==1 then
-		local min=Auxiliary.ProcCancellable and 0 or 1
-		local ct=Duel.DiscardHand(tp,c51543904.cfilter,min,1,REASON_COST+REASON_DISCARD)
-		if ct>0 then
-			return true,true
-		else
-			return false
-		end
-	end
+	if chk==0 then return Duel.IsExistingMatchingCard(c51543904.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+	local tc=Duel.GetMatchingGroup(c51543904.cfilter,tp,LOCATION_HAND,0,nil):SelectUnselect(Group.CreateGroup(),tp,aux.ProcCancellable,aux.ProcCancellable)
+	if tc then
+		Duel.SendtoGrave(tc,REASON_DISCARD+REASON_COST)
+		return true
+	else return false end
 end
 function c51543904.filter(c,e,tp)
 	return c:IsSetCard(0x48) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)

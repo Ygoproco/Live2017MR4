@@ -43,8 +43,8 @@ function c675319.atlimit(e,c)
 	return c:IsFaceup() and c:IsRace(RACE_BEASTWARRIOR) and Duel.IsExistingMatchingCard(c675319.atfilter,c:GetControler(),LOCATION_MZONE,0,1,nil,c:GetAttack())
 end
 function c675319.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
-		and c:IsSetCard(0xf1) and c:IsReason(REASON_EFFECT) and c:GetFlagEffect(675319)==0
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0xf1) 
+		and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT) and c:GetFlagEffect(675319)==0
 end
 function c675319.desfilter(c,e,tp)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE+LOCATION_HAND) and c:IsType(TYPE_MONSTER)

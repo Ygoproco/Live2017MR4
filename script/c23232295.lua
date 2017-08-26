@@ -23,7 +23,8 @@ function c23232295.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c23232295.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x84)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x84) 
+		and not c:IsReason(REASON_REPLACE)
 end
 function c23232295.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(c23232295.repfilter,1,nil,tp) end
