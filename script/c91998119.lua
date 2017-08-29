@@ -2,7 +2,7 @@
 function c91998119.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCode3(c,62651957,65622692,64500000,true,true)
+	aux.AddFusionProcMix(c,true,true,62651957,65622692,64500000)
 	aux.AddContactFusion(c,c91998119.contactfil,c91998119.contactop)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
@@ -45,7 +45,7 @@ function c91998119.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c91998119.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
