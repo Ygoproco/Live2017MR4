@@ -71,8 +71,8 @@ function c97795930.handcon(e)
 		or Duel.IsEnvironment(22702055)
 end
 function c97795930.repfilter(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsLocation(LOCATION_MZONE)
-		and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
+	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp) 
+		and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
 end
 function c97795930.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(c97795930.repfilter,1,nil,tp) end

@@ -1,21 +1,6 @@
 --旋風剣
 function c22147147.initial_effect(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_EQUIP)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetTarget(c22147147.target)
-	e1:SetOperation(c22147147.operation)
-	c:RegisterEffect(e1)
-	--Equip limit
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_EQUIP_LIMIT)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetValue(c22147147.eqlimit)
-	c:RegisterEffect(e2)
+	aux.AddEquipProcedure(c,nil,c22147147.filter)
 	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(22147147,0))
@@ -29,24 +14,8 @@ function c22147147.initial_effect(c)
 	e3:SetOperation(c22147147.desop)
 	c:RegisterEffect(e3)
 end
-function c22147147.eqlimit(e,c)
-	return c:IsSetCard(0xc008)
-end
 function c22147147.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0xc008)
-end
-function c22147147.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c22147147.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c22147147.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	Duel.SelectTarget(tp,c22147147.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
-end
-function c22147147.operation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		Duel.Equip(tp,e:GetHandler(),tc)
-	end
+	return c:IsSetCard(0xc008)
 end
 function c22147147.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker()==e:GetHandler():GetEquipTarget()
@@ -64,7 +33,7 @@ end
 function c22147147.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

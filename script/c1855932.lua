@@ -49,9 +49,10 @@ function c1855932.repfilter(c,tp)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x88) and c:IsRace(RACE_BEASTWARRIOR)
 end
 function c1855932.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(c1855932.repfilter,1,nil,tp) end
-	if e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) and Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
-		e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_EFFECT)
+	local c=e:GetHandler()
+	if chk==0 then return c:IsDestructable(e) and eg:IsExists(c1855932.repfilter,1,nil,tp) end
+	if c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) and Duel.SelectEffectYesNo(tp,c,96) then
+		c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 		local g=eg:Filter(c1855932.repfilter,nil,tp)
 		if g:GetCount()==1 then
 			e:SetLabelObject(g:GetFirst())
