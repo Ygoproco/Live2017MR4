@@ -4,15 +4,6 @@ function c2111707.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,62651957,65622692)
 	aux.AddContactFusion(c,c2111707.contactfil,c2111707.contactop,c2111707.splimit)
-	--special summon rule
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_EXTRA)
-	e2:SetCondition(c2111707.spcon)
-	e2:SetOperation(c2111707.spop)
-	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(2111707,0))
@@ -50,7 +41,7 @@ function c2111707.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c2111707.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
