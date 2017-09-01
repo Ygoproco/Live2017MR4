@@ -20,9 +20,11 @@ function c35494087.initial_effect(c)
 	c:RegisterEffect(e2)
 	--battle damage
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_REFLECT_BATTLE_DAMAGE)
-	e3:SetValue(1)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e3:SetCondition(c35494087.damcon)
+	e3:SetOperation(c35494087.damop)
+	e3:SetCountLimit(1)
 	c:RegisterEffect(e3)
 	--self destroy
 	local e4=Effect.CreateEffect(c)
@@ -43,8 +45,9 @@ function c35494087.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c35494087.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
 function c35494087.indval(e,c)
 	return c:IsSummonType(SUMMON_TYPE_NORMAL)
@@ -54,4 +57,11 @@ function c35494087.sdfilter(c)
 end
 function c35494087.sdcon(e)
 	return Duel.IsExistingMatchingCard(c35494087.sdfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+end
+function c35494087.damcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetBattleDamage(tp)>0
+end
+function c35494087.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(1-tp,Duel.GetBattleDamage(1-tp)+Duel.GetBattleDamage(tp),false)
+	Duel.ChangeBattleDamage(tp,0)
 end

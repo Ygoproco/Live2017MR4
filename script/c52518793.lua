@@ -50,7 +50,7 @@ function c52518793.acop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x7,1)
 end
 function c52518793.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not e:GetHandler():IsReason(REASON_RULE)
+	if chk==0 then return not e:GetHandler():IsReason(REASON_REPLACE+REASON_RULE)
 		and Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_HAND,0,1,nil,52518793) end
 	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end

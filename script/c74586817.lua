@@ -140,3 +140,4 @@ function c74586817.tdop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Group.FromCards(c,tc)
 		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	end
+end

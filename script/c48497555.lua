@@ -26,7 +26,7 @@ function c48497555.condition(e,tp,eg,ep,ev,re,r,rp)
 	return rc:IsOnField() and rc:IsControler(1-tp) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and not re:IsHasType(EFFECT_TYPE_ACTIVATE)
 end
 function c48497555.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return re:GetHandler():IsDestructable() end
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 end
 function c48497555.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -34,7 +34,7 @@ function c48497555.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsCanTurnSet() then
+	if c:IsRelateToEffect(e) and c:IsCanTurnSet() and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		Duel.BreakEffect()
 		c:CancelToGrave()
 		Duel.ChangePosition(c,POS_FACEDOWN)

@@ -19,17 +19,19 @@ function c24838456.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
 function c24838456.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
 	local ng=Group.CreateGroup()
 	local dg=Group.CreateGroup()
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 		local tc=te:GetHandler()
-		ng:AddCard(tc)
-		if tc:IsRelateToEffect(te) then
-			dg:AddCard(tc)
+		if te:IsHasType(EFFECT_TYPE_ACTIVATE) or te:IsActiveType(TYPE_MONSTER) then
+			ng:AddCard(tc)
+			if tc:IsRelateToEffect(te) then
+				dg:AddCard(tc)
+			end
 		end
 	end
+	if chk==0 then return ng:GetCount()>0 end
 	Duel.SetTargetCard(dg)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,ng,ng:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,dg:GetCount(),0,0)
@@ -39,7 +41,8 @@ function c24838456.activate(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,ev do
 		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
 		local tc=te:GetHandler()
-		if Duel.NegateActivation(i) and tc:IsRelateToEffect(e) and tc:IsRelateToEffect(te) then
+		if (te:IsHasType(EFFECT_TYPE_ACTIVATE) or te:IsActiveType(TYPE_MONSTER)) and Duel.NegateActivation(i) 
+			and tc:IsRelateToEffect(e) and tc:IsRelateToEffect(te) then
 			dg:AddCard(tc)
 		end
 	end

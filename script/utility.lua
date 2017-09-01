@@ -3,33 +3,32 @@ aux=Auxiliary
 POS_FACEUP_DEFENCE=POS_FACEUP_DEFENSE
 POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
 
---to be removed once updated in core
-local rmf=Card.IsAbleToRemove
-Card.IsAbleToRemove=function(c,player,pos)
-	if not rmf(c,player) then return false end
-	return not pos or not c:IsType(TYPE_TOKEN) or bit.band(pos,POS_FACEDOWN)<=0
+function Auxiliary.ExtraLinked(c,emc,card,eg)
+	eg:AddCard(c)
+	local res
+	if c==emc then
+		res=eg:IsContains(card)
+	else
+		local g=c:GetMutualLinkedGroup()
+		res=g and g:IsExists(Auxiliary.ExtraLinked,1,eg,emc,card,eg)
+	end
+	eg:RemoveCard(c)
+	return res
 end
-local rmfc=Card.IsAbleToRemoveAsCost
-Card.IsAbleToRemoveAsCost=function(c,pos)
-	if not rmfc(c) then return false end
-	return not pos or not c:IsType(TYPE_TOKEN) or bit.band(pos,POS_FACEDOWN)<=0
-end
-Card.EnableCounterPermit=function(c,countertype,location)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_COUNTER_PERMIT+countertype)
-	e1:SetProperty(EFFECT_FLAG_IGNORE_RANGE)
-	e1:SetCondition(function(e)
-		local self=e:GetHandler()
-		if self:IsOnField() then
-			if not location or tempchk then return true end
-			local fz=bit.band(location,LOCATION_FZONE)
-			local loc=bit.band(location,LOCATION_ONFIELD+LOCATION_PZONE)
-			return self:IsLocation(loc) or (fz>0 and self:IsLocation(LOCATION_SZONE) and self:GetSequence()==5)
-		end
-		return true
-	end)
-	c:RegisterEffect(e1)
+function Card.IsExtraLinked(c)
+	local card50=Duel.GetFieldCard(0,LOCATION_MZONE,5)
+	local card60=Duel.GetFieldCard(0,LOCATION_MZONE,6)
+	if card50 and card60 then
+		local mg=card50:GetMutualLinkedGroup()
+		return mg and mg:IsExists(Auxiliary.ExtraLinked,1,nil,card60,c,Group.FromCards(card50))
+	end
+	local card51=Duel.GetFieldCard(1,LOCATION_MZONE,5)
+	local card61=Duel.GetFieldCard(1,LOCATION_MZONE,6)
+	if card51 and card61 then
+		local mg=card51:GetMutualLinkedGroup()
+		return mg and mg:IsExists(Auxiliary.ExtraLinked,1,nil,card61,c,Group.FromCards(card51))
+	end
+	return false
 end
 
 
@@ -574,19 +573,12 @@ function Auxiliary.ResetEffects(g,eff)
 	end
 end
 
---in case of moving to utility
---change live2017 to live folder name
---dofile("expansions/live2017/script/proc_fusion.lua")
---dofile("expansions/live2017/script/proc_ritual.lua")
---dofile("expansions/live2017/script/proc_synchro.lua")
---dofile("expansions/live2017/script/proc_union.lua")
---dofile("expansions/live2017/script/proc_xyz.lua")
---dofile("expansions/live2017/script/proc_pendulum.lua")
---dofile("expansions/live2017/script/proc_link.lua")
-
 function loadutility(file)
-	if(loadfile("expansions/live2017mr4/script/"..file) == nil) then
+	local f = loadfile("expansions/live2017mr4/script/"..file)
+	if(f == nil) then
 		dofile("script/"..file)
+	else
+		f()
 	end
 end
 loadutility("proc_fusion.lua")
