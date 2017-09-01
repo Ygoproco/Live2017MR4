@@ -23,8 +23,7 @@ end
 function c45986603.eqlimit(e,c)
 	return e:GetHandlerPlayer()~=c:GetControler() or e:GetHandler():GetEquipTarget()==c
 end
-function c45986603.target(e,tp,eg,ep,ev,re,r,rp,tc,chk)
-	if chk==0 then return true end
+function c45986603.target(e,tp,eg,ep,ev,re,r,rp,tc)
 	e:SetCategory(CATEGORY_CONTROL+CATEGORY_EQUIP)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,tc,1,0,0)
 end

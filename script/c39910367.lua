@@ -54,7 +54,7 @@ function c39910367.rop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RemoveCounter(ep,0x1,ev,REASON_EFFECT)
 end
 function c39910367.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not e:GetHandler():IsReason(REASON_RULE)
+	if chk==0 then return not e:GetHandler():IsReason(REASON_REPLACE+REASON_RULE)
 		and e:GetHandler():GetCounter(0x1)>0 end
 	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end

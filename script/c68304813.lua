@@ -20,9 +20,14 @@ function c68304813.initial_effect(c)
 	e3:SetCode(EVENT_MSET)
 	c:RegisterEffect(e3)
 end
+function c68304813.cfilter(c)
+	return bit.band(c:GetPreviousTypeOnField(),TYPE_MONSTER)==TYPE_MONSTER
+end
 function c68304813.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	return tc:IsSummonType(SUMMON_TYPE_ADVANCE) and tc:GetMaterialCount()>=2 and tc:GetSummonPlayer()==tp
+	local mg=tc:GetMaterial()
+	return tc:IsSummonType(SUMMON_TYPE_ADVANCE) and tc:GetSummonPlayer()==tp and mg 
+		and mg:FilterCount(c68304813.cfilter,nil)>=2
 end
 function c68304813.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
