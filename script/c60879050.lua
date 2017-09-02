@@ -55,7 +55,6 @@ function c60879050.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		local sg=g:FilterSelect(tp,c60879050.filterchk,1,1,rg,g,rg)
 		rg:Merge(sg)
 	end
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c60879050.value(e,c)
 	return c:GetBaseAttack()*2

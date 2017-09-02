@@ -3,14 +3,7 @@ function c29357956.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcMixN(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x19),3)
-	aux.AddContactFusion(c,c29357956.contactfil,c29357956.contactop)
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c29357956.splimit)
-	c:RegisterEffect(e1)
+	aux.AddContactFusion(c,c29357956.contactfil,c29357956.contactop,c29357956.splimit)
 	--battle indestructable
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -40,6 +33,7 @@ function c29357956.initial_effect(c)
 	e6:SetOperation(c29357956.spop)
 	c:RegisterEffect(e6)
 end
+c29357956.material_setcode=0x19
 function c29357956.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
 end

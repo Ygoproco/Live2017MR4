@@ -16,6 +16,7 @@ function c32543380.initial_effect(c)
 	e2:SetCode(EFFECT_MUST_ATTACK)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(0,LOCATION_MZONE)
+	e2:SetCondition(c32543380.atkcon)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_MUST_ATTACK_MONSTER)
@@ -70,4 +71,8 @@ function c32543380.desop(e,tp,eg,ep,ev,re,r,rp)
 	if ct>0 then
 		Duel.Damage(1-tp,ct*500,REASON_EFFECT)
 	end
+end
+function c32543380.atkcon(e)
+	local ph=Duel.GetCurrentPhase()
+	return Duel.GetTurnPlayer()~=e:GetHandlerPlayer() and ph>=0x8 and ph<=0x20
 end
