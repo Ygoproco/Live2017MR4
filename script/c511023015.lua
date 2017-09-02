@@ -2,7 +2,7 @@
 function c511023015.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCode2(c,84327329,58932615,true,true)
+	aux.AddFusionProcMix(c,true,true,84327329,58932615)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -30,7 +30,7 @@ function c511023015.initial_effect(c)
 	e3:SetValue(c511023015.indesval)
 	c:RegisterEffect(e3)
 end
-c511023015.material_setcode=0x8
+c511023015.material_setcode={0x8,0x3008}
 c511023015.dark_calling=true
 function c511023015.splimit(e,se,sp,st)
 	return st==SUMMON_TYPE_FUSION+0x10

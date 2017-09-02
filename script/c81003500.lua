@@ -21,7 +21,7 @@ function c81003500.initial_effect(c)
 	e2:SetOperation(c81003500.operation)
 	c:RegisterEffect(e2)
 end
-c81003500.material_setcode=0x8
+c81003500.material_setcode={0x8,0x3008}
 function c81003500.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
 	if chk==0 then return true end

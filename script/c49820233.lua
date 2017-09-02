@@ -22,6 +22,7 @@ function c49820233.initial_effect(c)
 	e2:SetLabelObject(e1)
 	c:RegisterEffect(e2)
 end
+c49820233.material_setcode=0x9f
 function c49820233.ffilter(c)
 	return c:IsFusionAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(5)
 end
