@@ -37,7 +37,8 @@ function c511009368.initial_effect(c)
 	e3:SetOperation(c511009368.desop)
 	c:RegisterEffect(e3)
 end
-function c511009368.ffilter(c,fc)
+c511009368.material_setcode=0x9f
+function c511009368.ffilter(c)
 	return c:IsFusionAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(5)
 end
 function c511009368.damcon(e,tp,eg,ep,ev,re,r,rp)
