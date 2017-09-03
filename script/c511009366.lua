@@ -58,7 +58,7 @@ function c511009366.checkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511009366.thfilter(c)
-	return c:IsSetCard(0x1414) and c:IsAbleToHand()
+	return c:IsSetCard(0x154e) and c:IsAbleToHand()
 end
 function c511009366.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009366.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -88,7 +88,7 @@ function c511009366.atlimit2(e,c)
 	return lv>lsc and lv<rsc and not c:IsImmuneToEffect(e)
 end
 function c511009366.effilter(c)
-	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsPreviousLocation(LOCATION_HAND) and c:IsSetCard(0x1414) 
+	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsPreviousLocation(LOCATION_HAND) and c:IsSetCard(0x154e) 
 		and c:GetFlagEffect(511009366)==0 and c:IsReleasableByEffect()
 end
 function c511009366.eftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
