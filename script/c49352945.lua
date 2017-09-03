@@ -3,14 +3,7 @@ function c49352945.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,89943723,17955766,54959865)
-	aux.AddContactFusion(c,c49352945.contactfil,c49352945.contactop)
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c49352945.splimit)
-	c:RegisterEffect(e1)
+	aux.AddContactFusion(c,c49352945.contactfil,c49352945.contactop,c49352945.splimit)
 	--return
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(49352945,0))
@@ -48,6 +41,7 @@ function c49352945.initial_effect(c)
 	e5:SetOperation(c49352945.tdop)
 	c:RegisterEffect(e5)
 end
+c49352945.material_setcode={0x8,0x3008,0x9,0x1f}
 function c49352945.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
 end
@@ -55,7 +49,6 @@ function c49352945.contactop(g,tp)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.SendtoDeck(g,nil,2,REASON_COST+REASON_MATERIAL)
 end
-c49352945.material_setcode=0x8
 function c49352945.retcon1(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsHasEffect(42015635)
 end
@@ -74,16 +67,13 @@ function c49352945.retop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RaiseSingleEvent(c,EVENT_CUSTOM+49352945,e,0,0,0,0)
 	end
 end
-function c49352945.desfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP)
-end
 function c49352945.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c49352945.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
-	local g=Duel.GetMatchingGroup(c49352945.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,TYPE_SPELL+TYPE_TRAP) end
+	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,TYPE_SPELL+TYPE_TRAP)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c49352945.desop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c49352945.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+	local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,TYPE_SPELL+TYPE_TRAP)
 	Duel.Destroy(g,REASON_EFFECT)
 end
 function c49352945.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)

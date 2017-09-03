@@ -78,7 +78,7 @@ end
 function c97617181.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=e:GetLabelObject()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -91,7 +91,7 @@ function c97617181.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local ec=c:GetEquipTarget()
 	local ph=Duel.GetCurrentPhase()
-	if chk==0 then return (ph>PHASE_MAIN1 and ph<PHASE_MAIN2)
+	if chk==0 then return not ec:IsReason(REASON_REPLACE) and (ph>PHASE_MAIN1 and ph<PHASE_MAIN2)
 		and c:IsDestructable(e) and not c:IsStatus(STATUS_DESTROY_CONFIRMED) end
 	return Duel.SelectEffectYesNo(tp,c,96)
 end
