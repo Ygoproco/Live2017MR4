@@ -33,7 +33,7 @@ function c80143954.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsLocation(LOCATION_SZONE) then return end
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,c,tc)
 		c:CancelToGrave()
 		local e1=Effect.CreateEffect(c)
@@ -73,8 +73,8 @@ function c80143954.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateEffect(ev)
 end
 function c80143954.repfilter(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x103) and c:IsLocation(LOCATION_ONFIELD)
-		and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
+	return c:IsFaceup() and c:IsSetCard(0x103) and c:IsLocation(LOCATION_ONFIELD) and c:IsControler(tp) 
+		and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
 end
 function c80143954.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(c80143954.repfilter,1,nil,tp) end

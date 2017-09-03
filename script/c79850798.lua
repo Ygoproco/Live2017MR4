@@ -8,7 +8,6 @@ function c79850798.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c79850798.spcon)
-	e1:SetOperation(c79850798.spop)
 	c:RegisterEffect(e1)
 	--cannot special summon
 	local e2=Effect.CreateEffect(c)
@@ -54,22 +53,20 @@ function c79850798.initial_effect(c)
 	e8:SetCondition(c79850798.mtcon)
 	e8:SetOperation(c79850798.mtop)
 	c:RegisterEffect(e8)
+	--spsummon cost
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_SINGLE)
+	e9:SetCode(EFFECT_SPSUMMON_COST)
+	e9:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e9:SetCost(c79850798.spcost)
+	e9:SetOperation(c79850798.spcop)
+	c:RegisterEffect(e9)
 end
 function c79850798.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0
-		and Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0
+	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-end
-function c79850798.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local e1=Effect.CreateEffect(c)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_BP)
-	e1:SetTargetRange(1,0)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
 end
 function c79850798.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumpos,POS_FACEDOWN)~=0
@@ -83,4 +80,17 @@ function c79850798.mtop(e,tp,eg,ep,ev,re,r,rp)
 	else
 		Duel.Destroy(e:GetHandler(),REASON_COST)
 	end
+end
+function c79850798.spcost(e,c,tp)
+	return Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0
+end
+function c79850798.spcop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_BP)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end

@@ -3,14 +3,7 @@ function c28677304.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,89943723,43237273)
-	aux.AddContactFusion(c,c28677304.contactfil,c28677304.contactop)
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c28677304.splimit)
-	c:RegisterEffect(e1)
+	aux.AddContactFusion(c,c28677304.contactfil,c28677304.contactop,c28677304.splimit)
 	--return
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(28677304,0))
@@ -40,6 +33,7 @@ function c28677304.initial_effect(c)
 	e5:SetOperation(c28677304.disop)
 	c:RegisterEffect(e5)
 end
+c28677304.material_setcode={0x8,0x3008,0x9,0x1f}
 function c28677304.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
 end
@@ -47,7 +41,6 @@ function c28677304.contactop(g,tp)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.SendtoDeck(g,nil,2,REASON_COST+REASON_MATERIAL)
 end
-c28677304.material_setcode=0x8
 function c28677304.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
 end
@@ -81,7 +74,7 @@ end
 function c28677304.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
