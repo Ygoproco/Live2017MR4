@@ -40,11 +40,11 @@ function c14799437.initial_effect(c)
 	e4:SetOperation(c14799437.negop)
 	c:RegisterEffect(e4)
 end
-function c23440231.spfilter(c)
+function c14799437.spfilter(c)
 	if not c:IsSetCard(0xbb) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
 	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
 end
-function c23440231.spcon(e,c)
+function c14799437.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local sum=0
@@ -60,29 +60,29 @@ function c23440231.spcon(e,c)
 	if ft<-2 then return false end
 	if c:IsHasEffect(34822850) then
 		if ft>0 then
-			return Duel.IsExistingMatchingCard(c23440231.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,3,c)
+			return Duel.IsExistingMatchingCard(c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,3,c)
 		else
 			local ct=-ft+1
-			return Duel.IsExistingMatchingCard(c23440231.spfilter,tp,LOCATION_MZONE,0,ct,nil)
-				and Duel.IsExistingMatchingCard(c23440231.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,3,c)
+			return Duel.IsExistingMatchingCard(c14799437.spfilter,tp,LOCATION_MZONE,0,ct,nil)
+				and Duel.IsExistingMatchingCard(c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,3,c)
 		end
 	else
 		if Duel.IsPlayerAffectedByEffect(tp,69832741) then
-			return Duel.IsExistingMatchingCard(c23440231.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,3,c)
+			return Duel.IsExistingMatchingCard(c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,3,c)
 		else
-			return ft>0 and Duel.IsExistingMatchingCard(c23440231.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,3,c)
+			return ft>0 and Duel.IsExistingMatchingCard(c14799437.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,3,c)
 		end
 	end
 end
-function c23440231.spop(e,tp,eg,ep,ev,re,r,rp,c)
+function c14799437.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local g=nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	if c:IsHasEffect(34822850) then
 		if ft>0 then
-			g=Duel.SelectMatchingCard(tp,c23440231.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,3,3,c)
+			g=Duel.SelectMatchingCard(tp,c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,3,3,c)
 		else
-			local sg=Duel.GetMatchingGroup(c23440231.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,c)
+			local sg=Duel.GetMatchingGroup(c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,c)
 			local ct=-ft+1
 			g=sg:FilterSelect(tp,Card.IsLocation,ct,ct,nil,LOCATION_MZONE)
 			if ct<3 then
@@ -95,9 +95,9 @@ function c23440231.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	else
 		if Duel.IsPlayerAffectedByEffect(tp,69832741) then
 			if ft>0 then
-				g=Duel.SelectMatchingCard(tp,c23440231.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,3,3,c)
+				g=Duel.SelectMatchingCard(tp,c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,3,3,c)
 			else
-				local sg=Duel.GetMatchingGroup(c23440231.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,c)
+				local sg=Duel.GetMatchingGroup(c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,c)
 				local ct=-ft+1
 				g=sg:FilterSelect(tp,Card.IsLocation,ct,ct,nil,LOCATION_MZONE)
 				if ct<3 then
@@ -108,7 +108,7 @@ function c23440231.spop(e,tp,eg,ep,ev,re,r,rp,c)
 				end
 			end
 		else
-			g=Duel.SelectMatchingCard(tp,c23440231.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,3,3,c)
+			g=Duel.SelectMatchingCard(tp,c14799437.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,3,3,c)
 		end
 	end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
