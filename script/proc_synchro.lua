@@ -1,4 +1,3 @@
-
 function Auxiliary.NonTuner(f,a,b,c)
 	return	function(target)
 				return target:IsNotTuner() and (not f or f(target,a,b,c))
@@ -32,14 +31,14 @@ function Auxiliary.SynchroCheckFilterChk(c,f1,f2,sub1,sub2)
 	if f(te,c) then
 		reset=true
 	end
-	local res=(c:IsType(TYPE_TUNER) and (not f1 or f1(c))) or not f2 or f2(c) or (sub1 and sub1(c)) or (sub2 and sub2(c))
+	local res=(c:IsSynchroType(TYPE_TUNER) and (not f1 or f1(c))) or not f2 or f2(c) or (sub1 and sub1(c)) or (sub2 and sub2(c))
 	if reset then
 		Duel.AssumeReset()
 	end
 	return res
 end
 function Auxiliary.TunerFilter(c,f1,sub1)
-	return (c:IsType(TYPE_TUNER) and (not f1 or f1(c))) or (sub1 and sub1(c))
+	return (c:IsSynchroType(TYPE_TUNER) and (not f1 or f1(c))) or (sub1 and sub1(c))
 end
 function Auxiliary.NonTunerFilter(c,f2,sub2)
 	return not f2 or f2(c) or (sub2 and sub2(c))
@@ -47,6 +46,7 @@ end
 function Auxiliary.SynCondition(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,req2,reqct2,reqm)
 	return	function(e,c,smat,mg)
 				if c==nil then return true end
+				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local pe={Duel.GetPlayerEffect(tp,EFFECT_MUST_BE_SMATERIAL)}
 				local pg=Group.CreateGroup()
@@ -512,8 +512,8 @@ function Auxiliary.SynTarget(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,req
 					end
 				end
 				local lv=c:GetLevel()
+				local tsg=Group.CreateGroup()
 				if g:IsExists(Auxiliary.SynchroCheckFilterChk,1,nil,f1,f2,sub1,sub2) then
-					local tsg=Group.CreateGroup()
 					local ntsg=Group.CreateGroup()
 					local tune=true
 					local g2=Group.CreateGroup()
@@ -608,7 +608,6 @@ function Auxiliary.SynTarget(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,req
 					end
 					Duel.AssumeReset()
 				else
-					local tsg=Group.CreateGroup()
 					local ntsg=Group.CreateGroup()
 					local tune=true
 					local g2=Group.CreateGroup()
@@ -684,6 +683,17 @@ function Auxiliary.SynTarget(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,req
 				local hg=Duel.GetMatchingGroup(Card.IsHasEffect,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,EFFECT_HAND_SYNCHRO+EFFECT_SYNCHRO_CHECK)
 				aux.ResetEffects(hg,EFFECT_HAND_SYNCHRO+EFFECT_SYNCHRO_CHECK)
 				if sg then
+					local subtsg=tsg:Filter(function(c) return sub1 and sub1(c) and ((f1 and not f1(c)) or not c:IsType(TYPE_TUNER)) end,nil)
+					local subc=subtsg:GetFirst()
+					while subc do
+						local e1=Effect.CreateEffect(c)
+						e1:SetType(EFFECT_TYPE_SINGLE)
+						e1:SetCode(EFFECT_ADD_TYPE)
+						e1:SetValue(TYPE_TUNER)
+						e1:SetReset(RESET_EVENT+0x1fe0000)
+						subc:RegisterEffect(e1,true)
+						subc=subtsg:GetNext()
+					end
 					sg:KeepAlive()
 					e:SetLabelObject(sg)
 					return true
@@ -847,9 +857,9 @@ function Auxiliary.MajesticSynchroCheck2(sg,card1,card2,card3,lv,sc,tp,f1,cbt1,f
 	end
 	local tunechk=false
 	if not f1(card1) or not f2(card2) or not f3(card3) then return false end
-	if cbt1 and card1:IsType(TYPE_TUNER) then tunechk=true end
-	if cbt2 and card2:IsType(TYPE_TUNER) then tunechk=true end
-	if cbt3 and card3:IsType(TYPE_TUNER) then tunechk=true end
+	if cbt1 and card1:IsSynchroType(TYPE_TUNER) then tunechk=true end
+	if cbt2 and card2:IsSynchroType(TYPE_TUNER) then tunechk=true end
+	if cbt3 and card3:IsSynchroType(TYPE_TUNER) then tunechk=true end
 	if not tunechk then return false end
 	local lvchk=false
 	if #funs[0]>0 then
@@ -1133,7 +1143,7 @@ function Auxiliary.DarkSynchroCheck2(sg,card1,card2,plv,nlv,sc,tp,f1,f2,...)
 		c=sg:GetNext()
 	end]]
 	local reqm={...}
-	if (f1 and not f1(card1)) or (f2 and not f2(card2)) or not card2:IsType(TYPE_TUNER) or not card2:IsSetCard(0x600) then return false end
+	if (f1 and not f1(card1)) or (f2 and not f2(card2)) or not card2:IsSynchroType(TYPE_TUNER) or not card2:IsSetCard(0x600) then return false end
 	local lvchk=false
 	if #reqm>0 then
 		for i=1,#reqm do
