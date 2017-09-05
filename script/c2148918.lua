@@ -4,6 +4,8 @@ function c2148918.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetTarget(c2148918.target)
+	e1:SetHintTiming(TIMING_SPSUMMON)
 	c:RegisterEffect(e1)
 	--atk change
 	local e2=Effect.CreateEffect(c)
@@ -16,6 +18,18 @@ function c2148918.initial_effect(c)
 	e2:SetTarget(c2148918.sptg)
 	e2:SetOperation(c2148918.spop)
 	c:RegisterEffect(e2)
+end
+function c2148918.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local res,teg,tep,tev,tre,tr,trp=Duel.CheckEvent(EVENT_SPSUMMON_SUCCESS,true)
+	if res and c2148918.spcon(e,tp,teg,tep,tev,tre,tr,trp) and c2148918.sptg(e,tp,teg,tep,tev,tre,tr,trp,0) and Duel.SelectYesNo(tp,94) then
+		e:SetCategory(CATEGORY_ATKCHANGE)
+		e:SetOperation(c2148918.spop2(e,tp,teg,tep,tev,tre,tr,trp))
+		c2148918.sptg(e,tp,teg,tep,tev,tre,tr,trp,1)
+	else
+		e:SetCategory(0)
+		e:SetOperation(nil)
+	end
 end
 function c2148918.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x2b)
@@ -42,5 +56,10 @@ function c2148918.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		tc=g:GetNext()
+	end
+end
+function c2148918.spop2(e,tp,eg,ep,ev,re,r,rp)
+	return function()
+		c2148918.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end

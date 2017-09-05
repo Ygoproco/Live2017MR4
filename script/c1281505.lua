@@ -35,11 +35,13 @@ function c1281505.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
 end
 function c1281505.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		Duel.Equip(tp,c,tc)
 		--equip limit
 		local e1=Effect.CreateEffect(c)
@@ -56,8 +58,9 @@ function c1281505.eqlimit(e,c)
 	return c:IsControler(tp)
 end
 function c1281505.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE) end
+	return Duel.SelectEffectYesNo(tp,c,96)
 end
 function c1281505.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT+REASON_REPLACE)

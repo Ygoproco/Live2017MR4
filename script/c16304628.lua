@@ -22,7 +22,7 @@ function c16304628.initial_effect(c)
 	e3:SetValue(aux.fuslimit)
 	c:RegisterEffect(e3)
 end
-c16304628.material_setcode=0x8
+c16304628.material_setcode={0x8,0x3008}
 function c16304628.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end

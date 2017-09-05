@@ -48,7 +48,7 @@ function c14799437.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local sum=0
-	for i=0,4 do
+	for i=0,6 do
 		local tc=Duel.GetFieldCard(tp,LOCATION_MZONE,i)
 		if tc and tc:IsFaceup() and tc:IsType(TYPE_EFFECT) then
 			if tc:IsType(TYPE_XYZ) then sum=sum+tc:GetRank()
@@ -108,23 +108,7 @@ function c14799437.spop(e,tp,eg,ep,ev,re,r,rp,c)
 				end
 			end
 		else
-			if Duel.IsPlayerAffectedByEffect(tp,69832741) then
-				if ft>0 then
-					g=Duel.SelectMatchingCard(tp,c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,2,2,c)
-				else
-					local sg=Duel.GetMatchingGroup(c14799437.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,c)
-					local ct=-ft+1
-					g=sg:FilterSelect(tp,Card.IsLocation,ct,ct,nil,LOCATION_MZONE)
-					if ct<2 then
-						sg:Sub(g)
-						Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-						local g2=sg:Select(tp,2-ct,2-ct,nil)
-						g:Merge(g2)
-					end
-				end
-			else
-				g=Duel.SelectMatchingCard(tp,c14799437.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,2,2,c)
-			end
+			g=Duel.SelectMatchingCard(tp,c14799437.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,3,3,c)
 		end
 	end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
