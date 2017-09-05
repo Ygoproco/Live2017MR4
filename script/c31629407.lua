@@ -37,7 +37,7 @@ function c31629407.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
 	if not re:IsHasType(EFFECT_TYPE_ACTIVATE) or c:GetFlagEffect(1)<=0 then return false end
-	return aux.checksamecolumn(c,rc)
+	return c:GetColumnGroup():IsContains(rc)
 end
 function c31629407.spfilter(c,e,tp)
 	return c:IsLevelBelow(4) and c:IsSetCard(0x108) and not c:IsCode(31629407) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)

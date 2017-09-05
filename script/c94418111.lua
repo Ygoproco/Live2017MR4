@@ -37,7 +37,7 @@ function c94418111.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
 	if not re:IsHasType(EFFECT_TYPE_ACTIVATE) or c:GetFlagEffect(1)<=0 then return false end
-	return aux.checksamecolumn(c,rc)
+	return c:GetColumnGroup():IsContains(rc)
 end
 function c94418111.filter(c)
 	return c:IsSetCard(0x108) and c:IsAbleToDeck()

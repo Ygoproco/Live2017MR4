@@ -38,7 +38,7 @@ function c32841045.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if not re:IsHasType(EFFECT_TYPE_ACTIVATE) or c:GetFlagEffect(1)<=0 then return false end
 	e:SetLabelObject(rc)
-	return aux.checksamecolumn(c,rc)
+	return c:GetColumnGroup():IsContains(rc)
 end
 function c32841045.thfilter(c,rc)
 	return c:IsSetCard(0x108) and not c:IsCode(rc:GetCode()) and c:IsAbleToHand()
