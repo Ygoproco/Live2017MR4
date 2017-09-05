@@ -40,7 +40,7 @@ function Auxiliary.AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op,mustbemat,exch
 	e1:SetTarget(Auxiliary.XyzTarget(f,lv,ct,maxct,mustbemat,exchk))
 	e1:SetOperation(Auxiliary.XyzOperation(f,lv,ct,maxct,mustbemat,exchk))
 	e1:SetValue(SUMMON_TYPE_XYZ)
-	e1:SetLabelObject(e0)
+	e1:SetLabelObject(chk1)
 	c:RegisterEffect(e1)
 	if alterf then
 		local chk2=chk1:Clone()
@@ -156,8 +156,8 @@ function Auxiliary.XyzRecursionChk1(c,mg,xyz,tp,min,max,minc,maxc,sg,matg,ct,mat
 		if matg:IsExists(Card.IsHasEffect,1,nil,91110378) then
 			ok=Auxiliary.MatNumChkF(matg)
 		end
-		if exchk then
-			if matg:GetCount()>0 and not matg:IsExists(f,matg:GetCount(),nil,true,tp,matg) then ok=false end
+		if ok and exchk then
+			if matg:GetCount()>0 and not exchk(matg,tp,xyz) then ok=false end
 		end
 		if ok then
 			if xyz:IsLocation(LOCATION_EXTRA) then
@@ -184,8 +184,8 @@ function Auxiliary.XyzRecursionChk1(c,mg,xyz,tp,min,max,minc,maxc,sg,matg,ct,mat
 					if matg:IsExists(Card.IsHasEffect,1,nil,91110378) then
 						ok=Auxiliary.MatNumChkF(matg)
 					end
-					if exchk then
-						if matg:GetCount()>0 and not matg:IsExists(f,matg:GetCount(),nil,true,tp,matg) then ok=false end
+					if ok and exchk then
+						if matg:GetCount()>0 and not exchk(matg,tp,xyz) then ok=false end
 					end
 					if ok then
 						if xyz:IsLocation(LOCATION_EXTRA) then
@@ -249,8 +249,8 @@ function Auxiliary.XyzRecursionChk2(c,mg,xyz,tp,minc,maxc,sg,matg,ct,mustbemat,e
 		if matg:IsExists(Card.IsHasEffect,1,nil,91110378) then
 			ok=Auxiliary.MatNumChkF(matg)
 		end
-		if exchk then
-			if matg:GetCount()>0 and not matg:IsExists(f,matg:GetCount(),nil,true,tp,matg) then ok=false end
+		if ok and exchk then
+			if matg:GetCount()>0 and not exchk(matg,tp,xyz) then ok=false end
 		end
 		if ok then
 			if xyz:IsLocation(LOCATION_EXTRA) then
@@ -282,8 +282,8 @@ function Auxiliary.XyzRecursionChk2(c,mg,xyz,tp,minc,maxc,sg,matg,ct,mustbemat,e
 					if matg:IsExists(Card.IsHasEffect,1,nil,91110378) then
 						ok=Auxiliary.MatNumChkF(matg)
 					end
-					if exchk then
-						if matg:GetCount()>0 and not matg:IsExists(f,matg:GetCount(),nil,true,tp,matg) then ok=false end
+					if ok and exchk then
+						if matg:GetCount()>0 and not exchk(matg,tp,xyz) then ok=false end
 					end
 					if ok then
 						if xyz:IsLocation(LOCATION_EXTRA) then
@@ -338,6 +338,7 @@ function Auxiliary.XyzCondition(f,lv,minc,maxc,mustbemat,exchk)
 	--og: use special material
 	return	function(e,c,og,min,max)
 				if c==nil then return true end
+				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local xg=nil
 				if tp==0 then
@@ -559,7 +560,7 @@ function Auxiliary.XyzTarget(f,lv,minc,maxc,mustbemat,exchk)
 							if ct>=minc and (not matg:IsExists(Card.IsHasEffect,1,nil,91110378) or Auxiliary.MatNumChkF(matg)) then
 								cancel=true
 							else
-								cancel=not og and Duel.GetCurrentChain()<=0
+								cancel=not og and Duel.GetCurrentChain()<=0 and sg:GetCount()==0
 							end
 						end
 						sg:KeepAlive()
@@ -594,6 +595,7 @@ end
 function Auxiliary.XyzCondition2(alterf,op)
 	return	function(e,c,og,min,max)
 				if c==nil then return true end
+				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local mg=nil
 				if og then
@@ -601,23 +603,17 @@ function Auxiliary.XyzCondition2(alterf,op)
 				else
 					mg=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)
 				end
-				return (not min or min<=1) and (not op or op(e,tp,0)) and mg:IsExists(Auxiliary.XyzAlterFilter,1,nil,alterf,c,e,tp,op)
+				return (not min or min<=1) and mg:IsExists(Auxiliary.XyzAlterFilter,1,nil,alterf,c,e,tp,op)
 			end
 end
 function Auxiliary.XyzTarget2(alterf,op)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c,og,min,max)
 				local cancel=not og and Duel.GetCurrentChain()<=0
-				if cancel then
-					Auxiliary.ProcCancellable=true
-				end
-				if op then
-					local ok,apply=op(e,tp,1)
-					if not ok then return false end
-					if apply then cancel=false end
-				end
+				Auxiliary.ProcCancellable=cancel
 				if og and not min then
 					og:KeepAlive()
 					e:SetLabelObject(og)
+					if op then op(e,tp,1,og:GetFirst()) end
 					return true
 				else
 					local mg=nil
@@ -626,27 +622,25 @@ function Auxiliary.XyzTarget2(alterf,op)
 					else
 						mg=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)
 					end
-					local minct=cancel and 0 or 1
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-					local g=mg:FilterSelect(tp,Auxiliary.XyzAlterFilter,minct,1,nil,alterf,c,e,tp,op)
-					if g:GetCount()>0 then
-						if op then op(e,tp,2,g:GetFirst()) end
-						g:KeepAlive()
-						e:SetLabelObject(g)
-						return true
-					else return false end
+					local oc=mg:Filter(Auxiliary.XyzAlterFilter,nil,alterf,c,e,tp,op):SelectUnselect(Group.CreateGroup(),tp,cancel,cancel)
+					if not oc then return false end
+					local ok=true
+					if op then ok=op(e,tp,1,oc) end
+					if not ok then return false end
+					e:SetLabelObject(oc)
+					return true
 				end
 			end
 end	
 function Auxiliary.XyzOperation2(alterf,op)
 	return	function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
-				local g=e:GetLabelObject()
-				local mg2=g:GetFirst():GetOverlayGroup()
+				local oc=e:GetLabelObject()
+				local mg2=oc:GetOverlayGroup()
 				if mg2:GetCount()~=0 then
 					Duel.Overlay(c,mg2)
 				end
-				c:SetMaterial(g)
-				Duel.Overlay(c,g)
-				g:DeleteGroup()
+				c:SetMaterial(Group.FromCards(oc))
+				Duel.Overlay(c,oc)
 			end
 end

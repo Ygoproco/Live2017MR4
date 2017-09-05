@@ -2,7 +2,7 @@
 function c52653092.initial_effect(c)
 	--xyz summon
 	c:EnableReviveLimit()
-	aux.AddXyzProcedure(c,c52653092.xyzfilter,nil,3,c52653092.ovfilter,aux.Stringid(52653092,0),nil,c52653092.xyzop,false,true)
+	aux.AddXyzProcedure(c,c52653092.xyzfilter,nil,3,c52653092.ovfilter,aux.Stringid(52653092,0),nil,c52653092.xyzop,false,c52653092.xyzcheck)
 	--cannot disable spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -50,9 +50,11 @@ function c52653092.initial_effect(c)
 end
 c52653092.xyz_number=0
 function c52653092.xyzfilter(c,chk,tp,sg)
-	if chk then return c:IsHasEffect(511001175) or sg:FilterCount(Card.IsType,c,TYPE_XYZ)==0 
-		or sg:IsExists(aux.FilterEqualFunction(Card.GetRank,c:GetRank()),1,c) end
 	return c:IsType(TYPE_XYZ) and c:IsSetCard(0x48)
+end
+function c52653092.xyzcheck(g,tp,xyz)
+	local mg=g:Filter(function(c) return not c:IsHasEffect(511001175) end,nil)
+	return mg:GetClassCount(Card.GetRank)==1
 end
 function c52653092.cfilter(c)
 	return c:IsSetCard(0x95) and c:GetType()==TYPE_SPELL and c:IsDiscardable()
@@ -61,16 +63,13 @@ function c52653092.ovfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x107f)
 end
 function c52653092.xyzop(e,tp,chk,mc)
-	if chk==0 then return mc or Duel.IsExistingMatchingCard(c52653092.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	if chk==1 then
-		local min=Auxiliary.ProcCancellable and 0 or 1
-		local ct=Duel.DiscardHand(tp,c52653092.cfilter,min,1,REASON_COST+REASON_DISCARD,nil)
-		if ct>0 then
-			return true,true
-		else
-			return false
-		end
-	end
+	if chk==0 then return Duel.IsExistingMatchingCard(c52653092.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+	local tc=Duel.GetMatchingGroup(c52653092.cfilter,tp,LOCATION_HAND,0,nil):SelectUnselect(Group.CreateGroup(),tp,aux.ProcCancellable,aux.ProcCancellable)
+	if tc then
+		Duel.SendtoGrave(tc,REASON_DISCARD+REASON_COST)
+		return true
+	else return false end
 end
 function c52653092.effcon(e)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
