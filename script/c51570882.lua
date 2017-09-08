@@ -32,8 +32,9 @@ function c51570882.initial_effect(c)
 	e3:SetOperation(c51570882.spop)
 	c:RegisterEffect(e3)
 end
-function c51570882.ffilter2(c)
-	return c:GetOriginalLevel()>=8 and c:IsFusionAttribute(ATTRIBUTE_DARK)
+c51570882.material_setcode={0xf3,0x10f3}
+function c51570882.ffilter2(c,fc,sumtype,tp)
+	return c:GetOriginalLevel()>=8 and c:IsAttribute(ATTRIBUTE_DARK,fc,sumtype,tp)
 end
 function c51570882.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or aux.fuslimit(e,se,sp,st)

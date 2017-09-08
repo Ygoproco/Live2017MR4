@@ -27,12 +27,12 @@ function c45349196.initial_effect(c)
 	e2:SetOperation(c45349196.damop)
 	c:RegisterEffect(e2)
 end
-c45349196.material_setcode=0x3b
-function c45349196.mfilter1(c)
-	return c:IsFusionSetCard(0x45) and c:IsFusionType(TYPE_NORMAL) and c:GetLevel()==6
+c45349196.material_setcode={0x3b,0x45}
+function c45349196.mfilter1(c,fc,sumtype,tp)
+	return c:IsFusionSetCard(0x45) and c:IsType(TYPE_NORMAL,fc,sumtype,tp) and c:GetLevel()==6
 end
-function c45349196.mfilter2(c)
-	return c:IsFusionSetCard(0x3b) and c:IsFusionType(TYPE_NORMAL)
+function c45349196.mfilter2(c,fc,sumtype,tp)
+	return c:IsFusionSetCard(0x3b) and c:IsType(TYPE_NORMAL,fc,sumtype,tp)
 end
 function c45349196.accon(e)
 	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()
@@ -58,7 +58,7 @@ function c45349196.damtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c45349196.damop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Damage(1-tp,tc:GetBaseAttack(),REASON_EFFECT)~=0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.Damage(1-tp,tc:GetBaseAttack(),REASON_EFFECT)~=0 then
 		Duel.BreakEffect()
 		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 	end

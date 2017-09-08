@@ -10,8 +10,9 @@ function c74506079.initial_effect(c)
 	e2:SetValue(c74506079.matcheck)
 	c:RegisterEffect(e2)
 end
-function c74506079.ffilter(c)
-	return c:IsFusionSetCard(0x3e) and c:IsRace(RACE_REPTILE)
+c74506079.material_setcode=0x3e
+function c74506079.ffilter(c,fc,sumtype,tp)
+	return c:IsFusionSetCard(0x3e) and c:IsRace(RACE_REPTILE,fc,sumtype,tp)
 end
 function c74506079.matcheck(e,c)
 	local ct=c:GetMaterial():GetClassCount(Card.GetCode)

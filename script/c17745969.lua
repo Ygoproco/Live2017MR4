@@ -26,8 +26,9 @@ function c17745969.initial_effect(c)
 	e2:SetOperation(c17745969.mvop)
 	c:RegisterEffect(e2)
 end
-function c17745969.matfilter(c)
-	return c:IsFusionType(TYPE_FUSION) and c:IsFusionSetCard(0x16)
+c17745969.material_setcode=0x16
+function c17745969.matfilter(c,fc,sumtype,tp)
+	return c:IsType(TYPE_FUSION,fc,sumtype,tp) and c:IsFusionSetCard(0x16)
 end
 function c17745969.spfilter1(c,e,tp,loc)
 	return c:IsFaceup() and Duel.IsExistingMatchingCard(c17745969.spfilter2,tp,loc,0,1,nil,e,tp,c:GetAttack())
@@ -71,7 +72,7 @@ end
 function c17745969.mvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsControler(tp) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
+	if tc and tc:IsRelateToEffect(e) and tc:IsControler(tp) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0
 		and tc:IsLocation(LOCATION_HAND) and c:IsFaceup() and c:IsRelateToEffect(e) then
 		local seq=tc:GetPreviousSequence()
 		Duel.MoveSequence(c,seq)

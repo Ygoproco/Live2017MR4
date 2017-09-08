@@ -2,7 +2,7 @@
 function c32752319.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,false,false,7602840,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR))
+	aux.AddFusionProcMix(c,false,false,7602840,aux.FilterBoolFunctionEx(Card.IsRace,RACE_WARRIOR))
 	--atk
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -11,6 +11,7 @@ function c32752319.initial_effect(c)
 	e1:SetOperation(c32752319.atkop)
 	c:RegisterEffect(e1)
 end
+c32752319.material_setcode=0x16
 function c32752319.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end

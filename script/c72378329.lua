@@ -2,15 +2,8 @@
 function c72378329.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,true,true,c72378329.ffilter,aux.FilterBoolFunction(Card.IsRace,RACE_BEAST))
-	aux.AddContactFusion(c,c72378329.contactfil,c72378329.contactop)
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c72378329.splimit)
-	c:RegisterEffect(e1)
+	aux.AddFusionProcMix(c,true,true,c72378329.ffilter,aux.FilterBoolFunctionEx(Card.IsRace,RACE_BEAST))
+	aux.AddContactFusion(c,c72378329.contactfil,c72378329.contactop,c72378329.splimit)
 	--damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DAMAGE)
@@ -28,8 +21,8 @@ function c72378329.initial_effect(c)
 	e4:SetLabelObject(e3)
 	c:RegisterEffect(e4)
 end
-function c72378329.ffilter(c)
-	return c:IsRace(RACE_DRAGON) and c:IsFusionAttribute(ATTRIBUTE_DARK)
+function c72378329.ffilter(c,fc,sumtype,tp)
+	return c:IsRace(RACE_DRAGON,fc,sumtype,tp) and c:IsAttribute(ATTRIBUTE_DARK,fc,sumtype,tp)
 end
 function c72378329.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION

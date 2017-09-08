@@ -33,8 +33,9 @@ function c18967507.initial_effect(c)
 	e3:SetOperation(c18967507.negop)
 	c:RegisterEffect(e3)
 end
-function c18967507.matfilter(c)
-	return c:IsType(TYPE_EFFECT) and c:IsFusionSetCard(0x4093)
+c18967507.material_setcode={0x93,0x4093}
+function c18967507.matfilter(c,fc,sumtype,tp)
+	return c:IsType(TYPE_EFFECT,fc,sumtype,tp) and c:IsFusionSetCard(0x4093)
 end
 function c18967507.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or aux.fuslimit(e,se,sp,st)

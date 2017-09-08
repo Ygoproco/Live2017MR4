@@ -2,7 +2,7 @@
 function c1516510.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,true,true,16178681,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER))
+	aux.AddFusionProcMix(c,true,true,16178681,aux.FilterBoolFunctionEx(Card.IsRace,RACE_SPELLCASTER))
 	--multi attack
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -17,6 +17,7 @@ function c1516510.initial_effect(c)
 	e2:SetLabelObject(e1)
 	c:RegisterEffect(e2)
 end
+c1516510.material_setcode={0x99,0xf2,0x10f2}
 function c1516510.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end

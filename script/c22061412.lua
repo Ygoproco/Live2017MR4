@@ -2,7 +2,7 @@
 function c22061412.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x3008),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_LIGHT))
+	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x3008),aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_LIGHT))
 	--tohand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(22061412,0))
@@ -30,7 +30,7 @@ function c22061412.initial_effect(c)
 	e4:SetValue(aux.fuslimit)
 	c:RegisterEffect(e4)
 end
-c22061412.material_setcode=0x8
+c22061412.material_setcode={0x8,0x3008}
 function c22061412.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x3008)
 end

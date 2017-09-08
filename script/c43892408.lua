@@ -2,7 +2,7 @@
 function c43892408.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,false,false,38033121,aux.FilterBoolFunction(Card.IsRace,RACE_DRAGON))
+	aux.AddFusionProcMix(c,false,false,38033121,aux.FilterBoolFunctionEx(Card.IsRace,RACE_DRAGON))
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -24,6 +24,7 @@ function c43892408.initial_effect(c)
 	e2:SetOperation(c43892408.activate)
 	c:RegisterEffect(e2)
 end
+c43892408.material_setcode={0x10a2,0x20a2}
 function c43892408.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION or se:GetHandler():IsCode(1784686)
 end

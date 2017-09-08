@@ -2,7 +2,7 @@
 function c88305705.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x10f2),aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR))
+	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x10f2),aux.FilterBoolFunctionEx(Card.IsRace,RACE_WARRIOR))
 	--atk
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(88305705,0))
@@ -32,6 +32,7 @@ function c88305705.initial_effect(c)
 	e3:SetOperation(c88305705.rmop)
 	c:RegisterEffect(e3)
 end
+c88305705.material_setcode={0xf2,0x10f2}
 function c88305705.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION
 end

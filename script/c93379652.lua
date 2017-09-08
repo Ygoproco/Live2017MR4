@@ -2,7 +2,7 @@
 function c93379652.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1047),aux.FilterBoolFunction(Card.IsRace,RACE_THUNDER))
+	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1047),aux.FilterBoolFunctionEx(Card.IsRace,RACE_THUNDER))
 	--spsummon condition
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -23,6 +23,7 @@ function c93379652.initial_effect(c)
 	e3:SetOperation(c93379652.operation)
 	c:RegisterEffect(e3)
 end
+c93379652.material_setcode={0x47,0x1047}
 function c93379652.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end

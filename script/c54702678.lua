@@ -34,8 +34,9 @@ function c54702678.initial_effect(c)
 	e4:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
 	c:RegisterEffect(e4)
 end
-function c54702678.ffilter(c)
-	return c:IsFusionSetCard(0x16) and c:IsRace(RACE_MACHINE)
+c54702678.material_setcode=0x16
+function c54702678.ffilter(c,fc,sumtype,tp)
+	return c:IsFusionSetCard(0x16) and c:IsRace(RACE_MACHINE,fc,sumtype,tp)
 end
 function c54702678.discon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttackTarget() and e:GetHandler()==Duel.GetAttacker()
