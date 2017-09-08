@@ -3,7 +3,7 @@ function c80896940.initial_effect(c)
 	c:EnableReviveLimit()
 	--pendulum summon
 	aux.EnablePendulumAttribute(c,false)
-	aux.AddSynchroProcedure(c,nil,1,1,aux.NonTuner(Card.IsType,TYPE_SYNCHRO),1,99,c80896940.matfilter)
+	aux.AddSynchroProcedure(c,nil,1,1,aux.NonTunerEx(Card.IsType,TYPE_SYNCHRO),1,99,c80896940.matfilter)
 	--indes
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -58,8 +58,8 @@ function c80896940.initial_effect(c)
 	e7:SetOperation(c80896940.penop)
 	c:RegisterEffect(e7)
 end
-function c80896940.matfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:GetSummonType()==SUMMON_TYPE_PENDULUM
+function c80896940.matfilter(c,scard,sumtype,tp)
+	return c:IsType(TYPE_PENDULUM,scard,sumtype,tp) and c:IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function c80896940.indcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
@@ -100,7 +100,7 @@ function c80896940.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c80896940.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO and e:GetLabel()==1
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO) and e:GetLabel()==1
 end
 function c80896940.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and chkc:IsAbleToHand() end
@@ -111,13 +111,12 @@ function c80896940.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c80896940.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end
 function c80896940.mfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:GetSummonType()==SUMMON_TYPE_PENDULUM
-		and (c:IsType(TYPE_TUNER) or c:GetFlagEffect(80896940)~=0)
+	return c:IsType(TYPE_PENDULUM) and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsType(TYPE_TUNER)
 end
 function c80896940.valcheck(e,c)
 	local g=c:GetMaterial()
