@@ -1,7 +1,7 @@
 --Raidraptor - Ultimate Falcon
 function c511002079.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WINDBEAST),10,3)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_WINDBEAST),10,3)
 	c:EnableReviveLimit()
 	--negate
 	local e1=Effect.CreateEffect(c)

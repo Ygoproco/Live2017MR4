@@ -28,7 +28,7 @@ function c100000581.filter1(c,e,tp)
 		and Duel.IsExistingMatchingCard(c100000581.filter2,tp,LOCATION_EXTRA,0,1,nil,rk,e,tp,c)
 end
 function c100000581.filter2(c,rk,e,tp,mc)
-	return c:GetRank()==rk+1 and mc:IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:GetRank()==rk+1 and mc:IsCanBeXyzMaterial(c,tp) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c100000581.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1

@@ -1,7 +1,7 @@
 --D/D/D Wave High King Executive Caesar
 function c511009532.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_FIEND),6,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_FIEND),6,2)
 	c:EnableReviveLimit()
 	--disable spsummon
 	local e4=Effect.CreateEffect(c)

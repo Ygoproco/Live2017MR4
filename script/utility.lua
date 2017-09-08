@@ -182,34 +182,49 @@ function Auxiliary.FilterEqualFunction(f,value,a,b,c)
 				return f(target,a,b,c)==value
 			end
 end
+--used for Material Types Filter Bool (works for IsRace, IsAttribute, IsType)
+function Auxiliary.FilterBoolFunctionEx(f,value)
+	return	function(target,scard,sumtype,tp)
+				return f(target,value,scard,sumtype,tp)
+			end
+end
 function Auxiliary.FilterBoolFunction(f,a,b,c)
 	return	function(target)
 				return f(target,a,b,c)
 			end
 end
 Auxiliary.ProcCancellable=false
-function Auxiliary.IsMaterialListCode(c,code)
+function Auxiliary.IsMaterialListCode(c,...)
 	if not c.material then return false end
-	for i,mcode in ipairs(c.material) do
-		if code==mcode then return true end
+	local codes={...}
+	for _,code in ipairs(codes) do
+		for _,mcode in ipairs(c.material) do
+			if code==mcode then return true end
+		end
 	end
 	return false
 end
-function Auxiliary.IsMaterialListSetCard(c,setcode)
+function Auxiliary.IsMaterialListSetCard(c,...)
 	if not c.material_setcode then return false end
-	if type(c.material_setcode)=='table' then
-		for _,v in ipairs(c.material_setcode) do
-			if v==setcode then return true end
+	local setcodes={...}
+	for _,setcode in ipairs(setcodes) do
+		if type(c.material_setcode)=='table' then
+			for _,v in ipairs(c.material_setcode) do
+				if v==setcode then return true end
+			end
+		else
+			if c.material_setcode==setcode then return true end
 		end
-		return false
-	else
-		return c.material_setcode==setcode
 	end
+	return false
 end
-function Auxiliary.IsCodeListed(c,code)
-	if not c.card_code_list then return false end
-	for i,ccode in ipairs(c.card_code_list) do
-		if code==ccode then return true end
+function Auxiliary.IsCodeListed(c,...)
+	if not c.listed_names then return false end
+	local codes={...}
+	for _,code in ipairs(codes) do
+		for _,ccode in ipairs(c.listed_names) do
+			if code==ccode then return true end
+		end
 	end
 	return false
 end

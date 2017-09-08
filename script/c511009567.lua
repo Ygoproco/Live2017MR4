@@ -1,7 +1,7 @@
 --Raidraptor - Final Fortress Falcon
 function c511009567.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WINDBEAST),12,3)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_WINDBEAST),12,3)
 	c:EnableReviveLimit()
 	
 	--atk

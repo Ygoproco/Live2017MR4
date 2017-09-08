@@ -41,8 +41,8 @@ function c10443957.initial_effect(c)
 	e4:SetLabelObject(e3)
 	c:RegisterEffect(e4)
 end
-function c10443957.mfilter(c)
-	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)
+function c10443957.mfilter(c,xyz,sumtype,tp)
+	return c:IsRace(RACE_MACHINE,xyz,sumtype,tp) and c:IsAttribute(ATTRIBUTE_LIGHT,xyz,sumtype,tp)
 end
 function c10443957.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(58069384)
