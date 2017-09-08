@@ -1,7 +1,7 @@
 --CNo.96 ブラック・ストーム
 function c77205367.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),3,4)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),3,4)
 	c:EnableReviveLimit()
 	--addown
 	local e1=Effect.CreateEffect(c)
@@ -43,7 +43,7 @@ function c77205367.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp and c:IsRelateToBattle() and eg:GetFirst()==c:GetBattleTarget()
 end
 function c77205367.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(1-tp,ev,false)
+	Duel.ChangeBattleDamage(1-tp,Duel.GetBattleDamage(tp)+Duel.GetBattleDamage(1-tp),false)
 end
 function c77205367.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,55727845)

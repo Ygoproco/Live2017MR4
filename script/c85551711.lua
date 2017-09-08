@@ -1,7 +1,7 @@
 --虚空の黒魔導師
 function c85551711.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),7,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_SPELLCASTER),7,2)
 	c:EnableReviveLimit()
 	--act qp/trap in hand
 	local e1=Effect.CreateEffect(c)

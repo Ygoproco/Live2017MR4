@@ -1,7 +1,7 @@
 --No.66 覇鍵甲虫マスター・キー・ビートル
 function c76067258.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),4,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_DARK),4,2)
 	c:EnableReviveLimit()
 	--target
 	local e1=Effect.CreateEffect(c)
@@ -69,10 +69,11 @@ function c76067258.repfilter(c,tp)
 	return c:IsControler(tp) and c:GetFlagEffect(76067258)~=0
 end
 function c76067258.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetCardTarget():IsExists(c76067258.repfilter,1,nil,tp) end
-	if Duel.SelectYesNo(tp,aux.Stringid(76067258,1)) then
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:GetCardTarget():IsExists(c76067258.repfilter,1,nil,tp) end
+	if Duel.SelectEffectYesNo(tp,c,96) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local g=e:GetHandler():GetCardTarget():FilterSelect(tp,c76067258.repfilter,1,1,nil,tp)
+		local g=c:GetCardTarget():FilterSelect(tp,c76067258.repfilter,1,1,nil,tp)
 		Duel.SendtoGrave(g,REASON_EFFECT)
 		return true
 	else return false end
