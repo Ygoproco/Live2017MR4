@@ -41,20 +41,16 @@ function c10443957.initial_effect(c)
 	e4:SetLabelObject(e3)
 	c:RegisterEffect(e4)
 end
-function c10443957.mfilter(c)
-	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT)
+function c10443957.mfilter(c,xyz,sumtype,tp)
+	return c:IsRace(RACE_MACHINE,xyz,sumtype,tp) and c:IsAttribute(ATTRIBUTE_LIGHT,xyz,sumtype,tp)
 end
 function c10443957.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(58069384)
 end
 function c10443957.xyzop(e,tp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,10443957)==0 end
-	if chk==1 then
-		return true,false
-	end
-	if chk==2 then
-		Duel.RegisterFlagEffect(tp,10443957,RESET_PHASE+PHASE_END,0,1)
-	end
+	Duel.RegisterFlagEffect(tp,10443957,RESET_PHASE+PHASE_END,0,1)
+	return true
 end
 function c10443957.atkval(e,c)
 	return c:GetOverlayCount()*200
@@ -91,7 +87,7 @@ end
 function c10443957.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end

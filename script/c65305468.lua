@@ -2,7 +2,7 @@
 function c65305468.initial_effect(c)
 	--xyz summon
 	c:EnableReviveLimit()
-	aux.AddXyzProcedure(c,c65305468.xyzfilter,nil,2,nil,nil,nil,nil,false,true)
+	aux.AddXyzProcedure(c,c65305468.xyzfilter,nil,2,nil,nil,nil,nil,false,c65305468.xyzcheck)
 	--indes
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -38,10 +38,12 @@ function c65305468.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 c65305468.xyz_number=0
-function c65305468.xyzfilter(c,chk,tp,sg)
-	if chk then return c:IsHasEffect(511001175) or sg:FilterCount(Card.IsType,c,TYPE_XYZ)==0 
-		or sg:IsExists(aux.FilterEqualFunction(Card.GetRank,c:GetRank()),1,c) end
-	return c:IsType(TYPE_XYZ) and not c:IsSetCard(0x48)
+function c65305468.xyzfilter(c,xyz,sumtype,tp)
+	return c:IsType(TYPE_XYZ,xyz,sumtype,tp) and not c:IsSetCard(0x48)
+end
+function c65305468.xyzcheck(g,tp,xyz)
+	local mg=g:Filter(function(c) return not c:IsHasEffect(511001175) end,nil)
+	return mg:GetClassCount(Card.GetRank)==1
 end
 function c65305468.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetHandler():GetBattleTarget()
@@ -56,7 +58,8 @@ function c65305468.ctop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c65305468.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsReason(REASON_EFFECT) and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT) 
+		and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
 	if Duel.SelectEffectYesNo(tp,c,96) then
 		c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 		return true

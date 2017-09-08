@@ -1,7 +1,7 @@
 --FA－ブラック・レイ・ランサー
 function c25853045.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),4,3,c25853045.ovfilter,aux.Stringid(25853045,0))
+	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_WATER),4,3,c25853045.ovfilter,aux.Stringid(25853045,0))
 	c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)
@@ -31,16 +31,17 @@ function c25853045.initial_effect(c)
 	e3:SetOperation(c25853045.desop)
 	c:RegisterEffect(e3)
 end
-function c25853045.ovfilter(c)
-	return c:IsFaceup() and c:GetRank()==3 and c:IsAttribute(ATTRIBUTE_WATER) and c:GetOverlayCount()==0
+function c25853045.ovfilter(c,tp,xyzc)
+	return c:IsFaceup() and c:GetRank()==3 and c:IsAttribute(ATTRIBUTE_WATER,xyzc,SUMMON_TYPE_XYZ,tp) and c:GetOverlayCount()==0
 end
 function c25853045.atkval(e,c)
 	return c:GetOverlayCount()*200
 end
 function c25853045.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
-	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
-		local g=e:GetHandler():GetOverlayGroup()
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
+	if Duel.SelectEffectYesNo(tp,c,96) then
+		local g=c:GetOverlayGroup()
 		Duel.SendtoGrave(g,REASON_EFFECT)
 		return true
 	else return false end
@@ -57,7 +58,7 @@ function c25853045.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c25853045.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
