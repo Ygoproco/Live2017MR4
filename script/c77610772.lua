@@ -1,6 +1,7 @@
 --星杯神楽イヴ
 function c77610772.initial_effect(c)
-	aux.AddLinkProcedure(c,c77610772.filter,2,nil,true)
+	c:EnableReviveLimit()
+	aux.AddLinkProcedure(c,nil,2,nil,c77610772.spcheck)
 	--indes
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -38,24 +39,19 @@ function c77610772.initial_effect(c)
 	e5:SetOperation(c77610772.spop2)
 	c:RegisterEffect(e5)
 end
-function c77610772.filter(c,chk,tp,sg)
-	if chk then return not sg:IsExists(c77610772.filter2,1,c,c:GetRace(),c:GetAttribute()) end
-	return true
-end
-function c77610772.filter2(c,rc,att)
-	return c:IsRace(rc) or c:IsAttribute(att)
+function c77610772.spcheck(g,lc,tp)
+	return g:GetClassCount(Card.GetRace,lc,SUMMON_TYPE_LINK,tp)>1 and g:GetClassCount(Card.GetAttribute,lc,SUMMON_TYPE_LINK,tp)>1
 end
 function c77610772.incon(e)
-	local c=e:GetHandler()
-	return c:IsLinkState()
+	return e:GetHandler():IsLinkState()
 end
 function c77610772.repfilter(c,tp,hc)
-	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
+	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and not c:IsReason(REASON_REPLACE) 
 		and c:IsControler(tp) and c:IsReason(REASON_EFFECT) and hc:GetLinkedGroup():IsContains(c)
 end
 function c77610772.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGrave() and eg:IsExists(c77610772.repfilter,1,nil,tp,e:GetHandler()) end
-	return Duel.SelectYesNo(tp,aux.Stringid(77610772,0))
+	return Duel.SelectEffectYesNo(tp,e:GetHandler(),96)
 end
 function c77610772.repval(e,c)
 	return c77610772.repfilter(c,e:GetHandlerPlayer(),e:GetHandler())
