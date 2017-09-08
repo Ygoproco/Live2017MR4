@@ -219,10 +219,10 @@ function Auxiliary.IsMaterialListSetCard(c,...)
 	return false
 end
 function Auxiliary.IsCodeListed(c,...)
-	if not c.listed_names then return false end
+	if not c.card_code_list then return false end
 	local codes={...}
 	for _,code in ipairs(codes) do
-		for _,ccode in ipairs(c.listed_names) do
+		for _,ccode in ipairs(c.card_code_list) do
 			if code==ccode then return true end
 		end
 	end
