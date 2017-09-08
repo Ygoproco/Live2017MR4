@@ -3,33 +3,32 @@ aux=Auxiliary
 POS_FACEUP_DEFENCE=POS_FACEUP_DEFENSE
 POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
 
---to be removed once updated in core
-local rmf=Card.IsAbleToRemove
-Card.IsAbleToRemove=function(c,player,pos)
-	if not rmf(c,player) then return false end
-	return not pos or not c:IsType(TYPE_TOKEN) or bit.band(pos,POS_FACEDOWN)<=0
+function Auxiliary.ExtraLinked(c,emc,card,eg)
+	eg:AddCard(c)
+	local res
+	if c==emc then
+		res=eg:IsContains(card)
+	else
+		local g=c:GetMutualLinkedGroup()
+		res=g and g:IsExists(Auxiliary.ExtraLinked,1,eg,emc,card,eg)
+	end
+	eg:RemoveCard(c)
+	return res
 end
-local rmfc=Card.IsAbleToRemoveAsCost
-Card.IsAbleToRemoveAsCost=function(c,pos)
-	if not rmfc(c) then return false end
-	return not pos or not c:IsType(TYPE_TOKEN) or bit.band(pos,POS_FACEDOWN)<=0
-end
-Card.EnableCounterPermit=function(c,countertype,location)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_COUNTER_PERMIT+countertype)
-	e1:SetProperty(EFFECT_FLAG_IGNORE_RANGE)
-	e1:SetCondition(function(e)
-		local self=e:GetHandler()
-		if self:IsOnField() then
-			if not location or tempchk then return true end
-			local fz=bit.band(location,LOCATION_FZONE)
-			local loc=bit.band(location,LOCATION_ONFIELD+LOCATION_PZONE)
-			return self:IsLocation(loc) or (fz>0 and self:IsLocation(LOCATION_SZONE) and self:GetSequence()==5)
-		end
-		return true
-	end)
-	c:RegisterEffect(e1)
+function Card.IsExtraLinked(c)
+	local card50=Duel.GetFieldCard(0,LOCATION_MZONE,5)
+	local card60=Duel.GetFieldCard(0,LOCATION_MZONE,6)
+	if card50 and card60 then
+		local mg=card50:GetMutualLinkedGroup()
+		return mg and mg:IsExists(Auxiliary.ExtraLinked,1,nil,card60,c,Group.FromCards(card50))
+	end
+	local card51=Duel.GetFieldCard(1,LOCATION_MZONE,5)
+	local card61=Duel.GetFieldCard(1,LOCATION_MZONE,6)
+	if card51 and card61 then
+		local mg=card51:GetMutualLinkedGroup()
+		return mg and mg:IsExists(Auxiliary.ExtraLinked,1,nil,card61,c,Group.FromCards(card51))
+	end
+	return false
 end
 
 
@@ -183,26 +182,49 @@ function Auxiliary.FilterEqualFunction(f,value,a,b,c)
 				return f(target,a,b,c)==value
 			end
 end
+--used for Material Types Filter Bool (works for IsRace, IsAttribute, IsType)
+function Auxiliary.FilterBoolFunctionEx(f,value)
+	return	function(target,scard,sumtype,tp)
+				return f(target,value,scard,sumtype,tp)
+			end
+end
 function Auxiliary.FilterBoolFunction(f,a,b,c)
 	return	function(target)
 				return f(target,a,b,c)
 			end
 end
 Auxiliary.ProcCancellable=false
-function Auxiliary.IsMaterialListCode(c,code)
+function Auxiliary.IsMaterialListCode(c,...)
 	if not c.material then return false end
-	for i,mcode in ipairs(c.material) do
-		if code==mcode then return true end
+	local codes={...}
+	for _,code in ipairs(codes) do
+		for _,mcode in ipairs(c.material) do
+			if code==mcode then return true end
+		end
 	end
 	return false
 end
-function Auxiliary.IsMaterialListSetCard(c,setcode)
-	return c.material_setcode and c.material_setcode==setcode
+function Auxiliary.IsMaterialListSetCard(c,...)
+	if not c.material_setcode then return false end
+	local setcodes={...}
+	for _,setcode in ipairs(setcodes) do
+		if type(c.material_setcode)=='table' then
+			for _,v in ipairs(c.material_setcode) do
+				if v==setcode then return true end
+			end
+		else
+			if c.material_setcode==setcode then return true end
+		end
+	end
+	return false
 end
-function Auxiliary.IsCodeListed(c,code)
-	if not c.card_code_list then return false end
-	for i,ccode in ipairs(c.card_code_list) do
-		if code==ccode then return true end
+function Auxiliary.IsCodeListed(c,...)
+	if not c.listed_names then return false end
+	local codes={...}
+	for _,code in ipairs(codes) do
+		for _,ccode in ipairs(c.listed_names) do
+			if code==ccode then return true end
+		end
 	end
 	return false
 end
@@ -584,16 +606,11 @@ end
 --dofile("expansions/live2017/script/proc_pendulum.lua")
 --dofile("expansions/live2017/script/proc_link.lua")
 
-function loadutility(file)
-	if(loadfile("expansions/live2017mr4/script/"..file) == nil) then
-		dofile("script/"..file)
-	end
-end
-loadutility("proc_fusion.lua")
-loadutility("proc_ritual.lua")
-loadutility("proc_synchro.lua")
-loadutility("proc_union.lua")
-loadutility("proc_xyz.lua")
-loadutility("proc_pendulum.lua")
-loadutility("proc_link.lua")
+dofile("script/proc_fusion.lua")
+dofile("script/proc_ritual.lua")
+dofile("script/proc_synchro.lua")
+dofile("script/proc_union.lua")
+dofile("script/proc_xyz.lua")
+dofile("script/proc_pendulum.lua")
+dofile("script/proc_link.lua")
 pcall(dofile,"init.lua")
