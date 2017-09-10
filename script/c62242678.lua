@@ -41,7 +41,7 @@ function c62242678.initial_effect(c)
 	e5:SetCode(21142671)
 	c:RegisterEffect(e5)
 end
-function c62242678.matfilter(c,scard,sumtype,tp)
+function c62242678.matfilter(c,val,scard,sumtype,tp)
 	return c:IsRace(RACE_DRAGON,scard,sumtype,tp) and c:IsAttribute(ATTRIBUTE_DARK,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
 end
 function c62242678.limcon(e,tp,eg,ep,ev,re,r,rp)
