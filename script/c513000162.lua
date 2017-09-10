@@ -93,8 +93,8 @@ function c513000162.spop(e,tp,c)
 			e1:SetCondition(c513000162.spcon1)
 			e1:SetLabel(0)
 			e1:SetOperation(c513000162.spop2)
-			rc:RegisterEffect(e1)		
-			rc:RegisterFlagEffect(513000162,RESET_EVENT+0x1fe0000,0,1)  
+			rc:RegisterEffect(e1)
+			rc:RegisterFlagEffect(513000162,RESET_EVENT+0x1fe0000,0,1)
 		end
 		rc=g:GetNext()
 	end
@@ -107,13 +107,13 @@ function c513000162.spop2(e,tp,c)
 	if c:GetControler()~=Duel.GetTurnPlayer() then return end
 	local ct=e:GetLabel()
 	if c:GetFlagEffect(513000162)~=0 and ct==8 then 
-		c:RegisterFlagEffect(100000111,RESET_EVENT+0x1fe0000,0,1)   
+		c:RegisterFlagEffect(100000111,RESET_EVENT+0x1fe0000,0,1) 
 	else	
 		e:SetLabel(ct+1)
 	end
 end
 function c513000162.filter(c)
-	return  c:IsFaceup() and c:GetLevel()==1 and c:IsType(TYPE_NORMAL) and c:GetFlagEffect(100000111)~=0
+	return c:IsFaceup() and c:GetLevel()==1 and c:IsType(TYPE_NORMAL) and c:GetFlagEffect(100000111)~=0
 end
 function c513000162.spcon3(e,c)
 	local c=e:GetHandler()
