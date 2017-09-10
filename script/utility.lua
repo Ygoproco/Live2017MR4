@@ -601,7 +601,7 @@ function loadutility(file)
 	local f2 = loadfile("expansions/script/"..file)
 	if(f1 == nil and f2== nil) then
 		dofile("script/"..file)
-	if(f1 == nil) then
+	elseif(f1 == nil) then
 		f2()
 	else
 		f1()
