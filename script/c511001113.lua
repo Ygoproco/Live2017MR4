@@ -19,7 +19,7 @@ function c511001113.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511001113.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 end
+	if chk==0 then return Duel.GetCurrentPhase()~=PHASE_MAIN2 end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_CANNOT_BP)
@@ -39,7 +39,7 @@ function c511001113.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabelObject(g1:GetFirst())
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,2,0,0)
 end
 function c511001113.desop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end

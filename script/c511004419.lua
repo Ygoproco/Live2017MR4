@@ -2,9 +2,8 @@
 --fixed by MLD
 function c511004419.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCategory(CATEGORY_DAMAGE)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCost(aux.bfgcost)
@@ -22,13 +21,13 @@ function c511004419.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
-function c511004419.gop(e,tp,eg,ev,ep,re,r,rp)
-	Duel.RegisterFlagEffect(ep,511004419,RESET_PHASE+PHASE_BATTLE,0,1)
+function c511004419.gop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.RegisterFlagEffect(ep,511004419,RESET_PHASE+PHASE_END,0,1)
 end
-function c511004419.condition(e,tp,eg,ev,ep,re,r,rp)
+function c511004419.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE and Duel.GetTurnPlayer()==tp
 end
-function c511004419.target(e,tp,eg,ev,ep,re,r,rp,chk)
+function c511004419.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,511004419)~=0 or Duel.GetFlagEffect(1-tp,511004419)~=0 end
 	local dep=nil
 	if Duel.GetFlagEffect(tp,511004419)~=0 and Duel.GetFlagEffect(1-tp,511004419)~=0 then
