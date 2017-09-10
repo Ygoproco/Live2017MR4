@@ -34,10 +34,12 @@ function c16719140.rfilter(c)
 	return c:GetOriginalLevel()>0
 end
 function c16719140.costfilter(c,e,tp,mg,rlv)
+	if c:GetLevel()==0 then return false end
 	local lv=c:GetLevel()-rlv
-	return lv>0 and c:IsSetCard(0xed) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
-		and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE))
-		and mg:CheckWithSumGreater(Card.GetOriginalLevel,lv)
+	if c:IsSetCard(0xed) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+		and (c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN)) then
+		return (lv<0 and mg:GetCount()>0) or mg:CheckWithSumGreater(Card.GetOriginalLevel,lv)
+	else return false end
 end
 function c16719140.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -70,7 +72,13 @@ function c16719140.spop1(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) then spos=spos+POS_FACEUP_DEFENSE end
 	if tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) then spos=spos+POS_FACEDOWN_DEFENSE end
 	if spos~=0 then
-		local g=mg:SelectWithSumGreater(tp,Card.GetOriginalLevel,tc:GetLevel()-c:GetOriginalLevel())
+		local lv=tc:GetLevel()-c:GetOriginalLevel()
+		local g=Group.CreateGroup()
+		if lv<0 then
+			g=mg:Select(tp,1,1,nil)
+		else
+			g=mg:SelectWithSumGreater(tp,Card.GetOriginalLevel,lv)
+		end
 		g:AddCard(c)
 		if g:GetCount()>=2 and Duel.Release(g,REASON_EFFECT)~=0 then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,spos)
