@@ -597,11 +597,14 @@ function Auxiliary.ResetEffects(g,eff)
 end
 
 function loadutility(file)
-	local f = loadfile("expansions/live2017mr4/script/"..file)
-	if(f == nil) then
+	local f1 = loadfile("expansions/live2017mr4/script/"..file)
+	local f2 = loadfile("expansions/script/"..file)
+	if(f1 == nil and f2== nil) then
 		dofile("script/"..file)
+	if(f1 == nil) then
+		f2()
 	else
-		f()
+		f1()
 	end
 end
 loadutility("proc_fusion.lua")
