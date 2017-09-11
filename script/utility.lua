@@ -172,9 +172,16 @@ function Auxiliary.TargetEqualFunction(f,value,a,b,c)
 				return f(target,a,b,c)==value
 			end
 end
+--provisory adjust
 function Auxiliary.TargetBoolFunction(f,a,b,c)
 	return	function(effect,target)
-				return f(target,a,b,c)
+				if b and c then
+					return f(target,a,b,c)
+				elseif b then
+					return f(target,a,b)
+				else
+					return f(target,a)
+				end
 			end
 end
 function Auxiliary.FilterEqualFunction(f,value,a,b,c)
