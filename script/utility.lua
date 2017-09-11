@@ -2,6 +2,7 @@ Auxiliary={}
 aux=Auxiliary
 POS_FACEUP_DEFENCE=POS_FACEUP_DEFENSE
 POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
+RACE_CYBERS=RACE_CYBERSE
 
 function Auxiliary.ExtraLinked(c,emc,card,eg)
 	eg:AddCard(c)
@@ -30,7 +31,30 @@ function Card.IsExtraLinked(c)
 	end
 	return false
 end
-
+--for additional registers
+local regeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,forced,...)
+	--1 == 511002571 - access to effects that activate that detach an Xyz Material as cost
+	regeff(c,e,forced)
+	local reg={...}
+	local resetflag,resetcount=e:GetReset()
+	for _,val in ipairs(reg) do
+		if val==1 then
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+			e2:SetCode(511002571)
+			e2:SetLabelObject(e)
+			e2:SetLabel(c:GetOriginalCode())
+			if resetflag and resetcount then
+				e2:SetReset(resetflag,resetcount)
+			elseif resetflag then
+				e2:SetReset(resetflag)
+			end
+			c:RegisterEffect(e2)
+		end
+	end
+end
 
 function Auxiliary.Stringid(code,id)
 	return code*16+id
@@ -172,9 +196,16 @@ function Auxiliary.TargetEqualFunction(f,value,a,b,c)
 				return f(target,a,b,c)==value
 			end
 end
+--provisory adjust
 function Auxiliary.TargetBoolFunction(f,a,b,c)
 	return	function(effect,target)
-				return f(target,a,b,c)
+				if b and c then
+					return f(target,a,b,c)
+				elseif b then
+					return f(target,a,b)
+				else
+					return f(target,a)
+				end
 			end
 end
 function Auxiliary.FilterEqualFunction(f,value,a,b,c)
@@ -188,9 +219,16 @@ function Auxiliary.FilterBoolFunctionEx(f,value)
 				return f(target,value,scard,sumtype,tp)
 			end
 end
+--provisory fix (same reason as above)
 function Auxiliary.FilterBoolFunction(f,a,b,c)
 	return	function(target)
-				return f(target,a,b,c)
+				if b and c then
+					return f(target,a,b,c)
+				elseif b then
+					return f(target,a,b)
+				else
+					return f(target,a)
+				end
 			end
 end
 Auxiliary.ProcCancellable=false
@@ -597,11 +635,14 @@ function Auxiliary.ResetEffects(g,eff)
 end
 
 function loadutility(file)
-	local f = loadfile("expansions/live2017mr4/script/"..file)
-	if(f == nil) then
+	local f1 = loadfile("expansions/live2017mr4/script/"..file)
+	local f2 = loadfile("expansions/script/"..file)
+	if(f1 == nil and f2== nil) then
 		dofile("script/"..file)
+	elseif(f1 == nil) then
+		f2()
 	else
-		f()
+		f1()
 	end
 end
 loadutility("proc_fusion.lua")
