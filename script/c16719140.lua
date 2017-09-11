@@ -1,4 +1,4 @@
---Subterror Nemesis Warrior
+--サブテラーの戦士
 function c16719140.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
