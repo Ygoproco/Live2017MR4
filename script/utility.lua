@@ -195,9 +195,16 @@ function Auxiliary.FilterBoolFunctionEx(f,value)
 				return f(target,value,scard,sumtype,tp)
 			end
 end
+--provisory fix (same reason as above)
 function Auxiliary.FilterBoolFunction(f,a,b,c)
 	return	function(target)
-				return f(target,a,b,c)
+				if b and c then
+					return f(target,a,b,c)
+				elseif b then
+					return f(target,a,b)
+				else
+					return f(target,a)
+				end
 			end
 end
 Auxiliary.ProcCancellable=false
