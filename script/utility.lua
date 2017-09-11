@@ -196,7 +196,6 @@ function Auxiliary.TargetEqualFunction(f,value,a,b,c)
 				return f(target,a,b,c)==value
 			end
 end
---provisory adjust
 function Auxiliary.TargetBoolFunction(f,a,b,c)
 	return	function(effect,target)
 				return f(target,a,b,c)
