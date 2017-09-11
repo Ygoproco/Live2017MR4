@@ -35,7 +35,7 @@ function c33964637.initial_effect(c)
 end
 c33964637.material_setcode=0x3d
 function c33964637.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:IsFusionSetCard(0x3d) and c:GetAttribute(fc,sumtype,tp)~=0 and (not sg or not sg:IsExists(c33964637.fusfilter,1,c,c:GetFusionAttribute(fc,sumtype,tp),fc,sumtype,tp))
+	return c:IsFusionSetCard(0x3d) and c:GetAttribute(fc,sumtype,tp)~=0 and (not sg or not sg:IsExists(c33964637.fusfilter,1,c,c:GetAttribute(fc,sumtype,tp),fc,sumtype,tp))
 end
 function c33964637.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD,0,nil)
