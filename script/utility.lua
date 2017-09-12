@@ -197,9 +197,16 @@ function Auxiliary.TargetEqualFunction(f,value,a,b,c)
 			end
 end
 function Auxiliary.TargetBoolFunction(f,a,b,c)
-	return	function(effect,target)
-				return f(target,a,b,c)
-			end
+	local tbf=function(effect,target)
+			return f(target,a,b,c)
+		end
+	local his=debug.traceback()
+	if f==nil then
+		Debug.Message(his)
+		return function () end
+	else
+		return tbf
+	end
 end
 function Auxiliary.FilterEqualFunction(f,value,a,b,c)
 	return	function(target)
