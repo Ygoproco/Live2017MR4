@@ -22,7 +22,7 @@ function c511002090.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(c511002090.lpcost)
 	e2:SetOperation(c511002090.lpop)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e2,false,1)
 	--lp - 0 materials
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(52090844,0))
@@ -55,13 +55,6 @@ function c511002090.initial_effect(c)
 	e6:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e6:SetValue(c511002090.indes)
 	c:RegisterEffect(e6)
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_SINGLE)
-	e7:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e7:SetCode(511002571)
-	e7:SetLabelObject(e2)
-	e7:SetLabel(c:GetOriginalCode())
-	c:RegisterEffect(e7)
 	if not c511002090.global_check then
 		c511002090.global_check=true
 		c511002090[0]=0

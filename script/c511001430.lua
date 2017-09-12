@@ -20,7 +20,7 @@ function c511001430.initial_effect(c)
 	e2:SetCondition(c511001430.damcon)
 	e2:SetTarget(c511001430.damtg)
 	e2:SetOperation(c511001430.damop)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e2,false,1)
 	--spsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(511001430,1))
@@ -39,13 +39,6 @@ function c511001430.initial_effect(c)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e4:SetValue(c511001430.indes)
 	c:RegisterEffect(e4)
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e5:SetCode(511002571)
-	e5:SetLabel(c:GetOriginalCode())
-	e5:SetLabelObject(e2)
-	c:RegisterEffect(e5)
 	if not c511001430.global_check then
 		c511001430.global_check=true
 		--register
