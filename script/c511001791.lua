@@ -38,7 +38,7 @@ function c511001791.initial_effect(c)
 	e4:SetCost(c511001791.atkcost)
 	e4:SetTarget(c511001791.atktg)
 	e4:SetOperation(c511001791.atkop)
-	c:RegisterEffect(e4)
+	c:RegisterEffect(e4,false,1)
 	--To Pendulum
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(35952884,1))
@@ -55,13 +55,6 @@ function c511001791.initial_effect(c)
 	local e7=e5:Clone()
 	e7:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e7)
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_SINGLE)
-	e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e8:SetLabel(c:GetOriginalCode())
-	e8:SetCode(511002571)
-	e8:SetLabelObject(e4)
-	c:RegisterEffect(e8)
 	if not c511001791.global_check then
 		c511001791.global_check=true
 		c511001791[0]=0
