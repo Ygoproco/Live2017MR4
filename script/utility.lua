@@ -196,17 +196,17 @@ function Auxiliary.TargetEqualFunction(f,value,a,b,c)
 				return f(target,a,b,c)==value
 			end
 end
---provisory adjust
 function Auxiliary.TargetBoolFunction(f,a,b,c)
-	return	function(effect,target)
-				if b and c then
-					return f(target,a,b,c)
-				elseif b then
-					return f(target,a,b)
-				else
-					return f(target,a)
-				end
-			end
+	local tbf=function(effect,target)
+			return f(target,a,b,c)
+		end
+	local his=debug.traceback()
+	if f==nil then
+		Debug.Message(his)
+		return function () end
+	else
+		return tbf
+	end
 end
 function Auxiliary.FilterEqualFunction(f,value,a,b,c)
 	return	function(target)
@@ -219,16 +219,9 @@ function Auxiliary.FilterBoolFunctionEx(f,value)
 				return f(target,value,scard,sumtype,tp)
 			end
 end
---provisory fix (same reason as above)
 function Auxiliary.FilterBoolFunction(f,a,b,c)
 	return	function(target)
-				if b and c then
-					return f(target,a,b,c)
-				elseif b then
-					return f(target,a,b)
-				else
-					return f(target,a)
-				end
+				return f(target,a,b,c)
 			end
 end
 Auxiliary.ProcCancellable=false
