@@ -2,6 +2,7 @@ Auxiliary={}
 aux=Auxiliary
 POS_FACEUP_DEFENCE=POS_FACEUP_DEFENSE
 POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
+RACE_CYBERS=RACE_CYBERSE
 
 function Auxiliary.ExtraLinked(c,emc,card,eg)
 	eg:AddCard(c)
@@ -30,7 +31,30 @@ function Card.IsExtraLinked(c)
 	end
 	return false
 end
-
+--for additional registers
+local regeff=Card.RegisterEffect
+function Card.RegisterEffect(c,e,forced,...)
+	--1 == 511002571 - access to effects that activate that detach an Xyz Material as cost
+	regeff(c,e,forced)
+	local reg={...}
+	local resetflag,resetcount=e:GetReset()
+	for _,val in ipairs(reg) do
+		if val==1 then
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+			e2:SetCode(511002571)
+			e2:SetLabelObject(e)
+			e2:SetLabel(c:GetOriginalCode())
+			if resetflag and resetcount then
+				e2:SetReset(resetflag,resetcount)
+			elseif resetflag then
+				e2:SetReset(resetflag)
+			end
+			c:RegisterEffect(e2)
+		end
+	end
+end
 
 function Auxiliary.Stringid(code,id)
 	return code*16+id
@@ -373,6 +397,23 @@ function Auxiliary.evospcon(e,tp,eg,ep,ev,re,r,rp)
 	return st>=(SUMMON_TYPE_SPECIAL+150) and st<(SUMMON_TYPE_SPECIAL+180)
 end
 
+--check for Spirit Elimination
+function Auxiliary.SpElimFilter(c,mustbefaceup,includemzone)
+	--includemzone - contains MZONE in original requirement
+	--NOTE: Should only check LOCATION_MZONE+LOCATION_GRAVE
+	if c:IsType(TYPE_MONSTER) then
+		if mustbefaceup and c:IsFacedown() then return false end
+		if includemzone then return c:IsLocation(LOCATION_MZONE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) end
+		if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
+			return c:IsLocation(LOCATION_MZONE)
+		else
+			return c:IsLocation(LOCATION_GRAVE)
+		end
+	else
+		return c:IsLocation(LOCATION_GRAVE)
+	end
+end
+
 --add procedure to equip spells equipping by rule
 function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con)
 	--Note: p==0 is check equip spell controler, p==1 for opponent's, PLAYER_ALL for both player's monsters
@@ -597,11 +638,14 @@ function Auxiliary.ResetEffects(g,eff)
 end
 
 function loadutility(file)
-	local f = loadfile("expansions/live2017mr4/script/"..file)
-	if(f == nil) then
+	local f1 = loadfile("expansions/live2017mr4/script/"..file)
+	local f2 = loadfile("expansions/script/"..file)
+	if(f1 == nil and f2== nil) then
 		dofile("script/"..file)
+	elseif(f1 == nil) then
+		f2()
 	else
-		f()
+		f1()
 	end
 end
 loadutility("proc_fusion.lua")
