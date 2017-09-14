@@ -57,7 +57,7 @@ function c66500065.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return ph==PHASE_MAIN1 or (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE) or ph==PHASE_MAIN2
 end
 function c66500065.mfilter(c)
-	return c:IsSetCard(0x9e)
+	return c:IsFaceup() and c:IsSetCard(0x9e)
 end
 function c66500065.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
