@@ -64,7 +64,7 @@ function c85704698.cfilter(c,syn)
 	return syn:IsSynchroSummonable(c)
 end
 function c85704698.spfilter(c,mg)
-	return c:IsAttribute(ATTRIBUTE_WIND) and mg:IsExists(c85704698.cfilter,1,nil,c)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND) and mg:IsExists(c85704698.cfilter,1,nil,c)
 end
 function c85704698.syntg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

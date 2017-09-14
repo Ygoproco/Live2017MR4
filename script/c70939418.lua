@@ -55,10 +55,13 @@ end
 function c70939418.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(70939418)~=0
 end
+function c70939418.mfilter(c)
+	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_WIND)
+end
 function c70939418.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local c=e:GetHandler()
-		local mg=Duel.GetMatchingGroup(Card.IsAttribute,tp,LOCATION_MZONE,0,nil,ATTRIBUTE_WIND)
+		local mg=Duel.GetMatchingGroup(c70939418.mfilter,tp,LOCATION_MZONE,0,nil)
 		return not c:IsStatus(STATUS_CHAINING)
 			and Duel.IsExistingMatchingCard(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,1,nil,c,mg)
 	end
@@ -67,7 +70,7 @@ end
 function c70939418.scop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:GetControler()~=tp or not c:IsRelateToEffect(e) then return end
-	local mg=Duel.GetMatchingGroup(Card.IsAttribute,tp,LOCATION_MZONE,0,nil,ATTRIBUTE_WIND)
+	local mg=Duel.GetMatchingGroup(c70939418.mfilter,tp,LOCATION_MZONE,0,nil)
 	local g=Duel.GetMatchingGroup(Card.IsSynchroSummonable,tp,LOCATION_EXTRA,0,nil,c,mg)
 	if g:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
