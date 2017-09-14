@@ -1,5 +1,5 @@
---通行税
-function c82003859.initial_effect(c)
+--墓守の使い魔
+function c16762927.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -11,26 +11,26 @@ function c82003859.initial_effect(c)
 	e2:SetCode(EFFECT_ATTACK_COST)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetTargetRange(1,1)
-	e2:SetCost(c82003859.atcost)
-	e2:SetOperation(c82003859.atop)
+	e2:SetTargetRange(0,1)
+	e2:SetCost(c16762927.atcost)
+	e2:SetOperation(c16762927.atop)
 	c:RegisterEffect(e2)
 	--accumulate
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(0x10000000+82003859)
+	e3:SetCode(0x10000000+16762927)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetTargetRange(1,1)
+	e3:SetTargetRange(0,1)
 	c:RegisterEffect(e3)
 end
-function c82003859.atcost(e,c,tp)
-	local ct=Duel.GetFlagEffect(tp,82003859)
-	return Duel.CheckLPCost(tp,ct*500)
+function c16762927.atcost(e,c,tp)
+	local ct=Duel.GetFlagEffect(tp,16762927)
+	return Duel.IsPlayerCanDiscardDeckAsCost(tp,ct)
 end
-function c82003859.atop(e,tp,eg,ep,ev,re,r,rp)
+function c16762927.atop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsAttackCostPaid()~=2 then
-		Duel.PayLPCost(tp,500)
+		Duel.DiscardDeck(tp,1,REASON_COST)
 		Duel.AttackCostPaid()
 	end
 end
