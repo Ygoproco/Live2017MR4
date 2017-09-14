@@ -43,7 +43,7 @@ function c101003046.atkfilter(c)
 end
 function c101003046.atkval(e,c)
 	local lg=c:GetLinkedGroup():Filter(c101003046.atkfilter,nil)
-	return g:GetSum(Card.GetBaseAttack)
+	return lg:GetSum(Card.GetBaseAttack)
 end
 function c101003046.discon(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
