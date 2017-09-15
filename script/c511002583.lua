@@ -14,13 +14,8 @@ function c511002583.filter(c,e,tp)
 	return c:IsRace(RACE_ROCK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002583.cfilter(c,e,tp)
-	if not c:IsRace(RACE_ROCK) or not c:IsType(TYPE_XYZ) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingMatchingCard(c511002583.filter,tp,LOCATION_GRAVE,0,2,c,e,tp) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_ROCK) and c:IsType(TYPE_XYZ) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingMatchingCard(c511002583.filter,tp,LOCATION_GRAVE,0,2,c,e,tp)
 end
 function c511002583.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511002583.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,e,tp) end
@@ -33,7 +28,7 @@ function c511002583.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_GRAVE)
 end
 function c511002583.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	local g=Duel.GetMatchingGroup(c511002583.filter,tp,LOCATION_GRAVE,0,nil,e,tp)
 	if g:GetCount()>=2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

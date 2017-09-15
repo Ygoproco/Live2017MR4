@@ -18,12 +18,7 @@ function c511001279.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511001279.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c511001279.filter(c)
-	if not c:IsCode(72413000) or not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and c:IsFaceup()
-	end
+	return c:IsCode(72413000) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c511001279.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c511001279.filter(chkc) end

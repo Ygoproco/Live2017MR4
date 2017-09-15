@@ -30,7 +30,6 @@ end
 function c511600003.cfilter(c)
 	return c:IsFaceup() and c:GetLevel()>0
 end
-
 function c511600003.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
@@ -55,12 +54,7 @@ function c511600003.condition(e,tp,eg,ep,ev,re,r,rp)
 	return c511600003[0] and c511600003[1]
 end
 function c511600003.filter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
 function c511600003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511600003.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil) end

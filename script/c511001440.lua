@@ -21,13 +21,8 @@ function c511001440.con(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001440.cfilter(c,e,tp,clv)
 	local lv=c:GetLevel()
-	if not c:IsAbleToRemoveAsCost() or lv<=0 or not c:IsType(TYPE_TUNER) or Duel.GetLocationCountFromEx(tp,tp,c)<=0
-		or not Duel.IsExistingMatchingCard(c511001440.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv+clv) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAbleToRemoveAsCost() and lv>0 and c:IsType(TYPE_TUNER) and Duel.GetLocationCountFromEx(tp,tp,c)>0 and aux.SpElimFilter(c,true)
+		and Duel.IsExistingMatchingCard(c511001440.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,lv+clv)
 end
 function c511001440.spfilter(c,e,tp,lv)
 	return c:IsType(TYPE_SYNCHRO) and c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)

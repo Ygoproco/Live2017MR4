@@ -44,13 +44,8 @@ function c511002707.refcon(e,re,val,r,rp,rc)
 	return bit.band(r,REASON_EFFECT)~=0 and rp~=e:GetHandler():GetControler() and e:GetHandler():IsAttackPos()
 end
 function c511002707.filter(c,fusc)
-	if bit.band(c:GetReason(),0x40008)~=0x40008 or c:GetReasonCard()~=fusc or not c:IsType(TYPE_SYNCHRO) 
-		or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return bit.band(c:GetReason(),0x40008)==0x40008 and c:GetReasonCard()==fusc and c:IsType(TYPE_SYNCHRO) 
+		and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c511002707.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and c511002707.filter(chkc,e:GetHandler()) end

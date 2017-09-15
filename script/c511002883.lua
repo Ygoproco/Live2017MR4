@@ -17,7 +17,7 @@ function c511002883.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCost(c511002883.indcost)
+	e2:SetCost(aux.bfgcost)
 	e2:SetTarget(c511002883.indtg)
 	e2:SetOperation(c511002883.indop)
 	c:RegisterEffect(e2)
@@ -40,11 +40,6 @@ function c511002883.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
-end
-function c511002883.indcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511002883.indfilter(c)
 	return c:IsFaceup() and c:IsCode(44508094)

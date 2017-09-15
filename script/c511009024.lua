@@ -41,12 +41,7 @@ function c511009024.cfilter(c,e)
 	return c:IsRed() and c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:GetAttack()~=val and (not e or c:IsCanBeEffectTarget(e))
 end
 function c511009024.rmfilter(c)
-	if not c:IsRed() or not c:IsType(TYPE_SYNCHRO) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRed() and c:IsType(TYPE_SYNCHRO) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c511009024.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return eg:IsContains(chkc) and c511009024.cfilter(chkc) end

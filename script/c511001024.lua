@@ -13,12 +13,7 @@ function c511001024.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001024.costfilter(c)
-	if not c:IsAttribute(ATTRIBUTE_LIGHT) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511001024.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)

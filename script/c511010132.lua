@@ -25,7 +25,7 @@ function c511010132.initial_effect(c)
 	e1:SetCost(c511010132.cost)
 	e1:SetTarget(c511010132.target)
 	e1:SetOperation(c511010132.operation)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,1)
 	--selfdes
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -34,13 +34,6 @@ function c511010132.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(c511010132.descon)
 	c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e3:SetCode(511002571)
-	e3:SetLabelObject(e1)
-	e3:SetLabel(c:GetOriginalCode())
-	c:RegisterEffect(e3)
 	--battle indestructable
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE)
@@ -75,12 +68,7 @@ function c511010132.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(65676461)
 end
 function c511010132.rfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsShark() or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsShark() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511010132.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)

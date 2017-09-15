@@ -9,18 +9,13 @@ function c511000760.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCondition(c511000760.condition)
-	e1:SetCost(c511000760.cost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c511000760.target)
 	e1:SetOperation(c511000760.operation)
 	c:RegisterEffect(e1)
 end
 function c511000760.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
-end
-function c511000760.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511000760.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

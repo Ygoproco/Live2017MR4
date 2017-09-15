@@ -17,8 +17,7 @@ end
 function c511002715.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c511002715.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c511002715.filter,tp,0,LOCATION_MZONE,1,nil) 
-		and not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
+		and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c511002715.filter,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)

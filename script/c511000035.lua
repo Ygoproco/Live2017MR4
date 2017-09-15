@@ -7,7 +7,7 @@ function c511000035.initial_effect(c)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCondition(c511000035.con)
-	e1:SetCost(c511000035.cost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetOperation(c511000035.op)
 	c:RegisterEffect(e1)
 end
@@ -21,11 +21,6 @@ function c511000035.con(e,tp,eg,ep,ev,re,r,rp)
 	else return Duel.IsPlayerAffectedByEffect(0,EFFECT_REVERSE_RECOVER)
 		or Duel.IsPlayerAffectedByEffect(1,EFFECT_REVERSE_RECOVER)
 	end
-end
-function c511000035.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511000035.op(e,tp,eg,ep,ev,re,r,rp)
 	local cid=Duel.GetChainInfo(ev,CHAININFO_CHAIN_ID)

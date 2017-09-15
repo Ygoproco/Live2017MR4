@@ -17,12 +17,7 @@ function c511002842.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c511002842.cfilter(c)
-	if not c:IsType(TYPE_SYNCHRO) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_SYNCHRO) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511002842.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)

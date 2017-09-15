@@ -129,18 +129,13 @@ function c511002517.effop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511002517.repfilter(c)
-	if not c:IsSetCard(0x300) or c:IsSetCard(0x13) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x300) and not c:IsSetCard(0x13) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c511002517.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return not c:IsReason(REASON_REPLACE) 
 		and Duel.IsExistingMatchingCard(c511002517.repfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
-	if Duel.SelectYesNo(tp,aux.Stringid(100000068,0)) then
+	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.SelectMatchingCard(tp,c511002517.repfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT+REASON_REPLACE)

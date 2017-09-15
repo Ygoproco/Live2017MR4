@@ -23,13 +23,8 @@ function c511004415.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	return true
 end
-function c511004415.cfilter(c,e,tp)
-	if not c:IsType(TYPE_MONSTER) or not c:IsSetCard(0xc008) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+function c511004415.cfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc008) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c511004415.target(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 	if chkc then return c511004415.filter(chkc,e,tp) and eg:IsContains(chkc) end

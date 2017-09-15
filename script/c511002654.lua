@@ -50,12 +50,7 @@ function c511002654.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c511002654.cfilter(c)
-	if not c:IsSetCard(0x33) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x33) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511002654.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511002654.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

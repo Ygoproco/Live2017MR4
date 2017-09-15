@@ -10,15 +10,9 @@ function c511001653.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001653.cfilter(c,tp)
-	if not c:IsSetCard(0x1045) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x1045) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,c)
 end
-
 function c511001653.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	if chk==0 then return true end
@@ -27,8 +21,7 @@ function c511001653.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return Duel.IsExistingMatchingCard(c511001653.cfilter,tp,LOCATION_GRAVE,0,1,nil) 
-			and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil)
+		return Duel.IsExistingMatchingCard(c511001653.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c511001653.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)

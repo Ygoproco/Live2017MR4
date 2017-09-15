@@ -92,8 +92,7 @@ function c511010507.zarcspfilter(c,e,tp)
 	return c:IsCode(13331639) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511010507.zarcremfilter(c)
-	if not c:IsCode(41209827,82044279,16195942,16178681) or not c:IsAbleToRemove() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsCode(41209827,82044279,16195942,16178681) and c:IsAbleToRemove() and (c:IsLocation(0x49) or aux.SpElimFilter(c,true,true))
 end
 function c511010507.fcheck(c,sg,g,code,...)
 	if not c:IsCode(code) then return false end

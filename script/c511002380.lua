@@ -51,7 +51,7 @@ function c511002380.cfilter(c)
 	return c:IsCode(33103459) and c:IsAbleToRemoveAsCost()
 end
 function c511002380.dmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) and e:GetHandler():IsAbleToRemoveAsCost()
+	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
 		and Duel.IsExistingMatchingCard(c511002380.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c511002380.cfilter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())

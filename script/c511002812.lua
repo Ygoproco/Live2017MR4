@@ -9,18 +9,13 @@ function c511002812.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCondition(c511002812.condition)
-	e1:SetCost(c511002812.cost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c511002812.target)
 	e1:SetOperation(c511002812.operation)
 	c:RegisterEffect(e1)
 end
 function c511002812.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetAttackTarget()==nil
-end
-function c511002812.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511002812.filter(c,e,tp)
 	return c:IsSetCard(0x55) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

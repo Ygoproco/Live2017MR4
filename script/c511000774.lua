@@ -29,7 +29,7 @@ function c511000774.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_GRAVE)
-	e3:SetCost(c511000774.spcost)
+	e3:SetCost(aux.bfgcost)
 	e3:SetTarget(c511000774.sptg)
 	e3:SetOperation(c511000774.spop)
 	c:RegisterEffect(e3)
@@ -64,11 +64,6 @@ function c511000774.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 	e:GetLabelObject():SetLabel(0)
 end
-function c511000774.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
 function c511000774.filter(c,e,tp)
 	return c:IsSetCard(0xa3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
@@ -82,7 +77,7 @@ function c511000774.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511000774.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
