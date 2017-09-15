@@ -39,13 +39,7 @@ function c94689206.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c94689206.spfilter(c)
-	if not c:IsAttribute(ATTRIBUTE_EARTH) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_HAND) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_EARTH) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
 end
 function c94689206.spcon(e,c)
 	if c==nil then return true end

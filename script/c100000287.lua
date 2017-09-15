@@ -47,12 +47,7 @@ function c100000287.archchk(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100000287.costfilter(c)
-	if not c:IsBarians() or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and c:IsFaceup()
-	end
+	return c:IsBarians() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c100000287.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000287.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

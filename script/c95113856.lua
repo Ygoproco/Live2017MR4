@@ -13,22 +13,14 @@ function c95113856.initial_effect(c)
 	e1:SetCost(c95113856.cost)
 	e1:SetTarget(c95113856.target)
 	e1:SetOperation(c95113856.operation)
-	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e2:SetCode(511002571)
-	e2:SetLabel(c:GetOriginalCode())
-	e2:SetLabelObject(e1)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e1,false,1)
 end
 function c95113856.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c95113856.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not c:IsType(TYPE_MONSTER) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAbleToRemove() and (not c:IsLocation(LOCATION_GRAVE) or aux.SpElimFilter(c))
 end
 function c95113856.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c95113856.rmfilter,tp,0,LOCATION_ONFIELD+LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,1,nil) end

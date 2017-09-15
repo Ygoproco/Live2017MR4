@@ -55,12 +55,7 @@ function c81992475.ssop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c81992475.rmfilter(c)
-	if not c:IsSetCard(0xb1) or c:IsCode(81992475) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0xb1) and not c:IsCode(81992475) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c81992475.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c81992475.rmfilter(chkc) end

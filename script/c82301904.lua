@@ -31,12 +31,7 @@ function c82301904.initial_effect(c)
 	Duel.AddCustomActivityCounter(82301904,ACTIVITY_CHAIN,aux.FALSE)
 end
 function c82301904.spfilter(c,att)
-	if not c:IsAttribute(att) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(att) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c82301904.spcon(e,c)
 	if c==nil then return true end

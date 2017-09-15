@@ -10,12 +10,7 @@ function c81172176.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c81172176.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
 function c81172176.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c81172176.rmfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,nil)

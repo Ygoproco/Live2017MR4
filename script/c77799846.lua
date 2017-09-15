@@ -12,7 +12,7 @@ function c77799846.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCost(c77799846.cost)
 	e1:SetOperation(c77799846.operation)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,1)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(77799846,1))
@@ -26,13 +26,6 @@ function c77799846.initial_effect(c)
 	e2:SetOperation(c77799846.spop)
 	e2:SetValue(c77799846.valcheck)
 	c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e3:SetCode(511002571)
-	e3:SetLabel(c:GetOriginalCode())
-	e3:SetLabelObject(e1)
-	c:RegisterEffect(e3)
 end
 function c77799846.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -53,30 +46,25 @@ end
 function c77799846.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY) and e:GetHandler():GetOverlayCount()>0
 end
-function c77799846.rfilter(c)
-	if not c:IsSetCard(0x85) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+function c77799846.rfilter(c,tp)
+	return c:IsSetCard(0x85) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
 end
 function c77799846.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if Duel.GetFlagEffect(tp,77799846)==0 then
 			Duel.RegisterFlagEffect(tp,77799846,RESET_CHAIN,0,1)
-			c77799846[0]=Duel.GetMatchingGroupCount(c77799846.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+			c77799846[0]=Duel.GetMatchingGroupCount(c77799846.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,tp)
 			c77799846[1]=0
 		end
 		return c77799846[0]-c77799846[1]>=1
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c77799846.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c77799846.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c77799846.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and e:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return e:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c77799846.mfilter(c)

@@ -11,24 +11,12 @@ function c100000318.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000318.cfilter1(c,e,tp)
-	if not c:IsRace(RACE_MACHINE) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingMatchingCard(c100000318.cfilter2,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,c,e,tp,c) then return false end
-	if c:IsLocation(LOCATION_HAND) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_MACHINE) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
+		and Duel.IsExistingMatchingCard(c100000318.cfilter2,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,c,e,tp,c)
 end
 function c100000318.cfilter2(c,e,tp,rc)
-	if not c:IsRace(RACE_DINOSAUR) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingMatchingCard(c100000318.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,c,e,tp,rc) then return false end
-	if c:IsLocation(LOCATION_HAND) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_DINOSAUR) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
+		and Duel.IsExistingMatchingCard(c100000318.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,c,e,tp,rc)
 end
 function c100000318.filter(c,e,tp,rc)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_DINOSAUR) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 

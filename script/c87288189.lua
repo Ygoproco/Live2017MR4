@@ -59,13 +59,7 @@ function c87288189.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,1000)
 end
 function c87288189.rmfilter(c,code)
-	if not c:IsCode(code) then return false end
-	if not c:IsLocation(LOCATION_GRAVE+LOCATION_MZONE) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsCode(code) and (c:IsLocation(0x43) or aux.SpElimFilter(c,true))
 end
 function c87288189.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)

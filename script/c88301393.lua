@@ -39,8 +39,8 @@ function c88301393.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c88301393.spfilter(c)
-	if not c:IsSetCard(0xbb) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsSetCard(0xbb) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() 
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))
 end
 function c88301393.spcon(e,c)
 	if c==nil then return true end
@@ -125,12 +125,7 @@ function c88301393.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function c88301393.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER)
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
 function c88301393.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(1-tp) and c88301393.rmfilter(chkc) end

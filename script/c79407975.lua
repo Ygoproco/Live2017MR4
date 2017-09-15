@@ -27,12 +27,7 @@ function c79407975.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c79407975.spfilter(c)
-	if not c:IsAttribute(ATTRIBUTE_DARK) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c79407975.spcon(e,c)
 	if c==nil then return true end
@@ -55,8 +50,7 @@ function c79407975.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Remove(rg,POS_FACEUP,REASON_COST)
 end
 function c79407975.cfilter(c)
-	if not c:IsAttribute(ATTRIBUTE_DARK) or (not c:IsLocation(LOCATION_GRAVE) and c:IsFacedown()) then return false end
-	return c:IsLocation(LOCATION_MZONE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAttribute(ATTRIBUTE_DARK) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and aux.SpElimFilter(c,true,true)
 end
 function c79407975.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c79407975.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,e:GetHandler())

@@ -18,12 +18,7 @@ function c100000246.cfilter1(c)
 	return c:IsCode(57116033) and c:IsAbleToGraveAsCost()
 end
 function c100000246.costfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c)
 end
 function c100000246.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000246.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,nil) end

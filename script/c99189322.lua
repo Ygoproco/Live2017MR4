@@ -13,12 +13,7 @@ function c99189322.filter(c)
 	return c:GetFlagEffect(36690018)~=0
 end
 function c99189322.rfilter(c)
-	if not c:IsSetCard(0x5) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x5) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c99189322.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -56,7 +51,7 @@ function c99189322.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function c99189322.rec_effect(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if tc:GetFlagEffect(99189322)==0 or tc:GetFlagEffect(36690018)==0 then return end
+	if not tc or tc:GetFlagEffect(99189322)==0 or tc:GetFlagEffect(36690018)==0 then return end
 	local regfun=tc.arcanareg
 	if not regfun then return end
 	local val=tc:GetFlagEffectLabel(36690018)

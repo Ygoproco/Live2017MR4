@@ -11,12 +11,7 @@ function c82542267.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c82542267.filter(c)
-	if not c:IsAbleToRemove() or not c:IsType(TYPE_MONSTER) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) and aux.SpElimFilter(c)
 end
 function c82542267.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(1-tp) and c82542267.filter(chkc) end

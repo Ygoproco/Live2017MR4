@@ -16,8 +16,7 @@ function c90452877.desfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xd2)
 end
 function c90452877.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER)
+	return c:IsAbleToRemove() and (c:IsLocation(LOCATION_SZONE) or aux.SpElimFilter(c,true,true))
 end
 function c90452877.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c90452877.desfilter(chkc) end

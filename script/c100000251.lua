@@ -18,15 +18,10 @@ function c100000251.cfilter(c,e,tp)
 	return Duel.IsExistingMatchingCard(c100000251.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c100000251.rmfilter(c,e,tp)
-	if not c:IsSetCard(0x41) or not c:IsAbleToRemoveAsCost() then return false end
+	if not c:IsSetCard(0x41) or not c:IsAbleToRemoveAsCost() or not aux.SpElimFilter(c,true) then return false end
 	local code=c:GetCode()
 	local class=_G["c"..code]
-	if not Duel.IsExistingMatchingCard(c100000251.spfilter,tp,LOCATION_DECK,0,1,nil,class,e,tp) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return Duel.IsExistingMatchingCard(c100000251.spfilter,tp,LOCATION_DECK,0,1,nil,class,e,tp)
 end
 function c100000251.spfilter(c,class,e,tp)
 	local code=c:GetCode()

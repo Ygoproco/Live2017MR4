@@ -47,13 +47,8 @@ function c89399912.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c89399912.rfilter(c)
-	if (not c:IsRace(RACE_DRAGON) and not c:IsAttribute(ATTRIBUTE_WIND)) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_HAND) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return (c:IsRace(RACE_DRAGON) or c:IsAttribute(ATTRIBUTE_WIND)) and c:IsAbleToRemoveAsCost() 
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
 end
 function c89399912.hspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c89399912.rfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,2,e:GetHandler()) end

@@ -44,8 +44,8 @@ function c89423971.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c89423971.spfilter(c)
-	if not c:IsSetCard(0xbb) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsSetCard(0xbb) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() 
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))
 end
 function c89423971.spcon(e,c)
 	if c==nil then return true end
@@ -97,9 +97,6 @@ function c89423971.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function c89423971.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP)
-end
 function c89423971.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:GetAttackAnnouncedCount()==0 end
@@ -111,15 +108,15 @@ function c89423971.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterEffect(e1)
 end
 function c89423971.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and c89423971.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c89423971.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsType(TYPE_SPELL+TYPE_TRAP) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil,TYPE_SPELL+TYPE_TRAP) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c89423971.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,Card.IsType,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,TYPE_SPELL+TYPE_TRAP)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c89423971.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
@@ -127,12 +124,7 @@ function c89423971.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
 function c89423971.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER)
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c89423971.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsReleasable,1,nil) end

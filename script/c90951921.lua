@@ -32,12 +32,7 @@ function c90951921.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(0x70)
 end
 function c90951921.filter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsSetCard(0x70) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x70) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c90951921.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c90951921.filter(chkc) end
@@ -54,7 +49,7 @@ function c90951921.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c90951921.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and Duel.IsPlayerCanDiscardDeck(tp,2) then
+	if tc and tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and Duel.IsPlayerCanDiscardDeck(tp,2) then
 		Duel.BreakEffect()
 		local g=Duel.GetDecktopGroup(tp,2)
 		Duel.ConfirmCards(tp,g)

@@ -21,27 +21,23 @@ function c81146288.initial_effect(c)
 	e2:SetOperation(c81146288.disop)
 	c:RegisterEffect(e2)
 end
-function c81146288.spfilter(c)
-	if not c:IsLevelAbove(7) or not c:IsRace(RACE_PLANT) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_HAND) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+function c81146288.spfilter(c,tp)
+	return c:IsLevelAbove(7) and c:IsRace(RACE_PLANT) and c:IsAbleToRemoveAsCost() 
+		and (c:IsLocation(LOCATION_HAND) 
+			or (aux.SpElimFilter(c,true) and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))))
 end
 function c81146288.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c81146288.spfilter,tp,LOCATION_HAND,0,1,c)
-		and Duel.IsExistingMatchingCard(c81146288.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+		and Duel.IsExistingMatchingCard(c81146288.spfilter,tp,LOCATION_HAND,0,1,c,tp)
+		and Duel.IsExistingMatchingCard(c81146288.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
 end
 function c81146288.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c81146288.spfilter,tp,LOCATION_HAND,0,1,1,c)
+	local g1=Duel.SelectMatchingCard(tp,c81146288.spfilter,tp,LOCATION_HAND,0,1,1,c,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c81146288.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	local g2=Duel.SelectMatchingCard(tp,c81146288.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	g1:Merge(g2)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end

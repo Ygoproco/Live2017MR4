@@ -27,21 +27,11 @@ function c78348934.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c78348934.filter1(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemove() 
-		or not Duel.IsExistingMatchingCard(c78348934.filter3,tp,LOCATION_MZONE,0,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingMatchingCard(c78348934.filter3,tp,LOCATION_MZONE,0,1,c)
 end
 function c78348934.filter2(c,rc)
-	if c:GetRace()~=rc or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(rc) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c78348934.filter3(c)
 	return c:IsFaceup() and (c:IsSetCard(0xd6) or c:IsSetCard(0xd7))

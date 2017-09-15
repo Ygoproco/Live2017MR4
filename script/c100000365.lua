@@ -13,8 +13,7 @@ function c100000365.spfilter(c,e,tp)
 	return c:IsCode(43378048) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c100000365.filter(c)
-	if not c:IsCode(6007213,32491822,69890967) or not c:IsAbleToRemove() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsCode(6007213,32491822,69890967) and c:IsAbleToRemove() and aux.SpElimFilter(c,true,true)
 end
 function c100000365.fcheck(c,sg,g,code,...)
 	if not c:IsCode(code) then return false end

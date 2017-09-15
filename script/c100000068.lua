@@ -46,12 +46,7 @@ function c100000068.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c100000068.filter,tp,0x13,0,1,nil,e,tp)
 end
 function c100000068.costfilter(c,code)
-	if not c:IsCode(code) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsCode(code) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c100000068.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000068.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,100000055)
@@ -95,12 +90,7 @@ function c100000068.eqlimit(e,c)
 	return c:IsCode(63468625)
 end
 function c100000068.cfilter(c)
-	if (not c:IsWisel() and not c:IsGranel() and not c:IsSkiel()) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return (c:IsWisel() or c:IsGranel() or c:IsSkiel()) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c100000068.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsContains(e:GetHandler():GetEquipTarget())

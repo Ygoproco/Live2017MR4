@@ -13,7 +13,7 @@ function c95474755.initial_effect(c)
 	e1:SetCost(c95474755.excost)
 	e1:SetTarget(c95474755.extg)
 	e1:SetOperation(c95474755.exop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,1)
 	--banish grave
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(95474755,1))
@@ -46,13 +46,6 @@ function c95474755.initial_effect(c)
 	e4:SetTarget(c95474755.dktg)
 	e4:SetOperation(c95474755.dkop)
 	c:RegisterEffect(e4)
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e5:SetCode(511002571)
-	e5:SetLabelObject(e1)
-	e5:SetLabel(c:GetOriginalCode())
-	c:RegisterEffect(e5)
 end
 c95474755.xyz_number=89
 function c95474755.excost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -77,12 +70,7 @@ function c95474755.grcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(95474755)~=0
 end
 function c95474755.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER)
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
 function c95474755.grtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return c:IsControler(1-tp) and c:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and c95474755.rmfilter(chkc) end

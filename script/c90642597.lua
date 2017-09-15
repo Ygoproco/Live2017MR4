@@ -16,13 +16,8 @@ function c90642597.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c90642597.costfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c)
+		and Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function c90642597.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c90642597.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

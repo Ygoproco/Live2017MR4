@@ -29,13 +29,8 @@ function c92719314.spcon(e,c)
 		and Duel.IsExistingMatchingCard(Card.IsAttribute,c:GetControler(),LOCATION_GRAVE,0,5,nil,ATTRIBUTE_DARK)
 end
 function c92719314.costfilter(c,e,tp)
-	if not c:IsAttribute(ATTRIBUTE_DARK) or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingTarget(c92719314.tgfilter,tp,LOCATION_GRAVE,0,1,c,e,tp) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingTarget(c92719314.tgfilter,tp,LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c92719314.tgfilter(c,e,tp)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

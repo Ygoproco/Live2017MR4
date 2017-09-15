@@ -1,6 +1,5 @@
 --トワイライトロード・ジェネラル ジェイン
 --Jain, Twilightsworn General
---Scripted by Eerie Code
 function c84673417.initial_effect(c)
 	--reduce atk
 	local e1=Effect.CreateEffect(c)
@@ -35,14 +34,8 @@ function c84673417.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c84673417.atkcfilter(c)
-	if not c:IsSetCard(0x38) or not c:IsLevelAbove(1) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,1,c) then return false end
-	if c:IsLocation(LOCATION_HAND) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x38) and c:IsLevelAbove(1) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
+		and Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function c84673417.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c84673417.atkcfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

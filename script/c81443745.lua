@@ -52,12 +52,7 @@ function c81443745.cfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToGraveAsCost()
 end
 function c81443745.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER)
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
 function c81443745.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c81443745.cfilter,tp,LOCATION_HAND,0,1,nil) end

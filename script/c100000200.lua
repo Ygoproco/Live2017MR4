@@ -38,8 +38,8 @@ function c100000200.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	e2:SetRange(LOCATION_GRAVE)		
 	e2:SetLabelObject(a) 		
 	e2:SetCondition(c100000200.spcon)
-	e2:SetCost(c100000200.cost)
-	e2:SetOperation(c100000200.opera)	
+	e2:SetCost(aux.bfgcost)
+	e2:SetOperation(c100000200.opera)
 	e2:SetReset(RESET_EVENT+RESET_TOFIELD+RESET_REMOVE+RESET_TODECK+RESET_TOHAND)
 	c:RegisterEffect(e2)
 	end 	
@@ -53,11 +53,6 @@ function c100000200.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetLocationCount(1-c:GetControler(),LOCATION_MZONE)>0
 		and	Duel.IsExistingMatchingCard(c100000200.filter,tp,0,LOCATION_GRAVE,1,nil,tc) 
-end
-function c100000200.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c100000200.opera(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
