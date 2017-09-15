@@ -17,13 +17,8 @@ function c52628687.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	return true
 end
 function c52628687.cfilter(c,e,tp)
-	if not c:IsRace(RACE_SPELLCASTER) or c:GetLevel()<=0 or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingTarget(c52628687.spfilter,tp,LOCATION_GRAVE,0,1,c,e,tp) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_SPELLCASTER) and c:GetLevel()>0 and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(c52628687.spfilter,tp,LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c52628687.cffilter(c)
 	return c:IsSetCard(0x106e) and c:IsType(TYPE_SPELL) and not c:IsPublic()
@@ -59,7 +54,7 @@ end
 function c52628687.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e)
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e)
 		and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK) then
 		--levelup
 		local e1=Effect.CreateEffect(c)

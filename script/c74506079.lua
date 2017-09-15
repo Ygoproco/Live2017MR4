@@ -83,12 +83,7 @@ function c74506079.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c74506079.costfilter(c)
-	if not c:IsRace(RACE_REPTILE) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_REPTILE) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c74506079.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c74506079.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

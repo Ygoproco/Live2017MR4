@@ -21,8 +21,7 @@ function c69572169.rfilter(c)
 end
 function c69572169.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetMatchingGroup(c69572169.rfilter,tp,LOCATION_GRAVE,0,e:GetHandler())
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() and rg:GetClassCount(Card.GetCode)>=3 end
+	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0) and rg:GetClassCount(Card.GetCode)>=3 end
 	local g=Group.CreateGroup()
 	for i=1,3 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)

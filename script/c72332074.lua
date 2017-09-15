@@ -51,16 +51,11 @@ function c72332074.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c72332074.costfilter(c)
-	if not c:IsCode(58753372) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and c:IsFaceup()
-	end
+	return c:IsCode(58753372) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c72332074.actcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:IsAbleToRemoveAsCost()
+	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
 		and Duel.IsExistingMatchingCard(c72332074.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c72332074.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,c)

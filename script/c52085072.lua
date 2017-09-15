@@ -78,12 +78,7 @@ function c52085072.btcon(e,tp,eg,ep,ev,re,r,rp)
 		and (Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler())
 end
 function c52085072.btcfilter(c)
-	if not c:IsType(TYPE_MONSTER) or c:GetLevel()~=1 or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:GetLevel()==1 and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c52085072.btcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c52085072.btcfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)

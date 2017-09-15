@@ -24,12 +24,7 @@ function c66789970.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c66789970.rfilter(c)
-	if not c:IsType(TYPE_NORMAL) or not c:IsRace(RACE_DRAGON) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_NORMAL) and c:IsRace(RACE_DRAGON) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c66789970.hspcon(e,c)
 	if c==nil then return true end
@@ -43,12 +38,7 @@ function c66789970.hspop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c66789970.cfilter(c)
-	if not c:IsRace(RACE_DRAGON) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_DRAGON) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c66789970.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66789970.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

@@ -31,7 +31,7 @@ function c66698383.cfilter(c,tp)
 	return (c:IsLocation(LOCATION_HAND+LOCATION_GRAVE) or c:IsFaceup())
 		and c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost()
 		and Duel.IsExistingTarget(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
-		and not (c:IsLocation(LOCATION_GRAVE) and Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741))
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))
 end
 function c66698383.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66698383.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil,tp) end
@@ -69,7 +69,7 @@ function c66698383.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c66698383.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

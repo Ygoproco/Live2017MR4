@@ -70,8 +70,7 @@ function c58330108.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf5)
 end
 function c58330108.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAbleToRemove() and aux.SpElimFilter(c,false,true)
 end
 function c58330108.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

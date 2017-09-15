@@ -22,12 +22,7 @@ function c65303664.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c65303664.cfilter,1,nil,tp)
 end
 function c65303664.rfiletr(c)
-	if not c:IsRace(RACE_BEAST) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsLocation(LOCATION_MZONE) and c:IsFaceup()
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_BEAST) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c65303664.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c65303664.rfiletr,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,nil) end

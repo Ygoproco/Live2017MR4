@@ -10,20 +10,11 @@ function c72029628.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c72029628.filter0(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsCanBeFusionMaterial() or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c72029628.filter1(c,e)
-	if not c:IsType(TYPE_MONSTER) or not c:IsCanBeFusionMaterial() or not c:IsAbleToRemove() or c:IsImmuneToEffect(e) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e) 
+		and aux.SpElimFilter(c,true)
 end
 function c72029628.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x1047) and (not f or f(c))

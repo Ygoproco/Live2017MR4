@@ -6,15 +6,10 @@ function c52624755.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_TO_GRAVE)
-	e1:SetCost(c52624755.cost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c52624755.target)
 	e1:SetOperation(c52624755.operation)
 	c:RegisterEffect(e1)
-end
-function c52624755.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c52624755.filter(c,e,sp)
 	return c:IsCode(52624755) and c:IsCanBeSpecialSummoned(e,0,sp,false,false)

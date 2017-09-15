@@ -12,13 +12,8 @@ function c57019473.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c57019473.filter(c)
-	if not c:IsRace(RACE_THUNDER) or not c:IsAttribute(ATTRIBUTE_LIGHT) or c:GetLevel()~=4
-		or c:IsCode(57019473) or not c:IsAttackBelow(1600) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_THUNDER) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:GetLevel()==4
+		and not c:IsCode(57019473) and c:IsAttackBelow(1600) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c57019473.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c57019473.filter(chkc) end 

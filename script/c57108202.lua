@@ -32,13 +32,8 @@ function c57108202.cona(e,tp,eg,ep,ev,re,r,rp)
 end
 function c57108202.filtera(c,tp)
 	local lv=c:GetLevel()
-	if not c:IsSetCard(0x26) or lv<=0 or not c:IsAbleToRemove()
-		or not Duel.IsExistingMatchingCard(c57108202.filter,tp,LOCATION_DECK,0,1,nil,lv) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x26) and lv>0 and c:IsAbleToRemove() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingMatchingCard(c57108202.filter,tp,LOCATION_DECK,0,1,nil,lv)
 end
 function c57108202.tga(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c57108202.filtera(chkc,tp) end
