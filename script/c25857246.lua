@@ -37,12 +37,7 @@ function c25857246.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp)
 end
 function c25857246.cfilter(c)
-	if not c:IsSetCard(0xb4) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and c:IsFaceup()
-	end
+	return c:IsSetCard(0xb4) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c25857246.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable()

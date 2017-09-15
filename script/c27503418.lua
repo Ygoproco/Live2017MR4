@@ -21,12 +21,7 @@ function c27503418.filter1(c,e,tp,tc,lv)
 end
 function c27503418.filter2(c,tp,lv)
 	local rlv=lv-c:GetLevel()
-	if rlv~=0 or not c:IsType(TYPE_TUNER) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return rlv==0 and c:IsType(TYPE_TUNER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c27503418.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()

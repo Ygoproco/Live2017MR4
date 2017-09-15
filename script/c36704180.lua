@@ -47,7 +47,7 @@ function c36704180.drcfilter(c)
 	return (c:IsSetCard(0x10db) or (c:IsSetCard(0xdb) and c:IsType(TYPE_SPELL+TYPE_TRAP))) and c:IsAbleToGraveAsCost()
 end
 function c36704180.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) and e:GetHandler():IsAbleToRemoveAsCost()
+	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
 		and Duel.IsExistingMatchingCard(c36704180.drcfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 	Duel.DiscardHand(tp,c36704180.drcfilter,1,1,REASON_COST,nil)

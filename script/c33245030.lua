@@ -37,7 +37,7 @@ function c33245030.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c33245030.operation(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	if at:IsAttackPos() and at:IsRelateToBattle() then
+	if at and at:IsAttackPos() and at:IsRelateToBattle() then
 		Duel.ChangePosition(at,POS_FACEUP_DEFENSE)
 	end
 end

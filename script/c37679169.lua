@@ -43,7 +43,7 @@ end
 function c37679169.adop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local lv=e:GetLabel()
 		--atkdown
 		local e1=Effect.CreateEffect(c)
@@ -64,8 +64,7 @@ function c37679169.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c37679169.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and c:IsAbleToRemoveAsCost() and c:IsLocation(LOCATION_GRAVE) end
+	if chk==0 then return c:IsLocation(LOCATION_GRAVE) and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0) end
 	Duel.Remove(c,POS_FACEUP,REASON_COST)
 end
 function c37679169.spfilter(c,e,tp)

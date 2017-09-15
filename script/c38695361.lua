@@ -46,7 +46,7 @@ function c38695361.atktg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c38695361.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		tc:RegisterFlagEffect(38695361,RESET_EVENT+0x1220000+RESET_PHASE+PHASE_END,0,1)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -78,12 +78,7 @@ function c38695361.atkval(e,c)
 	return c:GetBaseAttack()
 end
 function c38695361.cfilter(c,att)
-	if not c:IsAttribute(att) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(att) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c38695361.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

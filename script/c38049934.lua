@@ -13,12 +13,7 @@ function c38049934.initial_effect(c)
 end
 c38049934.check=false
 function c38049934.cfilter(c)
-	if not c:IsSetCard(0x39) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x39) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c38049934.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c38049934.check=true

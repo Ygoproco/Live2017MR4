@@ -16,12 +16,8 @@ function c51717541.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0
 end
 function c51717541.filter(c,tp)
-	if not c:IsSetCard(0xb) or not c:IsAbleToRemove() or not Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0xb) and c:IsAbleToRemove() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_ONFIELD,1,c)
 end
 function c51717541.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

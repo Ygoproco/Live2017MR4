@@ -13,12 +13,7 @@ function c34834619.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c34834619.mtfilter(c,e)
-	if c:GetLevel()<=0 or not c:IsAbleToRemove() or c:IsImmuneToEffect(e) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:GetLevel()>0 and c:IsAbleToRemove() and not c:IsImmuneToEffect(e) and aux.SpElimFilter(c,true)
 end
 function c34834619.spfilter(c,e,tp,m)
 	return c:IsCode(85346853) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,false)

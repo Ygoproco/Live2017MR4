@@ -12,13 +12,8 @@ function c50584941.initial_effect(c)
 end
 function c50584941.cfilter(c,tp)
 	local code=c:GetOriginalCode()
-	if not c:IsSetCard(0x1045) or not c:IsType(TYPE_SYNCHRO) or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingTarget(c50584941.filter,tp,LOCATION_MZONE,0,1,c,code) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x1045) and c:IsType(TYPE_SYNCHRO) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(c50584941.filter,tp,LOCATION_MZONE,0,1,c,code)
 end
 function c50584941.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 

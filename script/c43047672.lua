@@ -22,7 +22,7 @@ function c43047672.initial_effect(c)
 	e2:SetCost(c43047672.cost)
 	e2:SetTarget(c43047672.target)
 	e2:SetOperation(c43047672.operation)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e2,false,1)
 	--chain attack
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(43047672,1))
@@ -33,13 +33,6 @@ function c43047672.initial_effect(c)
 	e3:SetCost(c43047672.atcost)
 	e3:SetOperation(c43047672.atop)
 	c:RegisterEffect(e3)
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e5:SetCode(511002571)
-	e5:SetLabelObject(e2)
-	e5:SetLabel(c:GetOriginalCode())
-	c:RegisterEffect(e5)
 end
 function c43047672.imfilter(c)
 	return c:IsSetCard(0xba) and c:IsType(TYPE_XYZ)
@@ -73,12 +66,7 @@ function c43047672.atcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker()==c and aux.bdocon(e,tp,eg,ep,ev,re,r,rp) and c:IsChainAttackable(0)
 end
 function c43047672.atfilter(c)
-	if not c:IsSetCard(0xba) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0xba) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c43047672.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c43047672.atfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,e:GetHandler()) end
