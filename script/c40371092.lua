@@ -49,13 +49,8 @@ function c40371092.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c40371092.cfilter(c)
-	if not c:IsAttribute(ATTRIBUTE_DARK) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function c40371092.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c40371092.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

@@ -30,12 +30,7 @@ function c59771339.tfilter(c)
 	return c:IsCode(63977008) or c:IsHasEffect(20932152)
 end
 function c59771339.cfilter(c)
-	if not c:IsSetCard(0x43) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x43) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c59771339.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c59771339.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
@@ -52,7 +47,7 @@ function c59771339.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c59771339.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -71,7 +66,7 @@ function c59771339.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c59771339.desop(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
-	if d:IsRelateToBattle() then
+	if d and d:IsRelateToBattle() then
 		Duel.Destroy(d,REASON_EFFECT)
 	end
 end

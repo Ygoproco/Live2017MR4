@@ -25,23 +25,18 @@ function c9418365.initial_effect(c)
 	e2:SetOperation(c9418365.hdop)
 	c:RegisterEffect(e2)
 end
-function c9418365.spfilter(c)
-	if not c:IsSetCard(0x88) or not c:IsType(TYPE_MONSTER) or c:IsCode(9418365) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+function c9418365.spfilter(c,tp)
+	return c:IsSetCard(0x88) and c:IsType(TYPE_MONSTER) and not c:IsCode(9418365) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
 end
 function c9418365.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c9418365.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(c9418365.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
 end
 function c9418365.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c9418365.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c9418365.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c9418365.hdcon(e,tp,eg,ep,ev,re,r,rp)

@@ -48,13 +48,8 @@ function c53804307.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c53804307.rfilter(c)
-	if (not c:IsRace(RACE_DRAGON) and not c:IsAttribute(ATTRIBUTE_FIRE)) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_HAND) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return (c:IsRace(RACE_DRAGON) or c:IsAttribute(ATTRIBUTE_FIRE)) and c:IsAbleToRemoveAsCost() 
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
 end
 function c53804307.hspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c53804307.rfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,2,e:GetHandler()) end
@@ -106,7 +101,7 @@ function c53804307.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c53804307.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

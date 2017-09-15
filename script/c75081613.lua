@@ -26,23 +26,18 @@ function c75081613.initial_effect(c)
 	e3:SetOperation(c75081613.operation)
 	c:RegisterEffect(e3)
 end
-function c75081613.spfilter(c)
-	if not c:IsRace(RACE_INSECT) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+function c75081613.spfilter(c,tp)
+	return c:IsRace(RACE_INSECT) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
 end
 function c75081613.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c75081613.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(c75081613.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
 end
 function c75081613.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c75081613.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c75081613.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c75081613.condition(e,tp,eg,ep,ev,re,r,rp)

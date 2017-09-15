@@ -60,12 +60,7 @@ function c5817857.mtop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c5817857.rfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsSetCard(0x1d) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x1d) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c5817857.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

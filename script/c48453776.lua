@@ -29,20 +29,10 @@ function c48453776.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c48453776.spfilter1(c)
-	if not c:IsAttribute(ATTRIBUTE_LIGHT) or not c:IsRace(RACE_FAIRY) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_FAIRY) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c48453776.spfilter2(c)
-	if not c:IsAttribute(ATTRIBUTE_DARK) or not c:IsRace(RACE_FIEND) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FIEND) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c48453776.spcon(e,c)
 	if c==nil then return true end

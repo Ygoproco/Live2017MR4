@@ -42,13 +42,8 @@ function c12262393.tgop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c12262393.cfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsSetCard(0x2066) or not c:IsLevelBelow(4) or c:IsCode(12262393) 
-		or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x2066) and c:IsLevelBelow(4) and not c:IsCode(12262393) 
+		and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c12262393.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c12262393.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,nil) end

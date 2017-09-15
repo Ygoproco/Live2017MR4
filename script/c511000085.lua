@@ -36,12 +36,7 @@ function c511000085.filter(c,tp)
 		and Duel.IsExistingMatchingCard(c511000085.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,mi,nil) and not c:IsPublic()
 end
 function c511000085.rfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsClear() or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsClear() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511000085.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

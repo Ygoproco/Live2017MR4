@@ -23,12 +23,7 @@ function c62950604.initial_effect(c)
 	e1:SetLabelObject(e2)
 end
 function c62950604.filter(c)
-	if not c:IsRace(RACE_PSYCHO) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_PSYCHO) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c62950604.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c62950604.filter(chkc) end
@@ -40,7 +35,7 @@ end
 function c62950604.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
 		c:RegisterFlagEffect(62950604,RESET_EVENT+0x1680000,0,0)
 		tc:RegisterFlagEffect(62950604,RESET_EVENT+0x1fe0000,0,0)
 		e:GetLabelObject():SetLabelObject(tc)
@@ -63,7 +58,7 @@ function c62950604.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c62950604.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

@@ -57,8 +57,7 @@ function c4335427.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end
 function c4335427.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	return c:IsLocation(0x0e) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAbleToRemove() and (c:IsLocation(0x0a) or aux.SpElimFilter(c,false,true))
 end
 function c4335427.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

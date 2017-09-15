@@ -14,12 +14,7 @@ function c511001782.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c511001782.rmfilter(c,lv)
-	if not c:IsLevelBelow(lv) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsLevelBelow(lv) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c511001782.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ec=e:GetHandler():GetEquipTarget()

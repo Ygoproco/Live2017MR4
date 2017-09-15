@@ -18,12 +18,7 @@ function c100000039.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c100000039.cfilter,tp,LOCATION_MZONE,0,1,nil) and rp~=tp 
 end
 function c100000039.costfilter1(c)
-	if not c:IsRace(RACE_MACHINE) or c:IsFacedown() or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_MACHINE) and c:IsFaceup() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c100000039.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000039.costfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

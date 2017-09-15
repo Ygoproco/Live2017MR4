@@ -19,12 +19,7 @@ function c511002274.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,eg:GetCount(),0,0)
 end
 function c511002274.cfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsRace(0x80000000) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsRace(0x80000000) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511002274.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(68722455)

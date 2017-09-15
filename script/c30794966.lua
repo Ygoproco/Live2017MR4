@@ -20,33 +20,28 @@ function c30794966.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c30794966.rfilter1(c,tp)
-	if not c:IsRace(RACE_DRAGON) or not c:IsAttribute(ATTRIBUTE_LIGHT) or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingMatchingCard(c30794966.rfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 then ft=ft+1 end
+	return c:IsRace(RACE_DRAGON) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingMatchingCard(c30794966.rfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c,ft)
 end
-function c30794966.rfilter2(c)
-	if not c:IsRace(RACE_DRAGON) or not c:IsType(TYPE_NORMAL) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+function c30794966.rfilter2(c,ft)
+	return c:IsRace(RACE_DRAGON) and c:IsType(TYPE_NORMAL) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
 end
 function c30794966.hspcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c30794966.rfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
+	return Duel.IsExistingMatchingCard(c30794966.rfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp)
 end
 function c30794966.hspop(e,tp,eg,ep,ev,re,r,rp,c)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g1=Duel.SelectMatchingCard(tp,c30794966.rfilter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp)
+	local tc=g1:GetFirst()
+	if tc:IsLocation(LOCATION_MZONE) and tc:GetSequence()<5 then ft=ft+1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c30794966.rfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,g1:GetFirst())
+	local g2=Duel.SelectMatchingCard(tp,c30794966.rfilter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,g1,ft)
 	g1:Merge(g2)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end

@@ -35,12 +35,7 @@ function c10691144.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return flag~=0
 end
 function c10691144.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
 function c10691144.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Group.CreateGroup()

@@ -23,21 +23,11 @@ function c100100133.filter1(c,e,tp)
 end
 function c100100133.filter2(c,lv1,tp)
 	local lv2=c:GetLevel()
-	if not c:IsAbleToRemove() or not c:IsType(TYPE_TUNER)
-		or not Duel.IsExistingMatchingCard(c100100133.filter3,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c,lv1-lv2) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAbleToRemove() and c:IsType(TYPE_TUNER) and aux.SpElimFilter(c,true)
+		and Duel.IsExistingMatchingCard(c100100133.filter3,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,c,lv1-lv2)
 end
 function c100100133.filter3(c,lv)
-	if not c:IsAbleToRemove() or c:GetLevel()~=lv or c:IsType(TYPE_TUNER) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAbleToRemove() and c:GetLevel()==lv and not c:IsType(TYPE_TUNER) and aux.SpElimFilter(c,true)
 end
 function c100100133.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

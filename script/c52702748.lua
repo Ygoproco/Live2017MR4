@@ -32,12 +32,7 @@ function c52702748.ctlop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.GetControl(c,1-tp)
 end
 function c52702748.rmfilter(c,p)
-	if not c:IsAbleToRemove(p) then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove(p) and aux.SpElimFilter(c)
 end
 function c52702748.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and c52702748.rmfilter(chkc,1-tp) end

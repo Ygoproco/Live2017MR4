@@ -8,15 +8,10 @@ function c511001663.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_GRAVE)
-	e1:SetCost(c511001663.cost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c511001663.tg)
 	e1:SetOperation(c511001663.op)
 	c:RegisterEffect(e1)
-end
-function c511001663.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511001663.filter(c)
 	return c:IsFaceup() and c:GetAttack()~=c:GetBaseAttack()

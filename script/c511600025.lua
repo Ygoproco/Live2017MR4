@@ -23,7 +23,7 @@ function c511600025.cfilter(c)
 	return c:IsType(TYPE_LINK) and c:IsAbleToRemoveAsCost()
 end
 function c511600025.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) and e:GetHandler():IsAbleToRemoveAsCost()
+	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
 		and Duel.IsExistingMatchingCard(c511600025.cfilter,tp,LOCATION_GRAVE,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c511600025.cfilter,tp,LOCATION_GRAVE,0,2,2,nil)
@@ -41,7 +41,7 @@ function c511600025.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511600025.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_EXTRA_ATTACK)

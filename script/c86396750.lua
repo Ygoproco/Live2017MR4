@@ -19,12 +19,7 @@ function c86396750.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c86396750.cfilter(c)
-	if not c:IsSetCard(0xb5) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0xb5) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c86396750.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c86396750.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

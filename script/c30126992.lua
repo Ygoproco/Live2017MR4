@@ -30,12 +30,7 @@ function c30126992.spcon(e,c)
 	return ct>4
 end
 function c30126992.cfilter(c)
-	if not c:IsAttribute(ATTRIBUTE_LIGHT) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c30126992.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c30126992.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end
@@ -55,7 +50,7 @@ function c30126992.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c30126992.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFacedown() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFacedown() then
 		Duel.ConfirmCards(tp,tc)
 		local opt=Duel.SelectOption(tp,aux.Stringid(30126992,1),aux.Stringid(30126992,2))
 		Duel.SendtoDeck(tc,nil,opt,REASON_EFFECT)

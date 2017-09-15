@@ -17,13 +17,8 @@ function c5052212.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c5052212.cfilter(c,tp)
-	if not c:IsType(TYPE_TUNER) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,c)
 end
 function c5052212.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)

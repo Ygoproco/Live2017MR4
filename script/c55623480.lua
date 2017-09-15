@@ -37,13 +37,12 @@ function c55623480.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c55623480.posop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
 	end
 end
 function c55623480.rmfilter(c)
-	if not c:IsAbleToRemoveAsCost() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not c:IsType(TYPE_MONSTER) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_HAND+LOCATION_SZONE) or aux.SpElimFilter(c,false,true))
 end
 function c55623480.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)

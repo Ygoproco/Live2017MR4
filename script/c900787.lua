@@ -24,12 +24,7 @@ function c900787.condition(e,tp,eg,ep,ev,re,r,rp)
 		and not Duel.IsDamageCalculated()
 end
 function c900787.cfilter(c)
-	if not c:IsRace(RACE_WINDBEAST) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_WINDBEAST) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c900787.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(900787)==0

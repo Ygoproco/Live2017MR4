@@ -33,12 +33,7 @@ function c72989439.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c72989439.spfilter(c,att)
-	if not c:IsAttribute(att) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(att) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c72989439.spcon(e,c)
 	if c==nil then return true end

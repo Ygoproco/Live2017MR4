@@ -69,8 +69,7 @@ function c77679716.cfilter(c)
 	return c:IsCode(77679716) and c:IsAbleToRemoveAsCost()
 end
 function c77679716.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
+	if chk==0 then return e:GetHandler():IsCode(77679716) and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0) end
 	local g=Duel.GetMatchingGroup(c77679716.cfilter,tp,LOCATION_GRAVE,0,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end

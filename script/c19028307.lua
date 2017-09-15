@@ -16,8 +16,8 @@ function c19028307.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c19028307.spfilter(c,rac)
-	if not c:IsRace(rac) or not c:IsAbleToRemoveAsCost() or (c:IsLocation(LOCATION_MZONE) or c:IsFacedown()) then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsRace(rac) and c:IsAbleToRemoveAsCost() and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup()) 
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))
 end
 function c19028307.spcon(e,c)
 	if c==nil then return true end

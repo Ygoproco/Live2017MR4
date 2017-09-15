@@ -10,7 +10,7 @@ function c511000738.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCondition(c511000738.condition)
-	e1:SetCost(c511000738.cost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetOperation(c511000738.operation)
 	c:RegisterEffect(e1)
 end
@@ -19,11 +19,6 @@ function c511000738.condition(e,tp,eg,ep,ev,re,r,rp)
 	if phase~=PHASE_DAMAGE or Duel.IsDamageCalculated() then return false end
 	local a=Duel.GetAttacker()
 	return a:IsRelateToBattle() and a:IsType(TYPE_SYNCHRO)
-end
-function c511000738.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511000738.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()

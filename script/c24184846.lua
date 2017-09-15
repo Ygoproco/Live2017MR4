@@ -8,15 +8,10 @@ function c24184846.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCost(c24184846.rmcost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c24184846.rmtg)
 	e1:SetOperation(c24184846.rmop)
 	c:RegisterEffect(e1)
-end
-function c24184846.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (c:IsLocation(LOCATION_HAND) or not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741)) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c24184846.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x84) and c:IsAbleToRemove()
@@ -31,7 +26,7 @@ end
 function c24184846.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		if Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)==0 then return end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

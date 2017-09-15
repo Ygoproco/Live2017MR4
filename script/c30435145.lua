@@ -12,12 +12,7 @@ function c30435145.filter(c,g)
 	return c:GetLevel()>4 and c:IsSetCard(0x7) and g:CheckWithSumEqual(Card.GetLevel,c:GetLevel()*2,1,99)
 end
 function c30435145.rfilter(c)
-	if c:GetLevel()<=0 or not c:IsSetCard(0x7) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:GetLevel()>0 and c:IsSetCard(0x7) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c30435145.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then

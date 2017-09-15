@@ -21,12 +21,7 @@ function c31766317.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c31766317.rfilter(c)
-	if not c:IsRace(RACE_FIEND) or not c:IsAttribute(ATTRIBUTE_DARK) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c31766317.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dc=eg:GetFirst()

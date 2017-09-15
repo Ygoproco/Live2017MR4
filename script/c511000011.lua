@@ -41,8 +41,7 @@ function c511000011.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(tp,0)
 end
 function c511000011.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,511000011)==0 and 
-		not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) and e:GetHandler():IsAbleToRemoveAsCost() end
+	if chk==0 then return Duel.GetFlagEffect(tp,511000011)==0 and aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0) end
 	Duel.RegisterFlagEffect(tp,511000011,0,0,0)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end

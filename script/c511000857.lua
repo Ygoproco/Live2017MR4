@@ -42,7 +42,7 @@ function c511000857.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511000857.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		Duel.Damage(1-tp,tc:GetAttack()/2,REASON_EFFECT)
 	end
 end

@@ -39,13 +39,8 @@ function c71880877.sumop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c71880877.rmfilter(c,tp)
-	if not c:IsRace(RACE_MACHINE) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingTarget(c71880877.thfilter,tp,LOCATION_GRAVE,0,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_MACHINE) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(c71880877.thfilter,tp,LOCATION_GRAVE,0,1,c)
 end
 function c71880877.thfilter(c)
 	return (c:IsSetCard(0x85) or c:IsCode(71071546)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -65,7 +60,7 @@ function c71880877.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c71880877.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 	end

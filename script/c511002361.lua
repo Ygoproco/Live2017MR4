@@ -11,12 +11,7 @@ function c511002361.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002361.costfilter(c)
-	if not c:IsSetCard(0x3008) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x3008) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511002361.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(c511002361.filter,tp,0,LOCATION_ONFIELD,nil)

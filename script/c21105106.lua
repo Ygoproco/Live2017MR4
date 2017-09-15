@@ -82,8 +82,7 @@ function c21105106.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e3,tp)
 end
 function c21105106.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not c:IsType(TYPE_MONSTER) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAbleToRemove() and (c:IsLocation(LOCATION_SZONE) or aux.SpElimFilter(c,false,true))
 end
 function c21105106.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c21105106.rmfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,e:GetHandler()) end

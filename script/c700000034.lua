@@ -35,12 +35,7 @@ function c700000034.spfilter(c,e,tp,rg)
 	return rg:IsExists(c700000034.rmfilterchk,1,nil,mg,rg,c,minc,maxc,Group.CreateGroup(),ft,ftt,tp)
 end
 function c700000034.rmfilter(c)
-	if c:GetSummonLocation()~=LOCATION_EXTRA or not c:IsPreviousLocation(LOCATION_MZONE) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:GetSummonLocation()==LOCATION_EXTRA and c:IsPreviousLocation(LOCATION_MZONE) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c700000034.rmfilterchk(c,mg,rg,fc,minc,maxc,sg,ft,ftt,tp)
 	sg:AddCard(c)

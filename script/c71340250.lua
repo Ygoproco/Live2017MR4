@@ -63,8 +63,7 @@ function c71340250.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)
 		local cg=Duel.GetMatchingGroup(c71340250.cfilter,tp,LOCATION_GRAVE,0,nil)
-		return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) and c:IsAbleToRemoveAsCost()
-			and Duel.GetLocationCountFromEx(tp)>0
+		return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0) and Duel.GetLocationCountFromEx(tp)>0
 			and Duel.IsExistingMatchingCard(c71340250.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,cg:GetCount())
 	end
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))

@@ -79,12 +79,7 @@ function c511000497.filter(c,e,tp)
 	return c:IsCode(89943723) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511000497.cfilter(c)
-	if not c:IsCode(78371393) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsCode(78371393) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511000497.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511000497.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

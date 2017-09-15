@@ -12,12 +12,7 @@ function c62543393.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c62543393.cfilter(c)
-	if not c:IsAttribute(ATTRIBUTE_WATER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c62543393.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c62543393.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,nil) end

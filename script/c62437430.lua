@@ -21,9 +21,8 @@ function c62437430.initial_effect(c)
 	e1:SetLabelObject(e2)
 end
 function c62437430.filter(c)
-	if not c:IsAttribute(ATTRIBUTE_WATER) or not c:IsAbleToRemove()
-		or (c:IsLocation(LOCATION_MZONE) and c:IsFacedown()) then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToRemove() and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup()) 
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))
 end
 function c62437430.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c62437430.filter,tp,0x16,0,1,nil) end
@@ -52,7 +51,7 @@ function c62437430.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c62437430.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

@@ -12,12 +12,7 @@ function c511001066.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001066.cfilter(c,e,tp)
-	if not c:IsAbleToRemoveAsCost() or not c:IsRace(RACE_MACHINE) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAbleToRemoveAsCost() and c:IsRace(RACE_MACHINE) and aux.SpElimFilter(c,true)
 end
 function c511001066.filter(c,g,sg,e,tp)
 	sg:AddCard(c)

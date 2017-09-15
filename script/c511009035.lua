@@ -18,13 +18,8 @@ function c511009035.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
 function c511009035.cfilter(c,tp)
-	if c:GetAttack()<=0 or not c:IsSetCard(0xc008) or not c:IsAbleToRemoveAsCost() 
-		or not Duel.IsExistingTarget(c511009035.filter,tp,LOCATION_MZONE,0,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:GetAttack()>0 and c:IsSetCard(0xc008) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingTarget(c511009035.filter,tp,LOCATION_MZONE,0,1,c)
 end
 function c511009035.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0xc008) 

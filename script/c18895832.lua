@@ -15,30 +15,20 @@ function c18895832.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,1000)
 end
 function c18895832.filter(c)
-	return c:IsFaceup() and c:IsRace(RACE_MACHINE)
+	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and aux.SpElimFilter(c,true,true)
 end
 function c18895832.tfilter(c)
 	return not c:IsAbleToRemove()
 end
 function c18895832.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local g
-		if Duel.IsPlayerAffectedByEffect(1-tp,69832741) then
-			g=Duel.GetMatchingGroup(c18895832.filter,tp,0,LOCATION_MZONE,nil)
-		else
-			g=Duel.GetMatchingGroup(c18895832.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
-		end
+		local g=Duel.GetMatchingGroup(c18895832.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
 		return g:GetCount()>0 and not g:IsExists(c18895832.tfilter,1,nil)
 	end
 	local g=Duel.GetMatchingGroup(c18895832.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
 end
 function c18895832.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g
-	if Duel.IsPlayerAffectedByEffect(1-tp,69832741) then
-		g=Duel.GetMatchingGroup(c18895832.filter,tp,0,LOCATION_MZONE,nil)
-	else
-		g=Duel.GetMatchingGroup(c18895832.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
-	end
+	local g=Duel.GetMatchingGroup(c18895832.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end

@@ -25,12 +25,7 @@ function c86559484.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c86559484.cfilter(c,rac)
-	if not c:IsRace(rac) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(rac) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c86559484.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c86559484.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,RACE_DRAGON)

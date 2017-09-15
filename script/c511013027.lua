@@ -18,13 +18,8 @@ function c511013027.filter(c,lv)
 end
 function c511013027.rfilter(c,tp)
 	local lv=c:GetLevel()
-	if lv<=0 or not c:IsAbleToRemove()
-		or not Duel.IsExistingMatchingCard(c511013027.filter,tp,LOCATION_MZONE,0,1,c,lv) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return lv>0 and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingMatchingCard(c511013027.filter,tp,LOCATION_MZONE,0,1,c,lv)
 end
 function c511013027.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c511013027.rfilter(chkc,tp) end

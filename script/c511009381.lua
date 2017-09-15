@@ -61,7 +61,7 @@ function c511009381.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EVENT_TO_GRAVE)
 		e1:SetRange(LOCATION_GRAVE)
 		e1:SetCondition(c511009381.spcon)
-		e1:SetCost(c511009381.spcost)
+		e1:SetCost(aux.bfgcost)
 		e1:SetTarget(c511009381.sptg)
 		e1:SetOperation(c511009381.spop)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
@@ -75,11 +75,6 @@ function c511009381.cfilter(c,tp)
 end
 function c511009381.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c511009381.cfilter,1,nil,tp)
-end
-function c511009381.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511009381.aclimit(e,re,tp)
 	return re:GetHandler():GetOriginalCode()==511009381

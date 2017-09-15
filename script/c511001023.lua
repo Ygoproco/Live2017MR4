@@ -11,13 +11,7 @@ function c511001023.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001023.cfilter(c)
-	if not c:IsCode(25862681) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_EXTRA) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsCode(25862681) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_EXTRA) or aux.SpElimFilter(c,true))
 end
 function c511001023.confilter(c)
 	return c:IsFaceup() and c:IsCode(20210570)

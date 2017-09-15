@@ -10,12 +10,7 @@ function c100000079.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000079.filter1(c,e)
-	if not c:IsCanBeFusionMaterial() or not c:IsAbleToRemove() or c:IsImmuneToEffect(e) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e) and aux.SpElimFilter(c,true)
 end
 function c100000079.filter2(c,e,tp,m)
 	return c:IsType(TYPE_FUSION) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)

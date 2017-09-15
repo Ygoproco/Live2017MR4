@@ -68,12 +68,7 @@ function c511010132.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(65676461)
 end
 function c511010132.rfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsShark() or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsShark() and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511010132.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)

@@ -12,12 +12,7 @@ function c450000348.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c450000348.filter(c)
-	if not c:IsAbleToRemoveAsCost() or not c:IsType(TYPE_MONSTER) or (not c:IsSetCard(0x55) and not c:IsCode(31801517)) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x55) or c:IsCode(31801517)) and aux.SpElimFilter(c,true)
 end
 function c450000348.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c450000348.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,nil) end

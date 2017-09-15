@@ -16,21 +16,11 @@ function c26194151.filter1(c,e,tp)
 end
 function c26194151.filter2(c,tp,sc)
 	local rg=Duel.GetMatchingGroup(c26194151.filter3,tp,LOCATION_MZONE+LOCATION_GRAVE,0,c)
-	if not c:IsType(TYPE_TUNER) or not c:IsAbleToRemove()
-		or not rg:IsExists(c26194151.filterchk,1,nil,rg,Group.CreateGroup(),tp,c,sc) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_TUNER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
+		and rg:IsExists(c26194151.filterchk,1,nil,rg,Group.CreateGroup(),tp,c,sc)
 end
 function c26194151.filter3(c)
-	if c:GetLevel()<=0 or c:IsType(TYPE_TUNER) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:GetLevel()>0 and not c:IsType(TYPE_TUNER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c26194151.filterchk(c,g,sg,tp,tuner,sc)
 	sg:AddCard(c)

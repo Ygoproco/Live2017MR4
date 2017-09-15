@@ -397,6 +397,23 @@ function Auxiliary.evospcon(e,tp,eg,ep,ev,re,r,rp)
 	return st>=(SUMMON_TYPE_SPECIAL+150) and st<(SUMMON_TYPE_SPECIAL+180)
 end
 
+--check for Spirit Elimination
+function Auxiliary.SpElimFilter(c,mustbefaceup,includemzone)
+	--includemzone - contains MZONE in original requirement
+	--NOTE: Should only check LOCATION_MZONE+LOCATION_GRAVE
+	if c:IsType(TYPE_MONSTER) then
+		if mustbefaceup and c:IsFacedown() then return false end
+		if includemzone then return c:IsLocation(LOCATION_MZONE) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) end
+		if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
+			return c:IsLocation(LOCATION_MZONE)
+		else
+			return c:IsLocation(LOCATION_GRAVE)
+		end
+	else
+		return c:IsLocation(LOCATION_GRAVE)
+	end
+end
+
 --add procedure to equip spells equipping by rule
 function Auxiliary.AddEquipProcedure(c,p,f,eqlimit,cost,tg,op,con)
 	--Note: p==0 is check equip spell controler, p==1 for opponent's, PLAYER_ALL for both player's monsters

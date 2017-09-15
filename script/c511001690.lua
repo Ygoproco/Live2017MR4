@@ -39,12 +39,7 @@ function c511001690.archchk(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511001690.spfilter(c)
-	if not c:IsYomi() or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsYomi() and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511001690.spcon(e,c)
 	if c==nil then return true end

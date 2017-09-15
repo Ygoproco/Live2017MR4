@@ -28,12 +28,7 @@ function c60879050.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_EARTH)
 end
 function c60879050.rmfilter(c)
-	if not c:IsRace(RACE_MACHINE) or not c:IsLevelAbove(10) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_MACHINE) and c:IsLevelAbove(10) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c60879050.filterchk(c,g,sg)
 	sg:AddCard(c)

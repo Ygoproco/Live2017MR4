@@ -14,13 +14,7 @@ function c14391920.condition(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp and ev>=3000
 end
 function c14391920.filter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_DECK) then return true end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and (c:IsLocation(LOCATION_DECK) or aux.SpElimFilter(c))
 end
 function c14391920.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c14391920.filter,tp,LOCATION_DECK+LOCATION_MZONE+LOCATION_GRAVE,LOCATION_DECK+LOCATION_MZONE+LOCATION_GRAVE,1,nil) end

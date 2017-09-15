@@ -59,13 +59,8 @@ function c58988903.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c58988903.cfilter(c,e,tp)
-	if not c:IsSetCard(0xba) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingTarget(c58988903.spfilter,tp,LOCATION_GRAVE,0,1,c,e,tp) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0xba) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(c58988903.spfilter,tp,LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c58988903.spfilter(c,e,tp)
 	if c.rum_limit and not c.rum_limit(c,e) then return false end

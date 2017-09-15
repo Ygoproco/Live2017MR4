@@ -15,12 +15,7 @@ function c511002323.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsRace(RACE_FAIRY)
 end
 function c511002323.costfilter(c)
-	if not c:IsRace(RACE_FAIRY) or c:GetLevel()~=1 or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_FAIRY) and c:GetLevel()==1 and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511002323.filter(c,g,sg,e,tp)
 	sg:AddCard(c)

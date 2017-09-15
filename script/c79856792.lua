@@ -89,12 +89,7 @@ function c79856792.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(79856792)==0
 end
 function c79856792.cfilter(c)
-	if not c:IsSetCard(0x1034) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x1034) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c79856792.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c79856792.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

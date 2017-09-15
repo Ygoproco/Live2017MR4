@@ -34,12 +34,7 @@ function c57348141.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c57348141.filter1,tp,LOCATION_MZONE,0,1,nil,tp)
 end
 function c57348141.cfilter(c)
-	if not c:IsType(TYPE_MONSTER) or not c:IsSetCard(0x38) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x38) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c57348141.filter(c,g,sg)
 	sg:AddCard(c)

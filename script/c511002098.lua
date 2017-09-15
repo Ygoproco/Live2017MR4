@@ -8,7 +8,7 @@ function c511002098.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCondition(c511002098.damcon)
-	e1:SetCost(c511002098.damcost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c511002098.damtg)
 	e1:SetOperation(c511002098.damop)
 	c:RegisterEffect(e1)
@@ -18,11 +18,6 @@ function c511002098.cfilter(c)
 end
 function c511002098.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511002098.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
-end
-function c511002098.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c511002098.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

@@ -18,12 +18,7 @@ function c39041729.filter(c,e,tp)
 		and rg:CheckWithSumEqual(Card.GetLevel,lv,2,99)
 end
 function c39041729.cfilter(c)
-	if not c:IsRace(RACE_DINOSAUR) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsRace(RACE_DINOSAUR) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c39041729.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)

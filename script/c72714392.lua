@@ -40,7 +40,7 @@ end
 function c72714392.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or not c:IsRelateToEffect(e) then return end
+	if not tc or not tc:IsRelateToEffect(e) or not c:IsRelateToEffect(e) then return end
 	local rg=Group.FromCards(c,tc)
 	if Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)==2 and Duel.GetLocationCountFromEx(tp)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

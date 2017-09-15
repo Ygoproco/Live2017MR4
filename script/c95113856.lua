@@ -20,8 +20,7 @@ function c95113856.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c95113856.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	return not c:IsLocation(LOCATION_GRAVE) or not c:IsType(TYPE_MONSTER) or not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
+	return c:IsAbleToRemove() and (not c:IsLocation(LOCATION_GRAVE) or aux.SpElimFilter(c))
 end
 function c95113856.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c95113856.rmfilter,tp,0,LOCATION_ONFIELD+LOCATION_HAND+LOCATION_GRAVE+LOCATION_DECK,1,nil) end
