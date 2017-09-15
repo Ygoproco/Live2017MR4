@@ -18,13 +18,8 @@ function c4357063.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c4357063.costfilter(c,e,tp)
-	if not c:IsSetCard(0x70) or not c:IsAbleToRemoveAsCost() or c:GetLevel()<=0
-		or not Duel.IsExistingTarget(c4357063.spfilter,tp,LOCATION_GRAVE,0,1,c,e,tp,c:GetLevel()) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x70) and c:IsAbleToRemoveAsCost() and c:GetLevel()>0 and aux.SpElimFilter(c,true)
+		and	Duel.IsExistingTarget(c4357063.spfilter,tp,LOCATION_GRAVE,0,1,c,e,tp,c:GetLevel())
 end
 function c4357063.spfilter(c,e,tp,lv)
 	return c:IsSetCard(0x70) and c:GetLevel()==lv and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

@@ -47,12 +47,7 @@ function c20374351.discon(e,tp,eg,ep,ev,re,r,rp)
 	return tg and tg:IsContains(c) and Duel.IsChainNegatable(ev)
 end
 function c20374351.cfilter(c)
-	if not c:IsSetCard(0x39) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x39) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c20374351.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c20374351.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

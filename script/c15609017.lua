@@ -16,12 +16,7 @@ function c15609017.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	return true
 end
 function c15609017.costfilter(c)
-	if not c:IsSetCard(0x2016) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x2016) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c15609017.filter(c,g,sg,card)
 	sg:AddCard(c)

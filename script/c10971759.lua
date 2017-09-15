@@ -54,13 +54,8 @@ function c10971759.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SpecialSummonComplete()
 end
-function c10971759.cfilter(c,e,tp)
-	if not c:IsType(TYPE_XYZ) or c:GetRank()==3 or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+function c10971759.cfilter(c)
+	return c:IsType(TYPE_XYZ) and c:GetRank()~=3 and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c10971759.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()

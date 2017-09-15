@@ -31,13 +31,8 @@ function c9583383.atkcon(e)
 end
 function c9583383.rfilter(c,tp)
 	local lv=c:GetLevel()
-	if lv<=0 or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingMatchingCard(c9583383.tfilter,tp,LOCATION_MZONE,0,1,c,lv) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return lv>0 and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingMatchingCard(c9583383.tfilter,tp,LOCATION_MZONE,0,1,c,lv)
 end
 function c9583383.tfilter(c,clv)
 	local lv=c:GetLevel()

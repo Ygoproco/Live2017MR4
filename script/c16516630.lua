@@ -7,18 +7,13 @@ function c16516630.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetCondition(c16516630.condition)
-	e1:SetCost(c16516630.cost)
+	e1:SetCost(aux.bfgcost)
 	e1:SetTarget(c16516630.target)
 	e1:SetOperation(c16516630.operation)
 	c:RegisterEffect(e1)
 end
 function c16516630.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1
-end
-function c16516630.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) 
-		and e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c16516630.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x33)
@@ -31,7 +26,7 @@ function c16516630.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c16516630.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
+	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

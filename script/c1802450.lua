@@ -25,12 +25,7 @@ function c1802450.cfilter(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_EARTH)
 end
 function c1802450.rmfilter(c)
-	if not c:IsAbleToRemove() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)
-	end
+	return c:IsAbleToRemove() and aux.SpElimFilter(c)
 end
 function c1802450.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return c1802450.rmtg(e,tp,eg,ep,ev,re,r,rp,0,chkc) end

@@ -90,12 +90,7 @@ function c10060427.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Release(sg,REASON_SUMMON+REASON_MATERIAL)
 end
 function c10060427.dfilter(c)
-	if not c:IsSetCard(0x1d) or not c:IsAbleToRemoveAsCost() then return false end
-	if c:IsLocation(LOCATION_GRAVE) then
-		return (not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) or not c:IsType(TYPE_MONSTER))
-	else
-		return Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and c:IsFaceup()
-	end
+	return c:IsSetCard(0x1d) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c10060427.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c10060427.dfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

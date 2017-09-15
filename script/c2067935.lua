@@ -25,12 +25,7 @@ function c2067935.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c2067935.rmfilter(c)
-	if not c:IsSetCard(0x19) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0x19) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c2067935.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c2067935.rmfilter(chkc) end
@@ -42,7 +37,7 @@ end
 function c2067935.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local code=tc:GetOriginalCode()
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 		if c:IsFacedown() or not c:IsRelateToEffect(e) then return end

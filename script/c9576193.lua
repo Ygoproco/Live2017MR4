@@ -15,12 +15,7 @@ function c9576193.filter1(c,tp)
 	return lv>0 and c:IsFaceup() and Duel.IsExistingTarget(c9576193.filter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,lv)
 end
 function c9576193.filter2(c,lv)
-	if c:GetLevel()~=lv or not c:IsAbleToRemove() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:GetLevel()==lv and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
 end
 function c9576193.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

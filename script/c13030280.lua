@@ -22,14 +22,7 @@ function c13030280.initial_effect(c)
 	e2:SetCost(c13030280.damcost)
 	e2:SetTarget(c13030280.damtg)
 	e2:SetOperation(c13030280.damop)
-	c:RegisterEffect(e2)
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e3:SetCode(511002571)
-	e3:SetLabel(13030280)
-	e3:SetLabelObject(e2)
-	c:RegisterEffect(e3)
+	c:RegisterEffect(e2,false,1)
 end
 function c13030280.valcon(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE)~=0
@@ -53,7 +46,7 @@ function c13030280.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c13030280.damop(e,tp,eg,ep,ev,re,r,rp)
 	local bc=Duel.GetFirstTarget()
-	if bc:IsRelateToEffect(e) and Duel.Remove(bc,POS_FACEUP,REASON_EFFECT)>0 then
+	if bc and bc:IsRelateToEffect(e) and Duel.Remove(bc,POS_FACEUP,REASON_EFFECT)>0 then
 		Duel.Damage(1-tp,bc:GetBaseAttack(),REASON_EFFECT)
 	end
 end

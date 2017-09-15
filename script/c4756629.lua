@@ -31,13 +31,8 @@ function c4756629.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c4756629.rmfilter(c,tp)
-	if not c:IsSetCard(0xa) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingTarget(c4756629.filter,tp,LOCATION_GRAVE,0,1,c) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c:IsSetCard(0xa) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingTarget(c4756629.filter,tp,LOCATION_GRAVE,0,1,c)
 end
 function c4756629.filter(c)
 	return c:IsSetCard(0xa) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
@@ -58,7 +53,7 @@ end
 function c4756629.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
 	end

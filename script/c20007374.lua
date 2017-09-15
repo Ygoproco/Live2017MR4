@@ -103,12 +103,7 @@ function c20007374.cacon(e,tp,eg,ep,ev,re,r,rp)
 	return ec and eg:IsContains(ec)
 end
 function c20007374.cafilter(c)
-	if not c20007374.cfilter(c) or not c:IsAbleToRemoveAsCost() then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return c20007374.cfilter(c) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c20007374.cacost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c20007374.cafilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,e:GetHandler():GetEquipTarget()) end

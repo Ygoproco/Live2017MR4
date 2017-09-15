@@ -83,7 +83,7 @@ function c4474060.thfilter(c)
 end
 function c4474060.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(e:GetHandlerPlayer(),69832741) and c:IsAbleToRemoveAsCost()
+	if chk==0 then return aux.bfgcost(e,tp,eg,ep,ev,re,r,rp,0)
 		and Duel.IsExistingMatchingCard(c4474060.cfilter,tp,LOCATION_GRAVE,0,1,c,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c4474060.cfilter,tp,LOCATION_GRAVE,0,1,1,c,tp)
@@ -99,7 +99,7 @@ function c4474060.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c4474060.thop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

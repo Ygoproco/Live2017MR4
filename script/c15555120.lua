@@ -13,13 +13,8 @@ end
 c15555120.check=false
 function c15555120.cfilter(c,tp)
 	local lv=c:GetLevel()
-	if lv<=0 or not c:IsSetCard(0x2016) or not c:IsType(TYPE_MONSTER) or not c:IsAbleToRemoveAsCost()
-		or not Duel.IsExistingTarget(c15555120.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,lv) then return false end
-	if Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) then
-		return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-	else
-		return c:IsLocation(LOCATION_GRAVE)
-	end
+	return lv>0 and c:IsSetCard(0x2016) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+		and Duel.IsExistingTarget(c15555120.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c,lv)
 end
 function c15555120.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c15555120.check=true

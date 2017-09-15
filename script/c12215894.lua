@@ -65,11 +65,11 @@ function c12215894.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c12215894.cfilter(c)
 	return c:IsSetCard(0xab) and c:IsAbleToRemoveAsCost() and not c:IsCode(12215894)
-		and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
+		and (c:IsLocation(LOCATION_SZONE) or aux.SpElimFilter(c,true,true))
 end
 function c12215894.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c12215894.cfilter,tp,LOCATION_GRAVE+LOCATION_ONFIELD,0,nil)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,69832741) and g:GetClassCount(Card.GetCode)>=9 end
+	if chk==0 then return g:GetClassCount(Card.GetCode)>=9 end
 	local rg=Group.CreateGroup()
 	for i=1,9 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
