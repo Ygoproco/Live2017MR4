@@ -9,6 +9,7 @@ function c81172176.initial_effect(c)
 	e1:SetOperation(c81172176.activate)
 	c:RegisterEffect(e1)
 end
+c81172176.toss_coin=true
 function c81172176.rmfilter(c)
 	return c:IsAbleToRemove() and aux.SpElimFilter(c)
 end

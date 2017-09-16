@@ -34,6 +34,7 @@ function c17032740.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 c17032740.material_setcode={0x8,0x3008,0x9,0x1f}
+c17032740.toss_coin=true
 function c17032740.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToDeckOrExtraAsCost,tp,LOCATION_ONFIELD,0,nil)
 end
