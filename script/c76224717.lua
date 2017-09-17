@@ -40,26 +40,26 @@ end
 function c76224717.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	if tc:IsSummonType(SUMMON_TYPE_ADVANCE) then
-		c76224717[ep]=c76224717[ep]+tc:GetMaterialCount()
+		local mg=tc:GetMaterial()
+		if mg then
+			c76224717[ep]=c76224717[ep]+mg:FilterCount(Card.IsType,nil,TYPE_MONSTER)
+		end
 	end
 end
 function c76224717.clear(e,tp,eg,ep,ev,re,r,rp)
 	c76224717[0]=0
 	c76224717[1]=0
 end
-function c76224717.filter1(c)
-	return c:IsFacedown()
-end
 function c76224717.filter2(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c76224717.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=c76224717[tp]>0 and Duel.IsExistingMatchingCard(c76224717.filter1,tp,0,LOCATION_ONFIELD,1,nil)
+	local b1=c76224717[tp]>0 and Duel.IsExistingMatchingCard(Card.IsFacedown,tp,0,LOCATION_ONFIELD,1,nil)
 	local b2=c76224717[tp]>1 and Duel.IsPlayerCanDraw(tp,1)
 	local b3=c76224717[tp]>2 and Duel.IsExistingMatchingCard(c76224717.filter2,tp,LOCATION_GRAVE,0,1,nil)
 	if chk==0 then return b1 or b2 or b3 end
 	if b1 then
-		local g=Duel.GetMatchingGroup(c76224717.filter1,tp,0,LOCATION_ONFIELD,nil)
+		local g=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_ONFIELD,nil)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	end
 	if b2 then
@@ -74,7 +74,7 @@ function c76224717.operation(e,tp,eg,ep,ev,re,r,rp)
 	local act=false
 	if c76224717[tp]>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g=Duel.SelectMatchingCard(tp,c76224717.filter1,tp,0,LOCATION_ONFIELD,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,Card.IsFacedown,tp,0,LOCATION_ONFIELD,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.Destroy(g,REASON_EFFECT)
 			act=true
