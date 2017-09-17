@@ -98,7 +98,7 @@ function c100221001.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100221001.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM and e:GetHandler():IsLocation(LOCATION_HAND)
+	return bit.band(st,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM and not e:GetHandler():IsLocation(LOCATION_HAND)
 end
 function c100221001.hspfilter1(c,g)
 	local rg=Group.FromCards(c)
