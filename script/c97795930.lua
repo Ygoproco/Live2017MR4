@@ -35,13 +35,20 @@ function c97795930.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c97795930.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		local e0=Effect.CreateEffect(e:GetHandler())
+		e0:SetType(EFFECT_TYPE_SINGLE)
+		e0:SetCode(97795930)
+		e0:SetReset(RESET_EVENT+0x1fe0000)
+		e0:SetValue(0)
+		tc:RegisterEffect(e0)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 		e1:SetCode(EVENT_BATTLE_DESTROYING)
 		e1:SetCondition(c97795930.wincon)
 		e1:SetOperation(c97795930.winop)
 		e1:SetOwnerPlayer(tp)
+		e1:SetLabelObject(e0)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 	end
@@ -56,9 +63,11 @@ function c97795930.wincon(e,tp,eg,ep,ev,re,r,rp)
 		and c:GetControler()==e:GetOwnerPlayer()
 end
 function c97795930.winop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	c:RegisterFlagEffect(97795930,RESET_EVENT+0x1fe0000,0,0)
-	if c:GetFlagEffect(97795930)>2 then
+	local te=e:GetLabelObject()
+	local value=te:GetValue()+1
+	te:SetValue(value)
+	e:GetOwner():SetTurnCounter(value)
+	if value>2 then
 		local WIN_REASON_CELESTIAL_WHIRLPOOL=0x1c
 		Duel.Win(tp,WIN_REASON_CELESTIAL_WHIRLPOOL)
 	end
