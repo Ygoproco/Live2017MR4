@@ -38,7 +38,11 @@ function c82321037.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and g:GetCount()>=2 and g:IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_WATER)
 		and (ft>0 or g:IsExists(c82321037.locfilter,-ft+1,nil,tp)) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,2,tp,loc)
+	if (g:GetCount()==2 and g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)==1) or not g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
+	else
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,2,tp,loc)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c82321037.rmfilter(c)
