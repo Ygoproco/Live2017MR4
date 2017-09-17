@@ -49,11 +49,12 @@ function c24590232.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tuner=g2:GetFirst()
 		local rg=Duel.GetMatchingGroup(c24590232.filter3,tp,LOCATION_MZONE+LOCATION_GRAVE,0,tuner)
 		local tc
+		local sg=Group.CreateGroup()
 		::start::
 			local tg=rg:Filter(c24590232.filterchk,sg,rg,sg,tp,tuner,sc)
 			if tg:GetCount()<=0 then goto jump end
 			sg:AddCard(tuner)
-			local cancel=Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0 
+			local cancel=sg:GetCount()>1 and Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0 
 				and sg:CheckWithSumEqual(Card.GetLevel,sc:GetLevel(),sg:GetCount(),sg:GetCount())
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 			tc=Group.SelectUnselect(tg,sg,tp,cancel,cancel)
