@@ -21,7 +21,7 @@ end
 function c26285788.addcount(e,tp,eg,ep,ev,re,r,rp)
 	local c=eg:GetFirst()
 	while c~=nil do
-		if not c:IsType(TYPE_TOKEN) then
+		if c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_TOKEN) then
 			local p=c:GetReasonPlayer()
 			Duel.RegisterFlagEffect(p,26285789,RESET_PHASE+PHASE_END,0,1)
 		end
@@ -48,9 +48,6 @@ end
 function c26285788.filter1(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
-function c26285788.filter2(c)
-	return c:IsFaceup()
-end
 function c26285788.effectop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,26285788)
 	local ct=Duel.GetFlagEffect(tp,26285789)
@@ -65,7 +62,7 @@ function c26285788.effectop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,tg)
 		end
 	else
-		local g=Duel.GetMatchingGroup(c26285788.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
+		local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 		if g:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local tg=g:Select(tp,1,3,nil)
