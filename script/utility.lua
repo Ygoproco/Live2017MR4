@@ -40,9 +40,11 @@ function Card.RegisterEffect(c,e,forced,...)
 	local reg={...}
 	local resetflag,resetcount=e:GetReset()
 	for _,val in ipairs(reg) do
+		local prop=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE
+		if e:IsHasProperty(EFFECT_FLAG_UNCOPYABLE) then prop=prop+EFFECT_FLAG_UNCOPYABLE end
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+		e2:SetProperty(prop)
 		if val==1 then
 			e2:SetCode(511002571)
 		elseif val==2 then
