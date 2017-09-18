@@ -10,7 +10,7 @@ function c5489987.initial_effect(c)
 	e1:SetCost(c5489987.drcost)
 	e1:SetTarget(c5489987.drtg)
 	e1:SetOperation(c5489987.drop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,2)
 	--atk up
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(5489987,1))

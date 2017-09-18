@@ -8,7 +8,7 @@ function c80630522.initial_effect(c)
 	e1:SetCondition(c80630522.spcon)
 	e1:SetTarget(c80630522.sptg)
 	e1:SetOperation(c80630522.spop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,2)
 	--draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DRAW)
