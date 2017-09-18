@@ -56,7 +56,6 @@ function Card.RegisterEffect(c,e,forced,...)
 			e2:SetReset(resetflag)
 		end
 		c:RegisterEffect(e2)
-		end
 	end
 end
 
