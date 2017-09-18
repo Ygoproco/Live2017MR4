@@ -8,7 +8,7 @@ function c17141718.initial_effect(c)
 	e1:SetCondition(c17141718.spcon)
 	e1:SetTarget(c17141718.sptg)
 	e1:SetOperation(c17141718.spop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,2)
 	--shuffle
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DRAW)
