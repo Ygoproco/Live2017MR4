@@ -13,6 +13,8 @@ function c64631466.initial_effect(c)
 	e1:SetTarget(c64631466.eqtg)
 	e1:SetOperation(c64631466.eqop)
 	c:RegisterEffect(e1)
+	local te=aux.AddEREquipLimit(c,c64631466.eqcon,c64631466.eqval,c64631466.equipop,e1)
+	e1:SetLabelObject(te)
 	--atk/def
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -39,7 +41,6 @@ function c64631466.initial_effect(c)
 	e4:SetCondition(c64631466.damcon)
 	e4:SetOperation(c64631466.damop)
 	c:RegisterEffect(e4)
-	aux.AddEREquipLimit(c,c64631466.eqcon,c64631466.eqval,c64631466.equipop)
 end
 function c64631466.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetHandler():GetEquipGroup():Filter(c64631466.eqfilter,nil)
@@ -60,18 +61,25 @@ function c64631466.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
 function c64631466.eqlimit(e,c)
-	return e:GetOwner()==c
+	if e:GetOwner()~=c then return false end
+	local eff={c:GetCardEffect(100407001)}
+	for _,te in ipairs(eff) do
+		if te==e:GetLabelObject() then return true end
+	end
+	return false
 end
 function c64631466.equipop(c,e,tp,tc)
 	if not Duel.Equip(tp,tc,c,false) then return end
 	--Add Equip limit
 	tc:RegisterFlagEffect(64631466,RESET_EVENT+0x1fe0000,0,0)
+	local te=e:GetLabelObject()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
 	e1:SetCode(EFFECT_EQUIP_LIMIT)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	e1:SetValue(c64631466.eqlimit)
+	e1:SetLabelObject(te)
 	tc:RegisterEffect(e1)
 	--substitute
 	local e2=Effect.CreateEffect(c)

@@ -420,7 +420,7 @@ function Auxiliary.SpElimFilter(c,mustbefaceup,includemzone)
 end
 
 --check for Eyes Restrict equip limit
-function Auxiliary.AddEREquipLimit(c,con,equipval,equipop,prop,resetflag,resetcount)
+function Auxiliary.AddEREquipLimit(c,con,equipval,equipop,linkedeff,prop,resetflag,resetcount)
 	local finalprop=EFFECT_FLAG_CANNOT_DISABLE
 	if prop~=nil then
 		finalprop=finalprop+prop
@@ -432,6 +432,7 @@ function Auxiliary.AddEREquipLimit(c,con,equipval,equipop,prop,resetflag,resetco
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(finalprop)
 	e1:SetCode(100407001) --to be changed when official code is released
+	e1:SetLabelObject(linkedeff)
 	if resetflag and resetcount then
 		e1:SetReset(resetflag,resetcount)
 	elseif resetflag then
@@ -440,6 +441,7 @@ function Auxiliary.AddEREquipLimit(c,con,equipval,equipop,prop,resetflag,resetco
 	e1:SetValue(function(ec,c,tp) return equipval(ec,c,tp) end)
 	e1:SetOperation(function(c,e,tp,tc) equipop(c,e,tp,tc) end)
 	c:RegisterEffect(e1)
+	return e1
 end
 
 --add procedure to equip spells equipping by rule

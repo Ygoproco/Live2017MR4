@@ -112,6 +112,6 @@ function c100407004.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if not tc2 then return end
 	local te=tc2:GetCardEffect(100407001)
 	if tc1:IsFaceup() and tc1:IsRelateToEffect(e) and tc1:IsControler(1-tp) then
-		te:GetOperation()(tc2,e,tp,tc1)
+		te:GetOperation()(tc2,te:GetLabelObject(),tp,tc1)
 	end
 end
