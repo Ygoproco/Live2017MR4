@@ -37,7 +37,7 @@ function c100407001.eqfilter(c,ec,tp)
 	local eff={c:GetCardEffect(100407001)}
 	if c:IsFacedown() or ((not c:IsSetCard(0x20a) or not c:IsType(TYPE_FUSION)) and not c:IsCode(64631466,63519819)) then return false end
 	for _,te in ipairs(eff) do
-		if te:GetValue()(c,ec,tp) then return true end
+		if te:GetValue()(ec,c,tp) then return true end
 	end
 	return false
 end

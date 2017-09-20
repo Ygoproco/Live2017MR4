@@ -39,20 +39,17 @@ function c64631466.initial_effect(c)
 	e4:SetCondition(c64631466.damcon)
 	e4:SetOperation(c64631466.damop)
 	c:RegisterEffect(e4)
-	aux.AddEREquipLimit(c,nil,c64631466.eqval,c64631466.equipop)
+	aux.AddEREquipLimit(c,c64631466.eqcon,c64631466.eqval,c64631466.equipop)
 end
 function c64631466.eqcon(e,tp,eg,ep,ev,re,r,rp)
-	return c64631466.eqval(e:GetHandler())
+	local g=e:GetHandler():GetEquipGroup():Filter(c64631466.eqfilter,nil)
+	return g:GetCount()==0
 end
 function c64631466.eqfilter(c)
 	return c:GetFlagEffect(64631466)~=0 
 end
-function c64631466.eqval(c,ec,tp)
-	local g=c:GetEquipGroup():Filter(c64631466.eqfilter,nil)
-	if ec then
-		if ec:IsControler(tp) or not ec:IsAbleToChangeControler() then return false end
-	end
-	return g:GetCount()==0
+function c64631466.eqval(ec,c,tp)
+	return ec:IsControler(1-tp) and ec:IsAbleToChangeControler()
 end
 function c64631466.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToChangeControler() end

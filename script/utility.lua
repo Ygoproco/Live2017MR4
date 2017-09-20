@@ -437,7 +437,7 @@ function Auxiliary.AddEREquipLimit(c,con,equipval,equipop,prop,resetflag,resetco
 	elseif resetflag then
 		e1:SetReset(resetflag)
 	end
-	e1:SetValue(function(c,ec,tp) return equipval(c,ec,tp) end)
+	e1:SetValue(function(ec,c,tp) return equipval(ec,c,tp) end)
 	e1:SetOperation(function(c,e,tp,tc) equipop(c,e,tp,tc) end)
 	c:RegisterEffect(e1)
 end
