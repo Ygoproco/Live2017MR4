@@ -89,7 +89,7 @@ function c100407004.filter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and Duel.IsExistingMatchingCard(c100407004.eqfilter,tp,LOCATION_MZONE,0,1,nil,c,tp)
 end
 function c100407004.eqfilter(c,ec,tp)
-	local eff={c:GetCardEffect(100419001)}
+	local eff={c:GetCardEffect(100407001)}
 	if c:IsFacedown() or ((not c:IsSetCard(0x20a) or not c:IsType(TYPE_FUSION)) and not c:IsCode(64631466,63519819)) then return false end
 	for _,te in ipairs(eff) do
 		if te:GetValue()(c,ec,tp) then return true end
@@ -110,7 +110,7 @@ function c100407004.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c100407004.eqfilter,tp,LOCATION_MZONE,0,1,1,nil,tc1,tp)
 	local tc2=g:GetFirst()
 	if not tc2 then return end
-	local te=tc2:GetCardEffect(100419001)
+	local te=tc2:GetCardEffect(100407001)
 	if tc1:IsFaceup() and tc1:IsRelateToEffect(e) and tc1:IsControler(1-tp) then
 		te:GetOperation()(tc2,e,tp,tc1)
 	end

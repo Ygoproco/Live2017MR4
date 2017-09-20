@@ -431,7 +431,7 @@ function Auxiliary.AddEREquipLimit(c,con,equipval,equipop,prop,resetflag,resetco
 	end
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(finalprop)
-	e1:SetCode(100419001) --to be changed when official code is released
+	e1:SetCode(100407001) --to be changed when official code is released
 	if resetflag and resetcount then
 		e1:SetReset(resetflag,resetcount)
 	elseif resetflag then
