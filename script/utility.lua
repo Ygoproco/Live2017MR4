@@ -441,7 +441,44 @@ function Auxiliary.AddEREquipLimit(c,con,equipval,equipop,linkedeff,prop,resetfl
 	e1:SetValue(function(ec,c,tp) return equipval(ec,c,tp) end)
 	e1:SetOperation(function(c,e,tp,tc) equipop(c,e,tp,tc) end)
 	c:RegisterEffect(e1)
-	return e1
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(finalprop-EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetCode(100407001+EFFECT_EQUIP_LIMIT) --to be changed when official code is released
+	if resetflag and resetcount then
+		e2:SetReset(resetflag,resetcount)
+	elseif resetflag then
+		e2:SetReset(resetflag)
+	end
+	e2:SetValue(function(ec,c,tp) return equipval(ec,c,tp) end)
+	e2:SetOperation(function(c,e,tp,tc) equipop(c,e,tp,tc) end)
+	c:RegisterEffect(e2)
+	linkedeff:SetLabelObject(e2)
+end
+
+function Auxiliary.EquipByEffectLimitRegister(e,c)
+	if e:GetOwner()~=c then return false end
+	local eff={c:GetCardEffect(100407001+EFFECT_EQUIP_LIMIT)}
+	for _,te in ipairs(eff) do
+		if te==e:GetLabelObject() then return true end
+	end
+	return false
+end
+--register for "Equip to this card by its effect"
+function Auxiliary.EquipByEffectAndLimitRegister(c,e,tp,tc,code)
+	if not Duel.Equip(tp,tc,c,false) then return false end
+	--Add Equip limit
+	tc:RegisterFlagEffect(code,RESET_EVENT+0x1fe0000,0,0)
+	local te=e:GetLabelObject()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
+	e1:SetCode(EFFECT_EQUIP_LIMIT)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetValue(Auxiliary.EquipByEffectLimitRegister)
+	e1:SetLabelObject(te)
+	tc:RegisterEffect(e1)
+	return true
 end
 
 --add procedure to equip spells equipping by rule
