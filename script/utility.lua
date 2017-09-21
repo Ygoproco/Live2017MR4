@@ -463,8 +463,9 @@ function Auxiliary.EquipByEffectLimitRegister(e,c)
 	return false
 end
 --register for "Equip to this card by its effect"
-function Auxiliary.EquipByEffectAndLimitRegister(c,e,tp,tc,code)
-	if not Duel.Equip(tp,tc,c,false) then return false end
+function Auxiliary.EquipByEffectAndLimitRegister(c,e,tp,tc,code,mustbefaceup)
+	local up=false or mustbefaceup
+	if not Duel.Equip(tp,tc,c,up) then return false end
 	--Add Equip limit
 	tc:RegisterFlagEffect(code,RESET_EVENT+0x1fe0000,0,0)
 	local te=e:GetLabelObject()
