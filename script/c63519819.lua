@@ -54,7 +54,7 @@ function c63519819.eqfilter(c)
 	return c:GetFlagEffect(63519819)~=0 
 end
 function c63519819.eqval(ec,c,tp)
-	return ec:IsControler(1-tp) and ec:IsAbleToChangeControler()
+	return ec:IsControler(1-tp)
 end
 function c63519819.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToChangeControler() end
@@ -80,7 +80,7 @@ function c63519819.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsControler(1-tp) then
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
-		c63519819.equipop(c,e,tp,tc)
+			c63519819.equipop(c,e,tp,tc)
 		else Duel.SendtoGrave(tc,REASON_EFFECT) end
 	end
 end

@@ -49,7 +49,7 @@ function c100407003.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c100407003.eqval(ec,c,tp)
-	return ec:IsControler(1-tp) and ec:IsType(TYPE_EFFECT) and ec:IsAbleToChangeControler()
+	return ec:IsControler(1-tp) and ec:IsType(TYPE_EFFECT)
 end
 function c100407003.eqcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return ep~=tp and re:IsActiveType(TYPE_MONSTER)

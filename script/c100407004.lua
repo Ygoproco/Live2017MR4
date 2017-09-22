@@ -86,7 +86,8 @@ function c100407004.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100407004.filter(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and Duel.IsExistingMatchingCard(c100407004.eqfilter,tp,LOCATION_MZONE,0,1,nil,c,tp)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and c:IsAbleToChangeControler() 
+		and Duel.IsExistingMatchingCard(c100407004.eqfilter,tp,LOCATION_MZONE,0,1,nil,c,tp)
 end
 function c100407004.eqfilter(c,ec,tp)
 	local eff={c:GetCardEffect(100407001)}

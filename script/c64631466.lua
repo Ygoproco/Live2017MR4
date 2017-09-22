@@ -49,7 +49,7 @@ function c64631466.eqfilter(c)
 	return c:GetFlagEffect(64631466)~=0 
 end
 function c64631466.eqval(ec,c,tp)
-	return ec:IsControler(1-tp) and ec:IsAbleToChangeControler()
+	return ec:IsControler(1-tp)
 end
 function c64631466.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToChangeControler() end
