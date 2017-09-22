@@ -15,7 +15,7 @@ function c63519819.initial_effect(c)
 	e1:SetTarget(c63519819.eqtg)
 	e1:SetOperation(c63519819.eqop)
 	c:RegisterEffect(e1)
-	aux.AddEREquipLimit(c,c63519819.eqcon,c63519819.eqval,c63519819.equipop,e1)
+	aux.AddEREquipLimit(c,c63519819.eqcon,function(ec,_,tp) return ec:IsControler(1-tp) end,c63519819.equipop,e1)
 	--cannot attack
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -52,9 +52,6 @@ function c63519819.eqcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c63519819.eqfilter(c)
 	return c:GetFlagEffect(63519819)~=0 
-end
-function c63519819.eqval(ec,c,tp)
-	return ec:IsControler(1-tp)
 end
 function c63519819.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToChangeControler() end

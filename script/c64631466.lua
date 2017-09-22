@@ -13,7 +13,7 @@ function c64631466.initial_effect(c)
 	e1:SetTarget(c64631466.eqtg)
 	e1:SetOperation(c64631466.eqop)
 	c:RegisterEffect(e1)
-	aux.AddEREquipLimit(c,c64631466.eqcon,c64631466.eqval,c64631466.equipop,e1)
+	aux.AddEREquipLimit(c,c64631466.eqcon,function(ec,_,tp) return ec:IsControler(1-tp) end,c64631466.equipop,e1)
 	--atk/def
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -47,9 +47,6 @@ function c64631466.eqcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c64631466.eqfilter(c)
 	return c:GetFlagEffect(64631466)~=0 
-end
-function c64631466.eqval(ec,c,tp)
-	return ec:IsControler(1-tp)
 end
 function c64631466.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToChangeControler() end
