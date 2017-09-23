@@ -6,7 +6,7 @@ function c100407003.initial_effect(c)
 	aux.AddFusionProcMix(c,true,true,64631466,aux.FilterBoolFunctionEx(Card.IsType,TYPE_EFFECT))
 	--Equip
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(100419003,0))
+	e1:SetDescription(aux.Stringid(100407003,0))
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
@@ -17,8 +17,7 @@ function c100407003.initial_effect(c)
 	e1:SetTarget(c100407003.eqtg)
 	e1:SetOperation(c100407003.eqop)
 	c:RegisterEffect(e1)
-	local te=aux.AddEREquipLimit(c,nil,c100407003.eqval,c100407003.equipop,e1)
-	e1:SetLabelObject(te)
+	aux.AddEREquipLimit(c,nil,c100407003.eqval,c100407003.equipop,e1)
 	--atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -37,7 +36,7 @@ function c100407003.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetCode(EFFECT_DISABLE)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e4:SetTargetRange(0x7f,0x7f)
 	e4:SetTarget(c100407003.distg)
 	c:RegisterEffect(e4)
 	--atk limit
@@ -45,12 +44,12 @@ function c100407003.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_FIELD)
 	e5:SetCode(EFFECT_CANNOT_ATTACK)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e5:SetTargetRange(0x7f,0x7f)
 	e5:SetTarget(c100407003.distg)
 	c:RegisterEffect(e5)
 end
 function c100407003.eqval(ec,c,tp)
-	return ec:IsControler(1-tp) and ec:IsType(TYPE_EFFECT) and ec:IsAbleToChangeControler()
+	return ec:IsControler(1-tp) and ec:IsType(TYPE_EFFECT)
 end
 function c100407003.eqcon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return ep~=tp and re:IsActiveType(TYPE_MONSTER)
@@ -66,27 +65,8 @@ function c100407003.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,c100407003.eqfilter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
-function c100407003.eqlimit(e,c)
-	if e:GetOwner()~=c then return false end
-	local eff={c:GetCardEffect(100407001)}
-	for _,te in ipairs(eff) do
-		if te==e:GetLabelObject() then return true end
-	end
-	return false
-end
 function c100407003.equipop(c,e,tp,tc)
-	if not Duel.Equip(tp,tc,c,false) then return end
-	--Add Equip limit
-	local te=e:GetLabelObject()
-	tc:RegisterFlagEffect(100419003,RESET_EVENT+0x1fe0000,0,0)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
-	e1:SetCode(EFFECT_EQUIP_LIMIT)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
-	e1:SetValue(c100407003.eqlimit)
-	e1:SetLabelObject(te)
-	tc:RegisterEffect(e1)
+	aux.EquipByEffectAndLimitRegister(c,e,tp,tc,100407003)
 end
 function c100407003.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -102,7 +82,7 @@ function c100407003.atkval(e,c)
 	local g=c:GetEquipGroup()
 	local tc=g:GetFirst()
 	while tc do
-		if tc:GetFlagEffect(100419003)~=0 and tc:IsFaceup() and tc:GetAttack()>=0 then
+		if tc:GetFlagEffect(100407003)~=0 and tc:IsFaceup() and tc:GetAttack()>=0 then
 			atk=atk+tc:GetAttack()
 		end
 		tc=g:GetNext()
@@ -114,7 +94,7 @@ function c100407003.defval(e,c)
 	local g=c:GetEquipGroup()
 	local tc=g:GetFirst()
 	while tc do
-		if tc:GetFlagEffect(100419003)~=0 and tc:IsFaceup() and tc:GetDefense()>=0 then
+		if tc:GetFlagEffect(100407003)~=0 and tc:IsFaceup() and tc:GetDefense()>=0 then
 			atk=atk+tc:GetDefense()
 		end
 		tc=g:GetNext()
@@ -122,7 +102,7 @@ function c100407003.defval(e,c)
 	return atk
 end
 function c100407003.disfilter(c)
-	return c:IsFaceup() and c:GetFlagEffect(100419003)~=0
+	return c:IsFaceup() and c:GetFlagEffect(100407003)~=0
 end
 function c100407003.distg(e,c)
 	local g=e:GetHandler():GetEquipGroup():Filter(c100407003.disfilter,nil)

@@ -15,8 +15,7 @@ function c63519819.initial_effect(c)
 	e1:SetTarget(c63519819.eqtg)
 	e1:SetOperation(c63519819.eqop)
 	c:RegisterEffect(e1)
-	local te=aux.AddEREquipLimit(c,c63519819.eqcon,c63519819.eqval,c63519819.equipop,e1)
-	e1:SetLabelObject(te)
+	aux.AddEREquipLimit(c,c63519819.eqcon,function(ec,_,tp) return ec:IsControler(1-tp) end,c63519819.equipop,e1)
 	--cannot attack
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -54,9 +53,6 @@ end
 function c63519819.eqfilter(c)
 	return c:GetFlagEffect(63519819)~=0 
 end
-function c63519819.eqval(ec,c,tp)
-	return ec:IsControler(1-tp) and ec:IsAbleToChangeControler()
-end
 function c63519819.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsAbleToChangeControler() end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
@@ -65,27 +61,8 @@ function c63519819.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToChangeControler,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
-function c63519819.eqlimit(e,c)
-	if e:GetOwner()~=c then return false end
-	local eff={c:GetCardEffect(100407001)}
-	for _,te in ipairs(eff) do
-		if te==e:GetLabelObject() then return true end
-	end
-	return false
-end
 function c63519819.equipop(c,e,tp,tc)
-	if not Duel.Equip(tp,tc,c,false) then return end
-	--Add Equip limit
-	tc:RegisterFlagEffect(63519819,RESET_EVENT+0x1fe0000,0,0)
-	local te=e:GetLabelObject()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
-	e1:SetCode(EFFECT_EQUIP_LIMIT)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
-	e1:SetValue(c63519819.eqlimit)
-	e1:SetLabelObject(te)
-	tc:RegisterEffect(e1)
+	if not aux.EquipByEffectAndLimitRegister(c,e,tp,tc,63519819) then return end
 	--substitute
 	local e2=Effect.CreateEffect(c)
  	e2:SetType(EFFECT_TYPE_EQUIP)
@@ -100,7 +77,7 @@ function c63519819.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsType(TYPE_MONSTER) and tc:IsControler(1-tp) then
 		if c:IsFaceup() and c:IsRelateToEffect(e) then
-		c63519819.equipop(c,e,tp,tc)
+			c63519819.equipop(c,e,tp,tc)
 		else Duel.SendtoGrave(tc,REASON_EFFECT) end
 	end
 end

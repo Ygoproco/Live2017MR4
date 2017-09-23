@@ -31,7 +31,8 @@ function c100407001.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
 end
 function c100407001.filter(c,tp)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and Duel.IsExistingMatchingCard(c100407001.eqfilter,tp,LOCATION_MZONE,0,1,nil,c,tp)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and c:IsAbleToChangeControler() 
+		and Duel.IsExistingMatchingCard(c100407001.eqfilter,tp,LOCATION_MZONE,0,1,nil,c,tp)
 end
 function c100407001.eqfilter(c,ec,tp)
 	local eff={c:GetCardEffect(100407001)}
