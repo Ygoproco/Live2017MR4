@@ -14,7 +14,7 @@ function c54458867.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c54458867.ddfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x201)
+	return c:IsFaceup() and c:IsSetCard(0x102)
 end
 function c54458867.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c54458867.ddfilter(chkc) end
