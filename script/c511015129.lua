@@ -14,17 +14,15 @@ function c511015129.initial_effect(c)
 	e2:SetDescription(aux.Stringid(698785,0))
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG2_XMDETACH)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(c511015129.cost)
 	e2:SetTarget(c511015129.target)
 	e2:SetOperation(c511015129.operation)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e2,false,1)
 end
 function c511015129.indes(e,c)
 	return not c:IsSetCard(0x48)
 end
-
 function c511015129.filter(c,seq,flag)
 	return c:GetSequence()==4-seq or (flag~=0 and c:IsLocation(LOCATION_MZONE) and (c:GetSequence()==4-seq+1 or c:GetSequence()==4-seq-1))
 end

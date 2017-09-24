@@ -2,19 +2,18 @@
 function c511009567.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_WINDBEAST),12,3)
-	c:EnableReviveLimit()
-	
+	c:EnableReviveLimit()	
 	--atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(33334269,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetProperty(EFFECT_FLAG2_XMDETACH+EFFECT_FLAG_CARD_TARGET)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1)
 	e2:SetCost(c511009567.cost)
 	e2:SetTarget(c511009567.target)
 	e2:SetOperation(c511009567.operation)
-	c:RegisterEffect(e2)
+	c:RegisterEffect(e2,false,1)
 	--multi atk
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(56532353,0))
