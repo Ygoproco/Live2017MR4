@@ -41,9 +41,11 @@ function c101003019.hspval(e,c)
 	local tp=c:GetControler()
 	local zone=0
 	local lg=Duel.GetMatchingGroup(c101003019.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	for tc in aux.Next(lg) do
-		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
-	end
+    	for tc in aux.Next(lg) do
+        	if tp==tc:GetControler() then
+            		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
+        	end
+    	end
 	return 0,zone
 end
 function c101003019.seqfilter(c)
@@ -62,11 +64,11 @@ function c101003019.seqop(e,tp,eg,ep,ev,re,r,rp)
 	local seq=tc:GetSequence()
 	local flag=0
 	for i=0,4 do
-		if Duel.CheckLocation(tp,LOCATION_MZONE,i) then flag=bit.bor(flag,math.pow(2,i)) end
+		if Duel.CheckLocation(tp,LOCATION_MZONE,i) then flag=bit.bor(flag,math.pow(2,i+16)) end
 	end
 	if flag==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,571)
 	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,flag)
-	local nseq=math.sqrt(s)
+	local nseq=math.log(s,2)
 	Duel.MoveSequence(tc,nseq)
 end
