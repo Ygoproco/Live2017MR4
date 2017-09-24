@@ -77,18 +77,16 @@ function c511001791.pcfilter(c)
 	return c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
 function c511001791.pctg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local seq=e:GetHandler():GetSequence()
-	if chk==0 then return Duel.CheckLocation(tp,LOCATION_SZONE,13-seq)
+	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
 		and Duel.IsExistingMatchingCard(c511001791.pcfilter,tp,LOCATION_DECK,0,1,nil) end
 end
 function c511001791.pcop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local seq=e:GetHandler():GetSequence()
-	if not Duel.CheckLocation(tp,LOCATION_SZONE,13-seq) then return end
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local g=Duel.SelectMatchingCard(tp,c511001791.pcfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
-		Duel.MoveToField(g:GetFirst(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(g:GetFirst(),tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
 function c511001791.descon(e,tp,eg,ep,ev,re,r,rp)
@@ -149,18 +147,18 @@ function c511001791.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c511001791.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local lsc=Duel.GetFieldCard(tp,LOCATION_SZONE,6)
-	local rsc=Duel.GetFieldCard(tp,LOCATION_SZONE,7)
-	local g=Group.FromCards(lsc,rsc):Filter(Card.IsDestructable,nil)
+	local lsc=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
+	local rsc=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
+	local g=Group.FromCards(lsc,rsc)
 	if chk==0 then return g:GetCount()>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c511001791.penop(e,tp,eg,ep,ev,re,r,rp)
-	local lsc=Duel.GetFieldCard(tp,LOCATION_SZONE,6)
-	local rsc=Duel.GetFieldCard(tp,LOCATION_SZONE,7)
+	local lsc=Duel.GetFieldCard(tp,LOCATION_PZONE,0)
+	local rsc=Duel.GetFieldCard(tp,LOCATION_PZONE,1)
 	local g=Group.FromCards(lsc,rsc)
 	if Duel.Destroy(g,REASON_EFFECT)~=0 and e:GetHandler():IsRelateToEffect(e) then
-		Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
 function c511001791.desfilter2(c,tp)

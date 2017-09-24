@@ -32,8 +32,7 @@ function c72714461.penfilter(c)
 	return c:IsSetCard(0x98) and c:IsType(TYPE_PENDULUM) and not c:IsCode(72714461) and not c:IsForbidden()
 end
 function c72714461.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsDestructable()
-		and Duel.IsExistingMatchingCard(c72714461.penfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c72714461.penfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c72714461.penop(e,tp,eg,ep,ev,re,r,rp)
@@ -43,7 +42,7 @@ function c72714461.penop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,c72714461.penfilter,tp,LOCATION_DECK,0,1,1,nil)
 		local tc=g:GetFirst()
 		if tc then
-			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		end
 	end
 end
@@ -62,7 +61,7 @@ function c72714461.sctg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c72714461.scop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LSCALE)

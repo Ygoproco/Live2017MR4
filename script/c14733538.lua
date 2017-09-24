@@ -40,7 +40,7 @@ function c14733538.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=cg:GetFirst()
 	Duel.Hint(HINT_CARD,0,tc:GetCode())
 	if b1 and (not b2 or not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) or Duel.SelectYesNo(tp,aux.Stringid(14733538,0))) then
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	else
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
