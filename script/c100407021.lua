@@ -5,7 +5,7 @@ function c100407021.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,84243274,73879377)
-	aux.AddContactFusion(c,c100407021.contactfil,c100407021.contactop,c100407021.splimit)
+	aux.AddContactFusion(c,c100407021.contactfil,c100407021.contactop,c100407021.splimit,c100407021.spcon)
 	--inactivate
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
@@ -50,12 +50,13 @@ function c100407021.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c100407021.contactfil(tp)
-	return Duel.GetFlagEffect(tp,100407021)~=0
-		and Duel.GetFlagEffect(tp,100407021+100)~=0
-		and Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
+	return Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
 end
 function c100407021.contactop(g)
 	Duel.Remove(g,POS_FACEUP,REASON_COST+REASON_MATERIAL)
+end
+function c100407021.spcon(tp)
+	return Duel.GetFlagEffect(tp,100407021)~=0 and Duel.GetFlagEffect(tp,100407021+100)~=0
 end
 function c100407021.acfilter(c,cd)
 	return c:IsFaceup() and c:IsCode(cd)
