@@ -58,7 +58,7 @@ function c99427357.negop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c99427357.cfilter(c,tp)
 	return c:IsSetCard(0x2093) and c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER) and aux.SpElimFilter(c,true) 
-		and and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
+		and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
 end
 function c99427357.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c99427357.cfilter,tp,LOCATION_GRAVE,0,1,e:GetHandler(),tp) end
