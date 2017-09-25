@@ -32,9 +32,11 @@ function c101003019.hspcon(e,c)
 	local tp=c:GetControler()
 	local zone=0
 	local lg=Duel.GetMatchingGroup(c101003019.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	for tc in aux.Next(lg) do
-		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
-	end
+    	for tc in aux.Next(lg) do
+        	if tp==tc:GetControler() then
+            		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
+        	end
+    	end
 	return Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone)>0
 end
 function c101003019.hspval(e,c)
