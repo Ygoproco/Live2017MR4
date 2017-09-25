@@ -195,7 +195,7 @@ function c511009588.repfilter(c,tp)
 		and not c:IsReason(REASON_REPLACE)
 end
 function c511009588.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7)) 
+	if chk==0 then return (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)) 
 		and eg:IsExists(c511009588.repfilter,1,nil,tp) end
 	return Duel.SelectYesNo(tp,aux.Stringid(45974017,0))
 end
@@ -203,6 +203,6 @@ function c511009588.repval(e,c)
 	return c511009588.repfilter(c,e:GetHandlerPlayer())
 end
 function c511009588.repop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.CheckLocation(tp,LOCATION_SZONE,6) and not Duel.CheckLocation(tp,LOCATION_SZONE,7) then return false end
-	Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return false end
+	Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 end

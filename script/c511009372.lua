@@ -136,7 +136,7 @@ end
 function c511009372.pzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
 function c511009372.tetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

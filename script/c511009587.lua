@@ -147,14 +147,14 @@ function c511009587.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511009587.filter(c,e,tp)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009587.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c511009587.filter(chkc,e,tp) end
+	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) and c511009587.filter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c511009587.filter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(c511009587.filter,tp,LOCATION_PZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c511009587.filter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c511009587.filter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g2,g2:GetCount(),0,0)
@@ -165,7 +165,7 @@ function c511009587.penop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetFirstTarget()
 	if tg and tg:IsRelateToEffect(e) then
 		if Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP)>0 and c:IsRelateToEffect(e) then
-			if Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true) then
+			if Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) then
 				Duel.BreakEffect()
 				local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 				if Duel.Destroy(g,REASON_EFFECT)>0 then

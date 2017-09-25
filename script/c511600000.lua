@@ -78,7 +78,7 @@ function c511600000.penop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511600000.spfilter(c,e,tp)
-	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511600000.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(tp)
@@ -87,7 +87,7 @@ function c511600000.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local at=Duel.GetAttacker()
 	if chkc then return chkc==at end
 	if chk==0 then return at:IsCanBeEffectTarget(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-		and Duel.IsExistingMatchingCard(c511600000.spfilter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(c511600000.spfilter,tp,LOCATION_PZONE,0,1,nil,e,tp) end
 	Duel.SetTargetCard(at)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
@@ -96,19 +96,19 @@ function c511600000.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc or not tc:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511600000.spfilter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c511600000.spfilter,tp,LOCATION_PZONE,0,1,1,nil,e,tp)
 	local sc=g:GetFirst()
-	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)~=0 and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if sc and Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)~=0 and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(sc:GetAttack())
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
-		if not Duel.CheckLocation(tp,LOCATION_SZONE,6) and not Duel.CheckLocation(tp,LOCATION_SZONE,7) then return end
+		if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
 		if c:IsRelateToEffect(e) then
 			Duel.BreakEffect()
-			Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		end
 	end
 end
