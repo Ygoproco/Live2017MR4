@@ -36,6 +36,12 @@ function c101003100.seqop(e,tp,eg,ep,ev,re,r,rp)
 	if flag==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,571)
 	local s=Duel.SelectDisableField(tp,1,0,LOCATION_MZONE,flag)
-	local nseq=math.sqrt(s)
+	local nseq=0
+	for i=0,4 do
+		if math.pow(2,i+16)==s then
+			nseq=i
+			break
+		end
+	end
 	Duel.MoveSequence(tc,nseq)
 end
