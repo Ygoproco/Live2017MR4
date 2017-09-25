@@ -1,18 +1,18 @@
 --Dark Rebellion Xyz Dragon
 function c511000675.initial_effect(c)
---xyz summon
+	--xyz summon
 	aux.AddXyzProcedure(c,nil,4,2)
 	c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(511000675,0))
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET,EFFECT_FLAG2_XMDETACH)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCost(c511000675.cost)
 	e1:SetTarget(c511000675.target)
 	e1:SetOperation(c511000675.operation)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,1)
 end
 function c511000675.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

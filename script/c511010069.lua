@@ -32,13 +32,13 @@ function c511010069.initial_effect(c)
 	e4:SetCategory(CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetRange(LOCATION_MZONE)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET,EFFECT_FLAG2_XMDETACH)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetCondition(c511010069.descon)
 	e4:SetCost(c511010069.descost)
 	e4:SetTarget(c511010069.destg)
 	e4:SetOperation(c511010069.desop)
-	c:RegisterEffect(e4)
+	c:RegisterEffect(e4,false,1)
 	--battle indestructable
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE)
@@ -92,7 +92,7 @@ function c511010069.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511010069.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
@@ -101,5 +101,5 @@ function c511010069.numchk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(1-tp,2407234)
 end
 function c511010069.indes(e,c)
-return not c:IsSetCard(0x48)
+	return not c:IsSetCard(0x48)
 end
