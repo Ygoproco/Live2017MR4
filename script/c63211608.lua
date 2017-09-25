@@ -32,7 +32,7 @@ function c63211608.chop1(e,tp,eg,ep,ev,re,r,rp)
 	e:GetLabelObject():SetLabel(0)
 end
 function c63211608.chop2(e,tp,eg,ep,ev,re,r,rp)
-	if rp==tp then return end
+	if rp==tp or (not re:IsActiveType(TYPE_MONSTER) and not re:IsHasType(EFFECT_TYPE_ACTIVATE)) then return end
 	local de,dp=Duel.GetChainInfo(ev,CHAININFO_DISABLE_REASON,CHAININFO_DISABLE_PLAYER)
 	if dp==tp then
 		e:SetLabel(1)
