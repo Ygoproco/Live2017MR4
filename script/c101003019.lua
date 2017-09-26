@@ -32,22 +32,28 @@ function c101003019.hspcon(e,c)
 	local tp=c:GetControler()
 	local zone=0
 	local lg=Duel.GetMatchingGroup(c101003019.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-    	for tc in aux.Next(lg) do
-        	if tp==tc:GetControler() then
-            		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
-        	end
-    	end
+	for tc in aux.Next(lg) do
+    local z=tc:GetColumnZone(LOCATION_MZONE)
+    if tp==tc:GetControler() then
+		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
+    else
+		zone=bit.bor(zone,bit.bor(bit.rshift(bit.band(z,0x1f0000),16),bit.lshift(bit.band(z,0x1f),16)))
+    end
+end
 	return Duel.GetLocationCount(tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD,zone)>0
 end
 function c101003019.hspval(e,c)
 	local tp=c:GetControler()
 	local zone=0
 	local lg=Duel.GetMatchingGroup(c101003019.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-    	for tc in aux.Next(lg) do
-        	if tp==tc:GetControler() then
-            		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
-        	end
-    	end
+	for tc in aux.Next(lg) do
+    local z=tc:GetColumnZone(LOCATION_MZONE)
+    if tp==tc:GetControler() then
+		zone=bit.bor(zone,tc:GetColumnZone(LOCATION_MZONE))
+    else
+		zone=bit.bor(zone,bit.bor(bit.rshift(bit.band(z,0x1f0000),16),bit.lshift(bit.band(z,0x1f),16)))
+    end
+end
 	return 0,zone
 end
 function c101003019.seqfilter(c)
@@ -64,13 +70,8 @@ function c101003019.seqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) then return end
 	local seq=tc:GetSequence()
-	local flag=0
-	for i=0,4 do
-		if Duel.CheckLocation(tp,LOCATION_MZONE,i) then flag=bit.bor(flag,math.pow(2,i+16)) end
-	end
-	if flag==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,571)
-	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,flag)
+	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
 	local nseq=math.log(s,2)
 	Duel.MoveSequence(tc,nseq)
 end
