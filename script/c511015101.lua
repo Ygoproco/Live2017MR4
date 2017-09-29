@@ -77,6 +77,7 @@ function c511015101.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(511015101)
 		e2:SetReset(RESET_CHAIN)
 		c:RegisterEffect(e2)
+		mg1:AddCard(c)
 		exmat=true
 	end
 	if exmat then Auxiliary.FCheckAdditional=c511015101.fcheck end
