@@ -6,7 +6,6 @@ function c511002000.initial_effect(c)
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(95100062,0))
-	e1:SetProperty(0,EFFECT_FLAG2_XMDETACH)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetRange(LOCATION_MZONE)
@@ -14,7 +13,8 @@ function c511002000.initial_effect(c)
 	e1:SetCost(c511002000.eqcost)
 	e1:SetTarget(c511002000.eqtg)
 	e1:SetOperation(c511002000.eqop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,1)
+	aux.AddEREquipLimit(c,nil,function(ec,_,tp) return ec:IsControler(tp) end,c511002000.equipop,e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(95100062,1))
@@ -40,6 +40,19 @@ function c511002000.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(c511002000.filter,tp,LOCATION_HAND,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,tp,LOCATION_HAND)
 end
+function c511002000.equipop(c,e,tp,tc)
+	if not aux.EquipByEffectAndLimitRegister(c,e,tp,tc) then return end
+	local atk=tc:GetTextAttack()
+	if atk>0 then
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_EQUIP)
+		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
+		e2:SetCode(EFFECT_UPDATE_ATTACK)
+		e2:SetReset(RESET_EVENT+0x1fe0000)
+		e2:SetValue(atk)
+		tc:RegisterEffect(e2)
+	end
+end
 function c511002000.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
@@ -47,28 +60,8 @@ function c511002000.eqop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local tc=Duel.SelectMatchingCard(tp,c511002000.filter,tp,LOCATION_HAND,0,1,1,nil,tp):GetFirst()
 	if tc then
-		if not Duel.Equip(tp,tc,c,true) then return end
-		local e1=Effect.CreateEffect(c)
-		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_OWNER_RELATE)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c511002000.eqlimit)
-		tc:RegisterEffect(e1)
-		local atk=tc:GetTextAttack()
-		if atk>0 then
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_EQUIP)
-			e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_OWNER_RELATE)
-			e2:SetCode(EFFECT_UPDATE_ATTACK)
-			e2:SetReset(RESET_EVENT+0x1fe0000)
-			e2:SetValue(atk)
-			tc:RegisterEffect(e2)
-		end
+		c511002000.equipop(c,e,tp,tc)
 	end
-end
-function c511002000.eqlimit(e,c)
-	return e:GetOwner()==c
 end
 function c511002000.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

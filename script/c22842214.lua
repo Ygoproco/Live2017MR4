@@ -11,6 +11,7 @@ function c22842214.initial_effect(c)
 	e1:SetTarget(c22842214.eqtg)
 	e1:SetOperation(c22842214.eqop)
 	c:RegisterEffect(e1)
+	aux.AddEREquipLimit(c,nil,c22842214.eqval,c22842214.equipop,e1)
 	--Destroy replace
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
@@ -30,6 +31,9 @@ function c22842214.initial_effect(c)
 	e3:SetValue(1000)
 	c:RegisterEffect(e3)
 end
+function c22842214.eqval(ec,c,tp)
+	return ec:IsControler(tp) and ec:IsRace(RACE_FISH+RACE_AQUA+RACE_SEASERPENT)
+end
 function c22842214.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_FISH+RACE_AQUA+RACE_SEASERPENT) and not c:IsForbidden()
 end
@@ -42,8 +46,18 @@ function c22842214.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.SelectTarget(tp,c22842214.filter,tp,LOCATION_REMOVED,0,1,fc,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,g:GetCount(),0,0)
 end
-function c22842214.eqlimit(e,c)
-	return e:GetOwner()==c
+function c22842214.equipop(c,e,tp,tc,chk)
+	local eff=false or chk
+	Duel.Equip(tp,tc,c,false,eff)
+	tc:RegisterFlagEffect(22842214,RESET_EVENT+0x1fe0000,0,0)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
+	e1:SetCode(EFFECT_EQUIP_LIMIT)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetValue(aux.EquipByEffectLimit)
+	e1:SetLabelObject(e:GetLabelObject())
+	tc:RegisterEffect(e1)
 end
 function c22842214.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -62,15 +76,7 @@ function c22842214.eqop(e,tp,eg,ep,ev,re,r,rp)
 		if tg:GetCount()>0 then
 			local tc=tg:GetFirst()
 			while tc do
-				Duel.Equip(tp,tc,c,false,true)
-				tc:RegisterFlagEffect(22842214,RESET_EVENT+0x1fe0000,0,0)
-				local e1=Effect.CreateEffect(c)
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetCode(EFFECT_EQUIP_LIMIT)
-				e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_OWNER_RELATE)
-				e1:SetReset(RESET_EVENT+0x1fe0000)
-				e1:SetValue(c22842214.eqlimit)
-				tc:RegisterEffect(e1)
+				c22842214.equipop(c,e,tp,tc,true)
 				tc=tg:GetNext()
 			end
 			Duel.EquipComplete()
