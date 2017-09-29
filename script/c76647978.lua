@@ -38,13 +38,10 @@ function c76647978.filter2(c,e,tp,m,f)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,tp)
 end
-function c76647978.fcheck(tp,sg,fc)
-	return sg:GetCount()==2
-end
 function c76647978.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
-		Auxiliary.FCheckAdditional=c76647978.fcheck
+		Auxiliary.FCheckExact=2
 		local res=Duel.IsExistingMatchingCard(c76647978.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -55,7 +52,7 @@ function c76647978.target(e,tp,eg,ep,ev,re,r,rp,chk)
 				res=Duel.IsExistingMatchingCard(c74335036.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf)
 			end
 		end
-		Auxiliary.FCheckAdditional=nil
+		Auxiliary.FCheckExact=nil
 		return res
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -68,7 +65,7 @@ function c76647978.filter0(c,e)
 end
 function c76647978.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg1=Duel.GetFusionMaterial(tp):Filter(c76647978.filter0,nil,e)
-	Auxiliary.FCheckAdditional=c76647978.fcheck
+	Auxiliary.FCheckExact=2
 	local sg1=Duel.GetMatchingGroup(c76647978.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil)
 	local mg2=nil
 	local sg2=nil
@@ -121,7 +118,7 @@ function c76647978.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		g:AddCard(tc)
 	end
-	Auxiliary.FCheckAdditional=nil
+	Auxiliary.FCheckExact=nil
 end
 function c76647978.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
