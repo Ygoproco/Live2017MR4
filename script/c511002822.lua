@@ -72,7 +72,7 @@ function c511002822.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ce=Duel.GetChainMaterial(tp)
 	if ce~=nil then
 		local fgroup=ce:GetTarget()
-		mg2=fgroup(ce,e,tp)
+		mg2=fgroup(ce,e,tp):Filter(c511002822.filter2,nil)
 		local mf=ce:GetValue()
 		sg2=Duel.GetMatchingGroup(c511002822.filter3,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf)
 	end
