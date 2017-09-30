@@ -28,6 +28,7 @@ function c511010053.initial_effect(c)
 	e3:SetTarget(c511010053.eqtg)
 	e3:SetOperation(c511010053.eqop)
 	c:RegisterEffect(e3)
+	aux.AddEREquipLimit(c,nil,function(ec,_,tp) return ec:IsControler(tp) end,c511010053.equipop,e3)
 	--Destroy replace
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
@@ -111,30 +112,24 @@ function c511010053.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
+function c511010053.equipop(c,e,tp,tc)
+	local atk=a:GetAttack()
+	if atk<0 then atk=0 end
+	if not aux.EquipByEffectAndLimitRegister(c,e,tp,tc,511010053,true) then return end
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_EQUIP)
+	e2:SetCode(EFFECT_UPDATE_ATTACK)
+	e2:SetReset(RESET_EVENT+0x1fe0000)
+	e2:SetValue(atk)
+	tc:RegisterEffect(e2)
+end
 function c511010053.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	local a=Duel.GetAttacker()
 	if tc and tc:IsRelateToEffect(e) and c:IsFaceup() and c:IsRelateToEffect(e) and a and a:IsRelateToBattle() then
-		if not Duel.Equip(tp,tc,c) then return end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_OWNER_RELATE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c511010053.eqlimit)
-		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_EQUIP)
-		e2:SetCode(EFFECT_UPDATE_ATTACK)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
-		e2:SetValue(a:GetAttack())
-		tc:RegisterEffect(e2)
-		tc:RegisterFlagEffect(511010053,RESET_EVENT+0x1fe0000,0,0)
+		c511010053.equipop(c,e,tp,tc)
 	end
-end
-function c511010053.eqlimit(e,c)
-	return e:GetOwner()==c
 end
 function c511010053.repfilter(c,ec)
 	return c:GetEquipTarget()==ec and c:IsAbleToGrave() and c:GetFlagEffect(511010053)>0
@@ -143,7 +138,7 @@ function c511010053.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c511010053.repfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil,c)
 	if chk==0 then return c:IsReason(REASON_BATTLE) and g:GetCount()>0 end
-	if Duel.SelectYesNo(tp,aux.Stringid(63465535,1)) then
+	if Duel.SelectEffectYesNo(tp,c,96) then
 		local atk=c:GetAttack()
 		e:SetLabel(atk)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)

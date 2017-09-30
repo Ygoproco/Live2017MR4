@@ -21,6 +21,7 @@ function c84769941.initial_effect(c)
 	e2:SetTarget(c84769941.eqtg)
 	e2:SetOperation(c84769941.eqop)
 	c:RegisterEffect(e2)
+	aux.AddEREquipLimit(c,nil,c84769941.eqval,c84769941.equipop,e2)
 	--atk
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -29,6 +30,9 @@ function c84769941.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetValue(c84769941.atkval)
 	c:RegisterEffect(e3)
+end
+function c84769941.eqval(ec,c,tp)
+	return ec:IsControler(tp) and c84769941.eqfilter(ec)
 end
 function c84769941.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xd3)
@@ -43,13 +47,16 @@ function c84769941.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsCanRemoveCounter(tp,1,1,0x37,2,REASON_COST) end
 	Duel.RemoveCounter(tp,1,1,0x37,2,REASON_COST)
 end
-function c84769941.eqfilter(c)
+function c84769941.eqfilter(c)c84769941.eqfilter(c)
 	return c:IsSetCard(0xd3) and c:IsType(TYPE_MONSTER) and not c:IsForbidden()
 end
 function c84769941.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0
 		and Duel.IsExistingMatchingCard(c84769941.eqfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,tp,LOCATION_GRAVE+LOCATION_HAND)
+end
+function c84769941.equipop(c,e,tp,tc)
+	aux.EquipByEffectAndLimitRegister(c,e,tp,tc,84769941,true)
 end
 function c84769941.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -59,19 +66,8 @@ function c84769941.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c84769941.eqfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil)
 	local tc=g:GetFirst()
 	if tc then
-		if not Duel.Equip(tp,tc,c,true) then return end
-		tc:RegisterFlagEffect(84769941,RESET_EVENT+0x1fe0000,0,0)
-		local e1=Effect.CreateEffect(c)
-		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT+EFFECT_FLAG_OWNER_RELATE)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c84769941.eqlimit)
-		tc:RegisterEffect(e1)
+		c84769941.equipop(c,e,tp,tc)
 	end
-end
-function c84769941.eqlimit(e,c)
-	return e:GetOwner()==c
 end
 function c84769941.atkfilter(c)
 	return c:IsSetCard(0xd3) and c:GetAttack()>=0 and c:GetFlagEffect(84769941)~=0
