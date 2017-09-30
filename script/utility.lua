@@ -60,6 +60,30 @@ function Card.RegisterEffect(c,e,forced,...)
 		c:RegisterEffect(e2)
 	end
 end
+function Card.IsColumn(c,seq,tp,loc)
+	if not c:IsOnField() then return false end
+	local cseq=c:GetSequence()
+	local seq=seq
+	local loc=loc and loc or c:GetLocation()
+	local tp=tp and tp or c:GetControler()
+	if c:IsLocation(LOCATION_MZONE) then
+		if cseq==5 then cseq=1 end
+		if cseq==6 then cseq=3 end
+	else
+		if cseq==6 then cseq=5 end
+	end
+	if loc==LOCATION_MZONE then
+		if seq==5 then seq=1 end
+		if seq==6 then seq=3 end
+	else
+		if cseq==6 then cseq=5 end
+	end
+	if c:IsControler(tp) then
+		return cseq==seq
+	else
+		return cseq==4-seq
+	end
+end
 
 function Auxiliary.Stringid(code,id)
 	return code*16+id
