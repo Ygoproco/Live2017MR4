@@ -704,6 +704,22 @@ function Auxiliary.ResetEffects(g,eff)
 		end
 	end
 end
+Auxiliary.CalledTokens={}
+function Auxiliary.CallToken(code)
+	if not Auxiliary.CalledTokens[code] then
+		Auxiliary.CalledTokens[code]=true
+		local ge=Effect.GlobalEffect()
+		ge:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge:SetCode(EVENT_ADJUST)
+		ge:SetCountLimit(1)
+		ge:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge:SetOperation(function()
+			Duel.CreateToken(0,code)
+			Duel.CreateToken(1,code)
+		end)
+		Duel.RegisterEffect(ge,0)
+	end
+end
 
 function loadutility(file)
 	local f1 = loadfile("expansions/live2017mr4/script/"..file)
