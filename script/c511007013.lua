@@ -11,6 +11,7 @@ function c511007013.initial_effect(c)
 	e1:SetTarget(c511007013.target)
 	e1:SetOperation(c511007013.activate)
 	c:RegisterEffect(e1)
+	aux.CallToken(420)
 	if not c511007013.global_check then
 		c511007013.global_check=true
 		c511007013[0]=false
@@ -26,20 +27,6 @@ function c511007013.initial_effect(c)
 		ge2:SetCountLimit(1)
 		ge2:SetOperation(c511007013.clear)
 		Duel.RegisterEffect(ge2,0)
-		local ge3=Effect.CreateEffect(c)
-		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge3:SetCode(EVENT_ADJUST)
-		ge3:SetCountLimit(1)
-		ge3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge3:SetOperation(c511007013.archchk)
-		Duel.RegisterEffect(ge3,0)
-	end
-end
-function c511007013.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
 	end
 end
 function c511007013.checkop(e,tp,eg,ep,ev,re,r,rp)

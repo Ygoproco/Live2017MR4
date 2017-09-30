@@ -8,23 +8,7 @@ function c100000633.initial_effect(c)
 	e1:SetTarget(c100000633.target)
 	e1:SetOperation(c100000633.operation)
 	c:RegisterEffect(e1)
-	if not c100000633.global_check then
-		c100000633.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c100000633.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function c100000633.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
+	aux.CallToken(420)
 end
 function c100000633.filter(c,e,tp)
 	return c:IsLandstar() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

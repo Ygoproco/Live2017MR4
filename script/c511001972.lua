@@ -13,23 +13,7 @@ function c511001972.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e2)
-	if not c511001972.global_check then
-		c511001972.global_check=true
-		local ge4=Effect.CreateEffect(c)
-		ge4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge4:SetCode(EVENT_ADJUST)
-		ge4:SetCountLimit(1)
-		ge4:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge4:SetOperation(c511001972.archchk)
-		Duel.RegisterEffect(ge4,0)
-	end
-end
-function c511001972.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
+	aux.CallToken(420)
 end
 function c511001972.filter(c,e,tp)
 	return c:IsJutte() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

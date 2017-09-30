@@ -20,22 +20,9 @@ function c511000573.initial_effect(c)
 	e2:SetCost(c511000573.cost)
 	e2:SetOperation(c511000573.op)
 	c:RegisterEffect(e2)
-	if not c511000573.global_check then
-		c511000573.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetCountLimit(1)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetOperation(c511000573.chk)
-		Duel.RegisterEffect(ge1,0)
-	end
+	aux.CallToken(300)
 end
 c511000573.dm=true
-function c511000573.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,300)
-	Duel.CreateToken(1-tp,300)
-end
 function c511000573.etarget(e,c)
 	return c:IsRace(RACE_DRAGON)
 end
