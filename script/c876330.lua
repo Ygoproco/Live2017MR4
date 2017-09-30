@@ -20,9 +20,14 @@ function c876330.initial_effect(c)
 	e2:SetTarget(c876330.eqtg)
 	e2:SetOperation(c876330.eqop)
 	c:RegisterEffect(e2)
+	aux.AddEREquipLimit(c,nil,c876330.eqval,aux.EquipByEffectAndLimitRegister,e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
+	aux.AddEREquipLimit(c,nil,c876330.eqval,aux.EquipByEffectAndLimitRegister,e3)
+end
+function c876330.eqval(ec,c,tp)
+	return ec:IsControler(tp) and ec:IsSetCard(0x29) and ec:IsRace(RACE_DRAGON)
 end
 function c876330.spfilter(c,ft)
 	return c:IsFaceup() and c:IsSetCard(0x29) and c:IsAbleToGraveAsCost() and (ft>0 or c:GetSequence()<5)
@@ -58,16 +63,7 @@ function c876330.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if not Duel.Equip(tp,tc,c,false) then return end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c876330.eqlimit)
-		tc:RegisterEffect(e1)
+	if c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
+		aux.EquipByEffectAndLimitRegister(c,e,tp,tc)
 	end
-end
-function c876330.eqlimit(e,c)
-	return e:GetOwner()==c and not c:IsDisabled()
 end

@@ -19,9 +19,11 @@ function c63487632.initial_effect(c)
 	e2:SetTarget(c63487632.eqtg)
 	e2:SetOperation(c63487632.eqop)
 	c:RegisterEffect(e2)
+	aux.AddEREquipLimit(c,nil,c63487632.eqval,aux.EquipByEffectAndLimitRegister,e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
+	aux.AddEREquipLimit(c,nil,c63487632.eqval,aux.EquipByEffectAndLimitRegister,e3)
 	--special summon
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -40,6 +42,9 @@ function c63487632.initial_effect(c)
 	e5:SetOperation(c63487632.spop2)
 	e5:SetLabelObject(e4)
 	c:RegisterEffect(e5)
+end
+function c63487632.eqval(ec,c,tp)
+	return ec:IsControler(tp) and not ec:IsCode(63487632) and ec:IsRace(RACE_DRAGON)
 end
 function c63487632.spfilter(c,ft)
 	return c:GetEquipGroup():IsExists(Card.IsSetCard,1,nil,0x29) and c:IsAbleToRemoveAsCost()
@@ -73,18 +78,9 @@ function c63487632.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if not Duel.Equip(tp,tc,c,false) then return end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c63487632.eqlimit)
-		tc:RegisterEffect(e1)
+	if c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
+		aux.EquipByEffectAndLimitRegister(c,e,tp,tc)
 	end
-end
-function c63487632.eqlimit(e,c)
-	return e:GetOwner()==c and not c:IsDisabled()
 end
 function c63487632.eqcheck(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabelObject() then e:GetLabelObject():DeleteGroup() end
@@ -111,7 +107,7 @@ function c63487632.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c63487632.spop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

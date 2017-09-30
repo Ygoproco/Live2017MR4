@@ -9,6 +9,7 @@ function c511001418.initial_effect(c)
 	e1:SetTarget(c511001418.eqtg)
 	e1:SetOperation(c511001418.eqop)
 	c:RegisterEffect(e1)
+	aux.AddEREquipLimit(c,nil,aux.FilterBoolFunction(Card.IsType,TYPE_MONSTER),aux.EquipByEffectAndLimitRegister,e1)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -42,18 +43,9 @@ function c511001418.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
 	if not bc or c:IsStatus(STATUS_BATTLE_DESTROYED) then return end
-	if c:IsFaceup() and c:IsRelateToEffect(e) and bc:IsRelateToEffect(e) and bc:IsLocation(LOCATION_SZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED) then
-		Duel.Equip(tp,d,c)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c511001418.eqlimit)
-		d:RegisterEffect(e1)
+	if c:IsFaceup() and c:IsRelateToEffect(e) and bc and bc:IsRelateToEffect(e) and bc:IsLocation(LOCATION_SZONE+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED) then
+		aux.EquipByEffectAndLimitRegister(c,e,tp,bc)
 	end
-end
-function c511001418.eqlimit(e,c)
-	return e:GetOwner()==c
 end
 function c511001418.eqcheck(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabelObject() then e:GetLabelObject():DeleteGroup() end

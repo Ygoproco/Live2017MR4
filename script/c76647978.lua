@@ -34,30 +34,25 @@ function c76647978.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,2000) end
 	Duel.PayLPCost(tp,2000)
 end
-function c76647978.filter1(c,e,tp,mg,f)
-	return mg:IsExists(c76647978.filter2,1,c,e,tp,c,f)
-end
-function c76647978.filter2(c,e,tp,mc,f)
-	local mg=Group.FromCards(c,mc)
-	return Duel.IsExistingMatchingCard(c76647978.ffilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg,f)
-end
-function c76647978.ffilter(c,e,tp,m,f)
+function c76647978.filter2(c,e,tp,m,f)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,tp)
 end
 function c76647978.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
-		local res=mg1:IsExists(c76647978.filter1,1,nil,e,tp,mg1,nil)
+		Auxiliary.FCheckExact=2
+		local res=Duel.IsExistingMatchingCard(c76647978.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
 			if ce~=nil then
 				local fgroup=ce:GetTarget()
 				local mg2=fgroup(ce,e,tp)
 				local mf=ce:GetValue()
-				res=mg2:IsExists(c76647978.filter1,1,nil,e,tp,mg2,mf)
+				res=Duel.IsExistingMatchingCard(c74335036.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf)
 			end
 		end
+		Auxiliary.FCheckExact=nil
 		return res
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -70,44 +65,34 @@ function c76647978.filter0(c,e)
 end
 function c76647978.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg1=Duel.GetFusionMaterial(tp):Filter(c76647978.filter0,nil,e)
-	local g1=mg1:Filter(c76647978.filter1,nil,e,tp,mg1,nil)
+	Auxiliary.FCheckExact=2
+	local sg1=Duel.GetMatchingGroup(c76647978.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil)
 	local mg2=nil
-	local g2=nil
+	local sg2=nil
 	local ce=Duel.GetChainMaterial(tp)
 	if ce~=nil then
 		local fgroup=ce:GetTarget()
 		mg2=fgroup(ce,e,tp)
 		local mf=ce:GetValue()
-		g2=mg2:Filter(c76647978.filter1,nil,e,tp,mg2,mf)
+		sg2=Duel.GetMatchingGroup(c76647978.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf)
 	end
-	local tc=nil
-	if g2~=nil and g2:GetCount()>0 and (g1:GetCount()==0 or Duel.SelectYesNo(tp,ce:GetDescription())) then
-		local mf=ce:GetValue()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local sg1=mg2:FilterSelect(tp,c76647978.filter1,1,1,nil,e,tp,mg2,mf)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local sg2=mg2:FilterSelect(tp,c76647978.filter2,1,1,sg1,e,tp,sg1:GetFirst(),mf)
-		sg1:Merge(sg2)
+	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
+		local sg=sg1:Clone()
+		if sg2 then sg:Merge(sg2) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,c76647978.ffilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,sg1,mf)
-		tc=sg:GetFirst()
-		local fop=ce:GetOperation()
-		fop(ce,e,tp,tc,sg1)
-	elseif g1:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local sg1=mg1:FilterSelect(tp,c76647978.filter1,1,1,nil,e,tp,mg1,nil)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local sg2=mg1:FilterSelect(tp,c76647978.filter2,1,1,sg1,e,tp,sg1:GetFirst(),nil)
-		sg1:Merge(sg2)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=Duel.SelectMatchingCard(tp,c76647978.ffilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,sg1,nil)
-		tc=sg:GetFirst()
-		tc:SetMaterial(sg1)
-		Duel.SendtoGrave(sg1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-		Duel.BreakEffect()
-		Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-	end
-	if tc then
+		local tg=sg:Select(tp,1,1,nil)
+		local tc=tg:GetFirst()
+		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,tp)
+			tc:SetMaterial(mat1)
+			Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+			Duel.BreakEffect()
+			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+		else
+			local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,tp)
+			local fop=ce:GetOperation()
+			fop(ce,e,tp,tc,mat2)
+		end
 		local c=e:GetHandler()
 		tc:RegisterFlagEffect(76647978,RESET_EVENT+0x1fe0000,0,1)
 		tc:CompleteProcedure()
@@ -133,6 +118,7 @@ function c76647978.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		g:AddCard(tc)
 	end
+	Auxiliary.FCheckExact=nil
 end
 function c76647978.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end

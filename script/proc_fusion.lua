@@ -135,6 +135,7 @@ function Auxiliary.FCheckMix(c,mg,sg,fc,sub,sub2,tp,fun1,fun2,...)
 		return fun1(c,fc,sub,sub2,mg,sg,tp)
 	end
 end
+Auxiliary.FCheckExact=nil
 Auxiliary.FCheckAdditional=nil
 --if sg1 is subset of sg2 then not Auxiliary.FCheckAdditional(tp,sg1,fc) -> not Auxiliary.FCheckAdditional(tp,sg2,fc)
 function Auxiliary.FCheckMixGoal(tp,sg,fc,sub,sub2,chkf,...)
@@ -144,6 +145,7 @@ function Auxiliary.FCheckMixGoal(tp,sg,fc,sub,sub2,chkf,...)
 end
 function Auxiliary.FSelectMix(c,tp,mg,sg,fc,sub,sub2,chkf,...)
 	local res
+	if Auxiliary.FCheckExact and Auxiliary.FCheckExact~=#{...} then return false end
 	local rg=Group.CreateGroup()
 	--c has the fusion limit
 	if c:IsHasEffect(73941492+TYPE_FUSION) then
@@ -257,7 +259,7 @@ function Auxiliary.FOperationMixRep(insf,sub,fun1,minc,maxc,...)
 				while sg:GetCount()<maxc+#funs do
 					local cg=mg:Filter(Auxiliary.FSelectMixRep,sg,tp,mg,sg,c,sub,sub,chkf,fun1,minc,maxc,table.unpack(funs))
 					if cg:GetCount()==0 then break end
-					local cancel=Auxiliary.FCheckMixRepGoal(tp,sg,c,sub,sub,chkf,fun1,minc,maxc,table.unpack(funs)) or (contact and sg:GetCount()==0)
+					local cancel=(Auxiliary.FCheckMixRepGoal(tp,sg,c,sub,sub,chkf,fun1,minc,maxc,table.unpack(funs)) or (contact and sg:GetCount()==0)) and not Auxiliary.FCheckExact
 					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 					local tc=Group.SelectUnselect(cg,sg,p,cancel,cancel)
 					if not tc then break end
@@ -363,8 +365,12 @@ function Auxiliary.FCheckSelectMixRepM(c,tp,...)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
 		and Auxiliary.FCheckMixRepTemplate(c,Auxiliary.FCheckSelectMixRep,tp,...)
 end
-function Auxiliary.FSelectMixRep(c,tp,mg,sg,fc,sub,sub2,chkf,...)
+function Auxiliary.FSelectMixRep(c,tp,mg,sg,fc,sub,sub2,chkf,fun1,minc,maxc,...)
 	local rg=Group.CreateGroup()
+	if Auxiliary.FCheckExact then
+		if Auxiliary.FCheckExact<minc + #{...} then return false end
+		maxc=Auxiliary.FCheckExact-#{...}
+	end
 	--c has the fusion limit
 	if c:IsHasEffect(73941492+TYPE_FUSION) then
 		local eff={c:GetCardEffect(73941492+TYPE_FUSION)}
@@ -393,11 +399,11 @@ function Auxiliary.FSelectMixRep(c,tp,mg,sg,fc,sub,sub2,chkf,...)
 	local res=false
 	if Auxiliary.FCheckAdditional and not Auxiliary.FCheckAdditional(tp,sg,fc) then
 		res=false
-	elseif Auxiliary.FCheckMixRepGoal(tp,sg,fc,sub,sub2,chkf,...) then
+	elseif Auxiliary.FCheckMixRepGoal(tp,sg,fc,sub,sub2,chkf,fun1,minc,maxc,...) then
 		res=true
 	else
 		local g=Group.CreateGroup()
-		res=sg:IsExists(Auxiliary.FCheckMixRepSelected,1,nil,tp,mg,sg,g,fc,sub,sub2,chkf,...)
+		res=sg:IsExists(Auxiliary.FCheckMixRepSelected,1,nil,tp,mg,sg,g,fc,sub,sub2,chkf,fun1,minc,maxc,...)
 	end
 	sg:RemoveCard(c)
 	mg:Merge(rg)
