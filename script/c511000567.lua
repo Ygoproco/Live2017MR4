@@ -13,22 +13,9 @@ function c511000567.initial_effect(c)
 	e1:SetTarget(c511000567.target)
 	e1:SetOperation(c511000567.operation)
 	c:RegisterEffect(e1)
-	if not c511000567.global_check then
-		c511000567.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetCountLimit(1)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetOperation(c511000567.chk)
-		Duel.RegisterEffect(ge1,0)
-	end
+	aux.CallToken(300)
 end
 c511000567.dm=true
-function c511000567.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,300)
-	Duel.CreateToken(1-tp,300)
-end
 function c511000567.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsDeckMaster()
 end
