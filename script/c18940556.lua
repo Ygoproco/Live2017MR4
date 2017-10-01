@@ -39,18 +39,43 @@ function c18940556.initial_effect(c)
 	e4:SetOperation(c18940556.tgop)
 	c:RegisterEffect(e4)
 end
+function c18940556.chkfilter(c,ft,sg,rg)
+	local res
+	if sg:GetCount()<2 then
+		sg:AddCard(c)
+		res=rg:IsExists(c18940556.chkfilter,1,sg,ft,sg,rg)
+		sg:RemoveCard(c)
+	else
+		res=sg:FilterCount(c18940556.mzfilter,nil)+ft>0
+	end
+	return res
+end
+function c18940556.mzfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
+end
 function c18940556.sprfilter(c)
 	return c:IsRace(RACE_DINOSAUR) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c18940556.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741))
-		and Duel.IsExistingMatchingCard(c18940556.sprfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,nil)
+	local rg=Duel.GetMatchingGroup(c18940556.sprfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-2 and rg:GetCount()>1 and rg:IsExists(c18940556.chkfilter,1,nil,ft,Group.CreateGroup(),rg)
 end
 function c18940556.sprop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c18940556.sprfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,2,nil)
+	local rg=Duel.GetMatchingGroup(c18940556.sprfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=Group.CreateGroup()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	while g:GetCount()<2 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local tc=rg:Filter(c18940556.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
+		if g:IsContains(tc) then
+			g:RemoveCard(tc)
+		else
+			g:AddCard(tc)
+		end
+	end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c18940556.descon(e,tp,eg,ep,ev,re,r,rp)

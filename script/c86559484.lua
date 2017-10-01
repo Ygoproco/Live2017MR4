@@ -27,22 +27,47 @@ end
 function c86559484.cfilter(c,rac)
 	return c:IsRace(rac) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
+function c86559484.chkfilter(c,ft,sg,rg)
+	local res
+	if sg:GetCount()<2 then
+		sg:AddCard(c)
+		res=rg:IsExists(c86559484.chkfilter,1,sg,ft,sg,rg)
+		sg:RemoveCard(c)
+	else
+		res=sg:FilterCount(c86559484.mzfilter,nil)+ft>0 and sg:IsExists(c86559484.atchk1,1,nil,sg)
+	end
+	return res
+end
+function c86559484.atchk1(c,sg)
+	return c:IsRace(RACE_DRAGON) and sg:FilterCount(Card.IsRace,c,RACE_WYRM)==1
+end
+function c86559484.mzfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
+end
 function c86559484.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c86559484.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,RACE_DRAGON)
-		and Duel.IsExistingMatchingCard(c86559484.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,RACE_WYRM) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c86559484.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,RACE_DRAGON)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c86559484.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,RACE_WYRM)
-	g1:Merge(g2)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
+	local rg1=Duel.GetMatchingGroup(c86559484.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,RACE_DRAGON)
+	local rg2=Duel.GetMatchingGroup(c86559484.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,RACE_WYRM)
+	local rg=rg1:Clone()
+	rg:Merge(rg2)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return ft>-2 and rg1:GetCount()>0 and rg2:GetCount()>0 and rg:IsExists(c86559484.chkfilter,1,nil,ft,Group.CreateGroup(),rg) end
+	local g=Group.CreateGroup()
+	while g:GetCount()<2 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local tc=rg:Filter(c86559484.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
+		if g:IsContains(tc) then
+			g:RemoveCard(tc)
+		else
+			g:AddCard(tc)
+		end
+	end
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c86559484.spfilter(c,e,tp)
 	return c:IsCode(86559484) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c86559484.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c86559484.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c86559484.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
 function c86559484.spop(e,tp,eg,ep,ev,re,r,rp)

@@ -30,23 +30,47 @@ function c82301904.initial_effect(c)
 	c:RegisterEffect(e3)
 	Duel.AddCustomActivityCounter(82301904,ACTIVITY_CHAIN,aux.FALSE)
 end
+function c82301904.chkfilter(c,ft,sg,rg)
+	local res
+	if sg:GetCount()<2 then
+		sg:AddCard(c)
+		res=rg:IsExists(c82301904.chkfilter,1,sg,ft,sg,rg)
+		sg:RemoveCard(c)
+	else
+		res=sg:FilterCount(c82301904.mzfilter,nil)+ft>0 and sg:IsExists(c82301904.atchk1,1,nil,sg)
+	end
+	return res
+end
+function c82301904.atchk1(c,sg)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and sg:FilterCount(Card.IsAttribute,c,ATTRIBUTE_DARK)==1
+end
 function c82301904.spfilter(c,att)
 	return c:IsAttribute(att) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c82301904.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c82301904.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,ATTRIBUTE_LIGHT)
-		and Duel.IsExistingMatchingCard(c82301904.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,ATTRIBUTE_DARK)
+	local rg1=Duel.GetMatchingGroup(c82301904.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_LIGHT)
+	local rg2=Duel.GetMatchingGroup(c82301904.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_DARK)
+	local rg=rg1:Clone()
+	rg:Merge(rg2)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-2 and rg1:GetCount()>0 and rg2:GetCount()>0 and rg:IsExists(c82301904.chkfilter,1,nil,ft,Group.CreateGroup(),rg)
 end
 function c82301904.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c82301904.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,ATTRIBUTE_LIGHT)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c82301904.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,ATTRIBUTE_DARK)
-	g1:Merge(g2)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
+	local rg=Duel.GetMatchingGroup(c82301904.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_LIGHT+ATTRIBUTE_DARK)
+	local g=Group.CreateGroup()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	while g:GetCount()<2 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local tc=rg:Filter(c82301904.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
+		if g:IsContains(tc) then
+			g:RemoveCard(tc)
+		else
+			g:AddCard(tc)
+		end
+	end
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c82301904.sgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,1000) and Duel.GetCustomActivityCount(82301904,tp,ACTIVITY_CHAIN)==0 end

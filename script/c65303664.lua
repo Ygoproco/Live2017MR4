@@ -21,22 +21,46 @@ end
 function c65303664.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c65303664.cfilter,1,nil,tp)
 end
+function c65303664.chkfilter(c,ft,sg,rg)
+	local res
+	if sg:GetCount()<2 then
+		sg:AddCard(c)
+		res=rg:IsExists(c65303664.chkfilter,1,sg,ft,sg,rg)
+		sg:RemoveCard(c)
+	else
+		res=sg:FilterCount(c65303664.mzfilter,nil)+ft>0
+	end
+	return res
+end
+function c65303664.mzfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
+end
 function c65303664.rfiletr(c)
 	return c:IsRace(RACE_BEAST) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c65303664.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c65303664.rfiletr,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c65303664.rfiletr,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,2,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local rg=Duel.GetMatchingGroup(c65303664.rfiletr,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	if chk==0 then return ft>-2 and rg:GetCount()>1 and rg:IsExists(c65303664.chkfilter,1,nil,ft,Group.CreateGroup(),rg) end
+	local g=Group.CreateGroup()
+	while g:GetCount()<2 do
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local tc=rg:Filter(c65303664.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
+		if g:IsContains(tc) then
+			g:RemoveCard(tc)
+		else
+			g:AddCard(tc)
+		end
+	end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c65303664.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c65303664.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

@@ -26,28 +26,44 @@ function c79407975.initial_effect(c)
 	e3:SetOperation(c79407975.atkop)
 	c:RegisterEffect(e3)
 end
+function c79407975.chkfilter(c,ft,sg,rg)
+	local res
+	if sg:GetCount()<7 then
+		sg:AddCard(c)
+		res=rg:IsExists(c79407975.chkfilter,1,sg,ft,sg,rg)
+		sg:RemoveCard(c)
+	else
+		res=sg:FilterCount(c79407975.mzfilter,nil)+ft>0 and sg:GetClassCount(Card.GetCode)==7
+	end
+	return res
+end
+function c79407975.mzfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
+end
 function c79407975.spfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c79407975.spcon(e,c)
 	if c==nil then return true end
-	if not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)<=0 then return false end
-	local g=Duel.GetMatchingGroup(c79407975.spfilter,c:GetControler(),LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	local ct=g:GetClassCount(Card.GetCode)
-	return ct>=7
+	local tp=c:GetControler()
+	local rg=Duel.GetMatchingGroup(c79407975.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-7 and rg:GetCount()>6 and rg:IsExists(c79407975.chkfilter,1,nil,ft,Group.CreateGroup(),rg)
 end
 function c79407975.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.GetMatchingGroup(c79407975.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	local rg=Group.CreateGroup()
-	for i=1,7 do
+	local rg=Duel.GetMatchingGroup(c79407975.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=Group.CreateGroup()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	while g:GetCount()<7 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=g:Select(tp,1,1,nil):GetFirst()
-		if tc then
-			rg:AddCard(tc)
-			g:Remove(Card.IsCode,nil,tc:GetCode())
+		local tc=rg:Filter(c79407975.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
+		if g:IsContains(tc) then
+			g:RemoveCard(tc)
+		else
+			g:AddCard(tc)
 		end
 	end
-	Duel.Remove(rg,POS_FACEUP,REASON_COST)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c79407975.cfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and aux.SpElimFilter(c,true,true)

@@ -20,13 +20,18 @@ end
 function c511000662.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,true,false) and c:IsSetCard(0x93) and c:GetLevel()==10
 end
+function c511000662.mzfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
+end
 function c511000662.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return (Duel.IsExistingMatchingCard(c511000662.cfilter,tp,LOCATION_MZONE,0,1,nil)
-			or (not Duel.IsPlayerAffectedByEffect(tp,69832741) and Duel.IsExistingMatchingCard(c511000662.cfilter,tp,LOCATION_GRAVE,0,1,nil) 
-			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0))
+		local mg=Duel.GetMatchingGroup(c511000662.cfilter,tp,LOCATION_MZONE,0,nil)
+		local gg=not Duel.IsPlayerAffectedByEffect(tp,69832741) and Duel.GetMatchingGroup(c511000662.cfilter,tp,LOCATION_GRAVE,0,nil) 
+			or Group.CreateGroup()
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		return ((mg:GetCount()>0 and mg:FilterCount(c62543393.mzfilter,nil)+ft>0) or (gg:GetCount()>0 and ft>0)) 
 			and Duel.IsExistingMatchingCard(c511000662.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp)
 	end
 	local g
@@ -36,11 +41,12 @@ function c511000662.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		g=Duel.GetMatchingGroup(c511000662.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
 	end
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:SetLabel(g:GetCount())
+	Duel.SetTargetParam(g:GetCount())
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 function c511000662.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local ct=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,c511000662.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
 	if tc then
@@ -50,7 +56,7 @@ function c511000662.activate(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetType(EFFECT_TYPE_SINGLE)
 				e1:SetCode(EFFECT_SET_ATTACK)
 				e1:SetReset(RESET_EVENT+0xff0000)
-				e1:SetValue(e:GetLabel()*700)
+				e1:SetValue(ct*700)
 				tc:RegisterEffect(e1)
 				local e2=e1:Clone()
 				e2:SetCode(EFFECT_SET_DEFENSE)
