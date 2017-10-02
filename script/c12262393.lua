@@ -46,17 +46,17 @@ function c12262393.cfilter(c)
 		and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c12262393.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c12262393.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c12262393.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,3,nil)
+	local rg=Duel.GetMatchingGroup(c12262393.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and rg:GetCount()>2 
+		and aux.SelectUnselectGroup(rg,e,tp,3,3,aux.ChkfMMZ(1),0) end
+	local g=aux.SelectUnselectGroup(rg,e,tp,3,3,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c12262393.spfilter(c,e,tp)
 	return c:IsCode(75347539) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c12262393.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c12262393.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c12262393.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK)
 end
 function c12262393.spop(e,tp,eg,ep,ev,re,r,rp)

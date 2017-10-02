@@ -32,12 +32,18 @@ function c33093439.cfilter(c)
 	return c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToRemoveAsCost()
 		and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
 end
+function c33093439.mzfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
+end
 function c33093439.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c33093439.cfilter,tp,LOCATION_MZONE,0,1,nil)
-		or (Duel.IsExistingMatchingCard(c33093439.cfilter,tp,LOCATION_GRAVE,0,1,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and not Duel.IsPlayerAffectedByEffect(tp,69832741))
+	local mg=Duel.GetMatchingGroup(c33093439.cfilter,tp,LOCATION_MZONE,0,nil)
+	local gg=not Duel.IsPlayerAffectedByEffect(tp,69832741) and Duel.GetMatchingGroup(c33093439.cfilter,tp,LOCATION_GRAVE,0,nil) 
+		or Group.CreateGroup()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return (mg:GetCount()>0 and (ft>0 or (mg:IsExists(c33093439.mzfilter,1,nil) and ft>-1))) 
+		or (gg:GetCount()>0 and ft>0)
 end
 function c33093439.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g

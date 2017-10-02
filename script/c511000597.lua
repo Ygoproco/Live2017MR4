@@ -13,22 +13,33 @@ function c511000597.initial_effect(c)
 	e1:SetOperation(c511000597.spop)
 	c:RegisterEffect(e1)
 end
-function c511000597.cfilter(c,code)
-	return c:IsCode(code) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+function c511000597.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c511000597.chk,1,nil,Group.CreateGroup(),sg,511000596,511000594,511000593)
+end
+function c511000597.chk(c,g,sg,code,...)
+	if not c:IsCode(code) then return false end
+	local res=true
+	if ... then
+		g:AddCard(c)
+		res=sg:IsExists(c511000597.chk,1,g,g,sg,...)
+		g:RemoveCard(c)
+	end
+	return res
+end
+function c511000597.cfilter(c,...)
+	return c:IsCode(...) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511000597.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,511000596)
-		and Duel.IsExistingMatchingCard(c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,511000594)
-		and Duel.IsExistingMatchingCard(c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,511000593) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,511000596)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,511000594)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g3=Duel.SelectMatchingCard(tp,c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,511000593)
-	g1:Merge(g2)
-	g1:Merge(g3)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
+	local rg1=Duel.GetMatchingGroup(c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,511000596)
+	local rg2=Duel.GetMatchingGroup(c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,511000594)
+	local rg3=Duel.GetMatchingGroup(c511000597.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,511000593)
+	local rg=rg1:Clone()
+	rg:Merge(rg2)
+	rg:Merge(rg3)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and rg1:GetCount()>0 and rg2:GetCount()>0 and rg3:GetCount()>0 
+		and aux.SelectUnselectGroup(rg,e,tp,3,3,c511000597.rescon,0)
+	local g=aux.SelectUnselectGroup(rg,e,tp,3,3,c511000597.rescon,1,tp,HINTMSG_REMOVE)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c511000597.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
@@ -37,8 +48,7 @@ function c511000597.filter(c,e,tp)
 	return c:IsCode(511000595) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511000597.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c511000597.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c511000597.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c511000597.spop(e,tp,eg,ep,ev,re,r,rp)

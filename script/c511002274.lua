@@ -27,17 +27,15 @@ end
 function c511002274.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateSummon(eg)
 	Duel.Destroy(eg,REASON_EFFECT)
-	Duel.BreakEffect()
-	if (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741))  then
-		local g=Duel.GetMatchingGroup(c511002274.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-		local spg=Duel.GetMatchingGroup(c511002274.filter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,e,tp)
-		if g:GetCount()>4 and spg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(62742651,2)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local rg=g:Select(tp,5,5,nil)
-			Duel.Remove(g,POS_FACEUP,REASON_COST)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sp=spg:Select(tp,1,1,nil)
-			Duel.SpecialSummon(sp,0,tp,tp,false,false,POS_FACEUP)
-		end
-	end	
+	local rg=Duel.GetMatchingGroup(c511002274.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local spg=Duel.GetMatchingGroup(c511002274.filter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,e,tp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>-5 and rg:GetCount()>4 and aux.SelectUnselectGroup(rg,e,tp,5,5,aux.ChkfMMZ(1),0) 
+		and spg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(62742651,2)) then
+		Duel.BreakEffect()
+		local g=aux.SelectUnselectGroup(rg,e,tp,5,5,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sp=spg:Select(tp,1,1,nil)
+		Duel.SpecialSummon(sp,0,tp,tp,false,false,POS_FACEUP)
+	end
 end

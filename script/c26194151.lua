@@ -9,30 +9,33 @@ function c26194151.initial_effect(c)
 	e1:SetOperation(c26194151.activate)
 	c:RegisterEffect(e1)
 end
+c26194151.synchro=nil
+c26194151.tuner=nil
 function c26194151.filter1(c,e,tp)
 	local lv=c:GetLevel()
 	return c:IsSetCard(0xa3) and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)
 		and Duel.IsExistingMatchingCard(c26194151.filter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,tp,c)
 end
+function c26194151.rescon(sg,e,tp,mg)
+	local sc=c26194151.synchro
+	sg:AddCard(c26194151.tuner)
+	local res=Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0 
+		and sg:CheckWithSumEqual(Card.GetLevel,sc:GetLevel(),sg:GetCount(),sg:GetCount())
+	sg:RemoveCard(c26194151.tuner)
+	return res
+end
 function c26194151.filter2(c,tp,sc)
 	local rg=Duel.GetMatchingGroup(c26194151.filter3,tp,LOCATION_MZONE+LOCATION_GRAVE,0,c)
-	return c:IsType(TYPE_TUNER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
-		and rg:IsExists(c26194151.filterchk,1,nil,rg,Group.CreateGroup(),tp,c,sc)
+	if not c:IsType(TYPE_TUNER) or not c:IsAbleToRemove() or not aux.SpElimFilter(c,true) then return false end
+	c26194151.synchro=sc
+	c26194151.tuner=c
+	local res=aux.SelectUnselectGroup(rg,e,tp,nil,2,c26194151.rescon,0)
+	c26194151.synchro=nil
+	c26194151.tuner=nil
+	return res
 end
 function c26194151.filter3(c)
 	return c:GetLevel()>0 and not c:IsType(TYPE_TUNER) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
-end
-function c26194151.filterchk(c,g,sg,tp,tuner,sc)
-	sg:AddCard(c)
-	sg:AddCard(tuner)
-	local res=Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0 
-		and sg:CheckWithSumEqual(Card.GetLevel,sc:GetLevel(),sg:GetCount(),sg:GetCount())
-	sg:RemoveCard(tuner)	
-	if sg:GetCount()<2 and not res then
-		res=g:IsExists(c26194151.filterchk,1,sg,g,sg,tp,tuner,sc)
-	end
-	sg:RemoveCard(c)
-	return res
 end
 function c26194151.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c26194151.filter1,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
@@ -47,24 +50,11 @@ function c26194151.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g2=Duel.SelectMatchingCard(tp,c26194151.filter2,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,tp,sc)
 		local tuner=g2:GetFirst()
 		local rg=Duel.GetMatchingGroup(c26194151.filter3,tp,LOCATION_MZONE+LOCATION_GRAVE,0,tuner)
-		local sg=Group.CreateGroup()
-		while sg:GetCount()<2 do
-			local tg=rg:Filter(c26194151.filterchk,sg,rg,sg,tp,tuner,sc)
-			if tg:GetCount()<=0 then break end
-			sg:AddCard(tuner)
-			local cancel=Duel.GetLocationCountFromEx(tp,tp,sg,sc)>0 
-				and sg:CheckWithSumEqual(Card.GetLevel,sc:GetLevel(),sg:GetCount(),sg:GetCount())
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local tc=Group.SelectUnselect(tg,sg,tp,cancel,cancel)
-			sg:RemoveCard(tuner)
-			if tc~-tuner then
-				if sg:IsContains(tc) then
-					sg:RemoveCard(tc)
-				else
-					sg:AddCard(tc)
-				end
-			end
-		end
+		c26194151.synchro=sc
+		c26194151.tuner=tuner
+		local sg=aux.SelectUnselectGroup(mg,e,tp,nil,2,c26194151.rescon,1,tp,HINTMSG_REMOVE,c26194151.rescon)
+		c26194151.synchro=nil
+		c26194151.tuner=nil
 		sg:AddCard(tuner)
 		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		Duel.SpecialSummonStep(sc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
