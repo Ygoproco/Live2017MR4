@@ -18,22 +18,9 @@ function c511000559.initial_effect(c)
 	e2:SetCondition(c511000559.con2)
 	e2:SetTarget(c511000559.ftarget)
 	c:RegisterEffect(e2)
-	if not c511000559.global_check then
-		c511000559.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetCountLimit(1)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetOperation(c511000559.chk)
-		Duel.RegisterEffect(ge1,0)
-	end
+	aux.CallToken(300)
 end
 c511000559.dm=true
-function c511000559.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,300)
-	Duel.CreateToken(1-tp,300)
-end
 function c511000559.con(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsDeckMaster() and Duel.IsExistingMatchingCard(function(c)return c:IsType(TYPE_FUSION)end,tp,LOCATION_MZONE,0,1,nil)
 end

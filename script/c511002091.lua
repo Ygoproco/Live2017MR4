@@ -22,30 +22,10 @@ function c511002091.initial_effect(c)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e3:SetValue(c511002091.indes)
 	c:RegisterEffect(e3)
-	if not c511002091.global_check then
-		c511002091.global_check=true
-		--register
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetCountLimit(1)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetOperation(c511002091.atkchk)
-		Duel.RegisterEffect(ge1,0)
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511002091.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	aux.CallToken(419)
+	aux.CallToken(39139935)
 end
 c511002091.xyz_number=33
-function c511002091.atkchk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,419)
-	Duel.CreateToken(1-tp,419)
-end
 function c511002091.cfilter(c)
 	local val=0
 	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
@@ -93,14 +73,6 @@ end
 function c511002091.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
-end
-function c511002091.numchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
-		Duel.CreateToken(tp,419)
-		Duel.CreateToken(1-tp,419)
-		Duel.RegisterFlagEffect(tp,419,nil,0,1)
-		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
-	end
 end
 function c511002091.indes(e,c)
 	return not c:IsSetCard(0x48)

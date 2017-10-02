@@ -37,7 +37,15 @@ function c94418111.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
 	if not re:IsHasType(EFFECT_TYPE_ACTIVATE) or c:GetFlagEffect(1)<=0 then return false end
-	return c:GetColumnGroup():IsContains(rc)
+	local p,loc,seq=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_CONTROLER,CHAININFO_TRIGGERING_LOCATION,CHAININFO_TRIGGERING_SEQUENCE)
+	if bit.band(loc,LOCATION_SZONE)==0 or rc:IsControler(1-p) then
+		if rc:IsLocation(LOCATION_SZONE) and rc:IsControler(p) then
+			seq=rc:GetSequence()
+		else
+			seq=rc:GetPreviousSequence()
+		end
+	end
+	return c:IsColumn(seq,p,LOCATION_SZONE)
 end
 function c94418111.filter(c)
 	return c:IsSetCard(0x108) and c:IsAbleToDeck()

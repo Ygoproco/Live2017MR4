@@ -16,6 +16,7 @@ function c511001776.initial_effect(c)
 	e1:SetTarget(c511001776.eqtg)
 	e1:SetOperation(c511001776.eqop)
 	c:RegisterEffect(e1)
+	aux.AddEREquipLimit(c,c511001776.eqcon,c511001776.eqval,aux.EquipByEffectAndLimitRegister,e1)
 	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -79,8 +80,11 @@ function c511001776.initial_effect(c)
 	end
 end
 c511001776.xyz_number=43
+function c511001776.eqval(ec,c,tp)
+	return ec:IsControler(tp) and ec:IsSetCard(0x48)
+end
 function c511001776.eqcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
 function c511001776.filter(c)
 	return c:IsSetCard(0x48) and c:IsType(TYPE_MONSTER)
@@ -98,19 +102,9 @@ function c511001776.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if not Duel.Equip(tp,tc,c,false) then return end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
-		e1:SetCode(EFFECT_EQUIP_LIMIT)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		e1:SetValue(c511001776.eqlimit)
-		tc:RegisterEffect(e1)
+	if c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
+		aux.EquipByEffectAndLimitRegister(c,e,tp,tc)
 	end
-end
-function c511001776.eqlimit(e,c)
-	return c==e:GetOwner()
 end
 function c511001776.indcon(e)
 	return e:GetHandler():GetEquipGroup():IsExists(Card.IsSetCard,1,nil,0x48)
