@@ -12,6 +12,7 @@ function c700000034.initial_effect(c)
 	e1:SetOperation(c700000034.activate)
 	c:RegisterEffect(e1)
 end
+c700000034.fusion=nil
 function c700000034.cfilter(c)
 	return c:IsCode(24094653) and c:IsAbleToGraveAsCost()
 end
@@ -28,60 +29,35 @@ function c700000034.spfilter(c,e,tp,rg)
 	if not c:IsType(TYPE_FUSION) or not c:IsSetCard(0x7) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) then return false end
 	local minc=c.min_material_count
 	local maxc=c.max_material_count
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ftt=Duel.GetUsableMZoneCount(tp)
 	if not minc then return false end
-	local mg=Duel.GetMatchingGroup(c700000034.matfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,nil,e,tp,c)
-	return rg:IsExists(c700000034.rmfilterchk,1,nil,mg,rg,c,minc,maxc,Group.CreateGroup(),ft,ftt,tp)
+	c700000034.fusion=c
+	local res=aux.SelectUnselectGroup(rg,e,tp,minc,maxc,c700000034.rescon1,0)
+	c700000034.fusion=nil
+	return res
+end
+c700000034["remg"]=nil
+function c700000034.rescon1(sg,e,tp,mg)
+	local mg=Duel.GetMatchingGroup(c700000034.matfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,sg,e,tp,c)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) and sg:GetCount()>1 then return false end
+	c700000034["remg"]=sg
+	local res=aux.SelectUnselectGroup(mg,e,tp,sg:GetCount(),sg:GetCount(),c700000034.rescon2,0)
+	c700000034["remg"]=nil
+	return res
+end
+function c700000034.rescon2(sg,e,tp,mg)
+	local fc=c700000034.fusion
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and (c29724053[tp]-1)
+	local chkg=c700000034["remg"] and c700000034["remg"] or Group.CreateGroup()
+	Auxiliary.FCheckExact=sg:GetCount()
+	local res=Duel.GetLocationCountFromEx(tp,tp,chkg)>=sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA) 
+		and chkg:FilterCount(aux.MZFilter,nil,tp)+Duel.GetLocationCount(tp,LOCATION_MZONE)>=sg:FilterCount(aux.NOT(Card.IsLocation),nil,LOCATION_EXTRA)
+		and chkg:FilterCount(Card.IsLocation,nil,LOCATION_MZONE)+Duel.GetUsableMZoneCount(tp)>=sg:GetCount()
+		and (not ect or sg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<ect) and fc:CheckFusionMaterial(sg,nil,tp)
+	Auxiliary.FCheckExact=nil
+	return res
 end
 function c700000034.rmfilter(c)
 	return c:GetSummonLocation()==LOCATION_EXTRA and c:IsPreviousLocation(LOCATION_MZONE) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
-end
-function c700000034.rmfilterchk(c,mg,rg,fc,minc,maxc,sg,ft,ftt,tp)
-	sg:AddCard(c)
-	local res
-	if c:IsLocation(LOCATION_MZONE) then
-		ftt=ftt+1
-		if c:GetSequence()<5 then
-			ft=ft+1
-		end
-	end
-	if sg:GetCount()<minc then
-		res=rg:IsExists(c700000034.rmfilterchk,1,sg,mg,rg,fc,minc,maxc,sg,ft,ftt,tp)
-	elseif sg:GetCount()<maxc then
-		local ftex=Duel.GetLocationCountFromEx(tp,tp,sg)
-		res=rg:IsExists(c700000034.rmfilterchk,1,sg,mg,rg,fc,minc,maxc,sg,ft,ftt,tp) 
-			or mg:IsExists(c700000034.matchk,1,sg,mg,sg,sg:GetCount(),Group.CreateGroup(),fc,ft,ftex,ftt,tp)
-	else
-		local ftex=Duel.GetLocationCountFromEx(tp,tp,sg)
-		res=mg:IsExists(c700000034.matchk,1,sg,mg,sg,sg:GetCount(),Group.CreateGroup(),fc,ft,ftex,ftt,tp)
-	end
-	if c:IsLocation(LOCATION_MZONE) then
-		ftt=ftt-1
-		if c:GetSequence()<5 then
-			ft=ft-1
-		end
-	end
-	sg:RemoveCard(c)
-	return res
-end
-function c700000034.matchk(c,mg,sg,ct,matg,fc,ft,ftex,ftt,tp)
-	if ftt<ct or (Duel.IsPlayerAffectedByEffect(tp,59822133) and ct>1) then return false end
-	if matg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)>ftex 
-		or matg:FilterCount(function(c) return not c:IsLocation(LOCATION_EXTRA) end,nil)>ft then return false end
-	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and (c29724053[tp]-1)
-	if ect and matg:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)>ect then return false end
-	sg:AddCard(c)
-	matg:AddCard(c)
-	local res
-	if matg:GetCount()<ct then
-		res=mg:IsExists(c700000034.matchk,1,sg,mg,sg,ct,matg,fc,ft,ftex,ftt,tp)
-	else
-		res=fc:CheckFusionMaterial(matg,nil,tp) and matg:IsExists(function(mc) return fc:CheckFusionMaterial(matg,mc) end,ct,nil)
-	end
-	sg:RemoveCard(c)
-	matg:RemoveCard(c)
-	return res
 end
 function c700000034.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetMatchingGroup(c700000034.rmfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
@@ -99,52 +75,13 @@ function c700000034.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not fc or not fc:IsRelateToEffect(e) or not c700000034.spfilter(fc,e,tp,rg) then return false end
 	local minc=fc.min_material_count
 	local maxc=fc.max_material_count
-	local mg=Duel.GetMatchingGroup(c700000034.matfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,nil,e,tp,fc)
-	local rsg=Group.CreateGroup()
-	local matg=Group.CreateGroup()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ftt=Duel.GetUsableMZoneCount(tp)
-	local ftex
-	while rsg:GetCount()<maxc do
-		ftex=Duel.GetLocationCountFromEx(tp,tp,rsg)
-		local cancel=rsg:GetCount()>0 and mg:IsExists(c700000034.matchk,1,rsg,mg,rsg,rsg:GetCount(),matg,fc,ft,ftex,ftt,tp)
-		local g=rg:Filter(c700000034.rmfilterchk,rsg,mg,rg,fc,minc,maxc,rsg,ft,ftt,tp)
-		if g:GetCount()<=0 then break end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=Group.SelectUnselect(g,rsg,tp,cancel,cancel)
-		if not tc then break end
-		if rsg:IsContains(tc) then
-			rsg:RemoveCard(tc)
-			if tc:IsLocation(LOCATION_MZONE) then
-				ftt=ftt-1
-				if tc:GetSequence()<5 then
-					ft=ft-1
-				end
-			end
-		else
-			rsg:AddCard(tc)
-			if tc:IsLocation(LOCATION_MZONE) then
-				ftt=ftt+1
-				if tc:GetSequence()<5 then
-					ft=ft+1
-				end
-			end
-		end
-	end
-	ftex=Duel.GetLocationCountFromEx(tp,tp,rsg)
+	c700000034.fusion=fc
+	local rsg=aux.SelectUnselectGroup(rg,e,tp,nil,nil,c700000034.rescon1,1,tp,HINTMSG_REMOVE,c700000034.rescon1)
 	local ct=Duel.Remove(rsg,POS_FACEUP,REASON_EFFECT)
-	if ct<rsg:GetCount() then return end
-	mg:Sub(rsg)
-	while matg:GetCount()<ct do
-		local g=mg:Filter(c700000034.matchk,matg,mg,matg,ct,matg,fc,ft,ftex,ftt,tp)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=Group.SelectUnselect(g,matg,tp)
-		if matg:IsContains(tc) then
-			matg:RemoveCard(tc)
-		else
-			matg:AddCard(tc)
-		end
-	end
+	local mg=Duel.GetMatchingGroup(c700000034.matfilter,tp,LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE,0,nil,e,tp,fc)
+	if ct<rsg:GetCount() then c700000034.fusion=nil return end
+	local matg=aux.SelectUnselectGroup(mg,e,tp,ct,ct,c700000034.rescon2,1,tp,HINTMSG_SPSUMMON)
+	c700000034.fusion=nil
 	local mc=matg:GetFirst()
 	while mc do
 		Duel.SpecialSummonStep(mc,0,tp,tp,true,false,POS_FACEUP)
