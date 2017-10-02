@@ -45,34 +45,11 @@ function c12262393.cfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x2066) and c:IsLevelBelow(4) and not c:IsCode(12262393) 
 		and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
-function c12262393.chkfilter(c,ft,sg,rg)
-	local res
-	if sg:GetCount()<3 then
-		sg:AddCard(c)
-		res=rg:IsExists(c12262393.chkfilter,1,sg,ft,sg,rg)
-		sg:RemoveCard(c)
-	else
-		res=sg:FilterCount(c12262393.mzfilter,nil)+ft>0
-	end
-	return res
-end
-function c12262393.mzfilter(c)
-	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
-end
 function c12262393.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=Duel.GetMatchingGroup(c12262393.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if chk==0 then return ft>-3 and rg:GetCount()>2 and rg:IsExists(c12262393.chkfilter,1,nil,ft,Group.CreateGroup(),rg) end
-	local g=Group.CreateGroup()
-	while g:GetCount()<3 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=rg:Filter(c12262393.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
-		if g:IsContains(tc) then
-			g:RemoveCard(tc)
-		else
-			g:AddCard(tc)
-		end
-	end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and rg:GetCount()>2 
+		and aux.SelectUnselectGroup(rg,e,tp,3,3,aux.ChkfMMZ(1),0) end
+	local g=aux.SelectUnselectGroup(rg,e,tp,3,3,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c12262393.spfilter(c,e,tp)
