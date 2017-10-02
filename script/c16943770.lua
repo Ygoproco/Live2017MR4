@@ -46,7 +46,7 @@ function c16943770.indcon(e)
 end
 function c16943770.cfilter(c,ft)
 	return c:IsSetCard(0x101b) and not c:IsCode(16943770) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
-		and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and ft>-1))
+		and (ft>0 or (aux.MZFilter(c,c:GetControler()) and ft>-1))
 end
 function c16943770.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)

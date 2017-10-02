@@ -18,16 +18,8 @@ end
 function c511001066.cfilter(c,e,tp)
 	return c:IsAbleToRemoveAsCost() and c:IsRace(RACE_MACHINE) and aux.SpElimFilter(c,true)
 end
-function c511001066.chkfilter(c,ft,sg,rg,e,tp)
-	local res
-	if sg:GetCount()<2 then
-		sg:AddCard(c)
-		res=rg:IsExists(c511001066.chkfilter,1,sg,ft,sg,rg,e,tp)
-		sg:RemoveCard(c)
-	else
-		res=sg:FilterCount(c511001066.mzfilter,nil)+ft>0 and Duel.IsExistingTarget(c511000310.spfilter,tp,LOCATION_GRAVE,0,1,sg,e,tp)
-	end
-	return res
+function c511001066.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and Duel.IsExistingTarget(c511001066.spfilter,tp,LOCATION_GRAVE,0,1,sg,e,tp)
 end
 function c511001066.mzfilter(c)
 	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
@@ -43,22 +35,13 @@ function c511001066.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then
 		if chkcost then
 			e:SetLabel(0)
-			return ft>-2 and rg:GetCount()>1 and rg:IsExists(c511001066.chkfilter,1,nil,ft,Group.CreateGroup(),rg,e,tp)
+			return ft>-2 and rg:GetCount()>1 and aux.SelectUnselectGroup(rg,e,tp,2,2,c511001066.rescon,0)
 		else
-			return ft>0 and Duel.IsExistingTarget(c511000310.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
+			return ft>0 and Duel.IsExistingTarget(c511001066.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
 		end
 	end
 	if chkcost then
-		local g=Group.CreateGroup()
-		while g:GetCount()<2 do
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local tc=rg:Filter(c511001066.chkfilter,g,ft,g,rg,e,tp):SelectUnselect(g,tp)
-			if g:IsContains(tc) then
-				g:RemoveCard(tc)
-			else
-				g:AddCard(tc)
-			end
-		end
+		local g=aux.SelectUnselectGroup(rg,e,tp,2,2,c511001066.rescon,1,tp,HINTMSG_REMOVE)
 		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

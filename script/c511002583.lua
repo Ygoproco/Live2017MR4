@@ -19,7 +19,7 @@ function c511002583.filter(c,e,tp)
 end
 function c511002583.cfilter(c,e,tp,ft)
 	return c:IsRace(RACE_ROCK) and c:IsType(TYPE_XYZ) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
-		and (ft>1 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and ft>0)) 
+		and (ft>1 or (aux.MZFilter(c,tp) and ft>0)) 
 		and Duel.IsExistingMatchingCard(c511002583.filter,tp,LOCATION_GRAVE,0,2,c,e,tp)
 end
 function c511002583.target(e,tp,eg,ep,ev,re,r,rp,chk)

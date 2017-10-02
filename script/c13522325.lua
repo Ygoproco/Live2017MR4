@@ -27,7 +27,7 @@ function c13522325.atkcon(e)
 end
 function c13522325.spfilter(c,ft)
 	return c:IsAttribute(ATTRIBUTE_FIRE) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
-		and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and ft>-1))
+		and (ft>0 or (aux.MZFilter(c,c:GetControler()) and ft>-1))
 end
 function c13522325.spcon(e,c)
 	if c==nil then return true end

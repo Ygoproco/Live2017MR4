@@ -13,7 +13,7 @@ function c5763020.initial_effect(c)
 end
 function c5763020.costfilter(c,ft)
 	return c:IsType(TYPE_TUNER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
-		and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and ft>-1))
+		and (ft>0 or (aux.MZFilter(c,c:GetControler()) and ft>-1))
 end
 function c5763020.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)

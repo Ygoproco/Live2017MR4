@@ -17,7 +17,7 @@ function c511000310.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511000310.costfilter(c,e,tp,ft)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xc008) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
-		and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and ft>-1))
+		and (ft>0 or (aux.MZFilter(c,tp) and ft>-1))
 		and Duel.IsExistingTarget(c511000310.spfilter,tp,LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c511000310.spfilter(c,e,tp)

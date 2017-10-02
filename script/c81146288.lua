@@ -23,8 +23,7 @@ function c81146288.initial_effect(c)
 end
 function c81146288.spfilter(c,ft)
 	return c:IsLevelAbove(7) and c:IsRace(RACE_PLANT) and c:IsAbleToRemoveAsCost() 
-		and (c:IsLocation(LOCATION_HAND) 
-			or (aux.SpElimFilter(c,true) and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and ft>-1))))
+		and (c:IsLocation(LOCATION_HAND) or (aux.SpElimFilter(c,true) and (ft>0 or (aux.MZFilter(c,c:GetControler()) and ft>-1))))
 end
 function c81146288.spcon(e,c)
 	if c==nil then return true end

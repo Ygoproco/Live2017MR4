@@ -28,25 +28,14 @@ function c48453776.initial_effect(c)
 	e3:SetOperation(c48453776.sgop)
 	c:RegisterEffect(e3)
 end
-function c48453776.chkfilter(c,ft,sg,rg)
-	local res
-	if sg:GetCount()<4 then
-		sg:AddCard(c)
-		res=rg:IsExists(c48453776.chkfilter,1,sg,ft,sg,rg)
-		sg:RemoveCard(c)
-	else
-		res=sg:FilterCount(c48453776.mzfilter,nil)+ft>0 and sg:IsExists(c48453776.atchk1,1,nil,sg)
-	end
-	return res
+function c48453776.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c48453776.atchk1,1,nil,sg)
 end
 function c48453776.atchk1(c,sg)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_FAIRY) and sg:FilterCount(c48453776.atchk2,c)==3
 end
 function c48453776.atchk2(c,sg)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FIEND)
-end
-function c48453776.mzfilter(c)
-	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
 end
 function c48453776.spfilter(c,att,race)
 	return c:IsAttribute(att) and c:IsRace(race) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
@@ -58,23 +47,13 @@ function c48453776.spcon(e,c)
 	local rg2=Duel.GetMatchingGroup(c48453776.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_DARK,RACE_FIEND)
 	local rg=rg1:Clone()
 	rg:Merge(rg2)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	return ft>-4 and rg1:GetCount()>0 and rg2:GetCount()>2 and rg:IsExists(c48453776.chkfilter,1,nil,ft,Group.CreateGroup(),rg)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-4 and rg1:GetCount()>0 and rg2:GetCount()>2 
+		and aux.SelectUnselectGroup(rg,e,tp,4,4,c48453776.rescon,0)
 end
 function c48453776.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local rg=Duel.GetMatchingGroup(c48453776.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_LIGHT,RACE_FAIRY)
 	rg:Merge(Duel.GetMatchingGroup(c48453776.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_DARK,RACE_FIEND))
-	local g=Group.CreateGroup()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	while g:GetCount()<4 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=rg:Filter(c48453776.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
-		if g:IsContains(tc) then
-			g:RemoveCard(tc)
-		else
-			g:AddCard(tc)
-		end
-	end
+	local g=aux.SelectUnselectGroup(rg,e,tp,4,4,c48453776.rescon,1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c48453776.sgcost(e,tp,eg,ep,ev,re,r,rp,chk)

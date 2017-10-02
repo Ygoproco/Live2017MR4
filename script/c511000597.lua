@@ -13,16 +13,8 @@ function c511000597.initial_effect(c)
 	e1:SetOperation(c511000597.spop)
 	c:RegisterEffect(e1)
 end
-function c511000597.chkfilter(c,ft,sg,rg)
-	local res
-	if sg:GetCount()<3 then
-		sg:AddCard(c)
-		res=rg:IsExists(c511000597.chkfilter,1,sg,ft,sg,rg)
-		sg:RemoveCard(c)
-	else
-		res=sg:FilterCount(c511000597.mzfilter,nil)+ft>0 and sg:IsExists(c511000597.chk,1,nil,Group.CreateGroup(),sg,511000596,511000594,511000593)
-	end
-	return res
+function c511000597.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c511000597.chk,1,nil,Group.CreateGroup(),sg,511000596,511000594,511000593)
 end
 function c511000597.chk(c,g,sg,code,...)
 	if not c:IsCode(code) then return false end
@@ -34,9 +26,6 @@ function c511000597.chk(c,g,sg,code,...)
 	end
 	return res
 end
-function c511000597.mzfilter(c)
-	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
-end
 function c511000597.cfilter(c,...)
 	return c:IsCode(...) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
@@ -47,19 +36,9 @@ function c511000597.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rg=rg1:Clone()
 	rg:Merge(rg2)
 	rg:Merge(rg3)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if chk==0 then return ft>-3 and rg1:GetCount()>0 and rg2:GetCount()>0 and rg3:GetCount()>0 
-		and rg:IsExists(c511000597.chkfilter,1,nil,ft,Group.CreateGroup(),rg)
-	local g=Group.CreateGroup()
-	while g:GetCount()<3 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=rg:Filter(c511000597.chkfilter,g,ft,g,rg):SelectUnselect(g,tp)
-		if g:IsContains(tc) then
-			g:RemoveCard(tc)
-		else
-			g:AddCard(tc)
-		end
-	end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and rg1:GetCount()>0 and rg2:GetCount()>0 and rg3:GetCount()>0 
+		and aux.SelectUnselectGroup(rg,e,tp,3,3,c511000597.rescon,0)
+	local g=aux.SelectUnselectGroup(rg,e,tp,3,3,c511000597.rescon,1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c511000597.spcon(e,tp,eg,ep,ev,re,r,rp)
