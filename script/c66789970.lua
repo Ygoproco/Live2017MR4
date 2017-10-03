@@ -29,16 +29,17 @@ end
 function c66789970.hspcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c66789970.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,nil)
+	local rg=Duel.GetMatchingGroup(c66789970.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and rg:GetCount()>2 and aux.SelectUnselectGroup(rg,e,tp,3,3,aux.ChkfMMZ(1),0)
 end
 function c66789970.hspop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c66789970.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,3,nil)
+	local rg=Duel.GetMatchingGroup(c66789970.rfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=aux.SelectUnselectGroup(rg,e,tp,3,3,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c66789970.cfilter(c)
-	return c:IsRace(RACE_DRAGON) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+	return c:IsRace(RACE_DRAGON) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
+		and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c)
 end
 function c66789970.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66789970.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil) end

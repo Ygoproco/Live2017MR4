@@ -35,12 +35,18 @@ function c8400623.cfilter(c)
 	return c:IsRace(RACE_REPTILE) and c:IsAbleToRemoveAsCost()
 		and (not c:IsLocation(LOCATION_MZONE) or c:IsFaceup())
 end
+function c8400623.mzfilter(c)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
+end
 function c8400623.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c8400623.cfilter,tp,LOCATION_MZONE,0,1,nil)
-		or (not Duel.IsPlayerAffectedByEffect(tp,69832741) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-			and Duel.IsExistingMatchingCard(c8400623.cfilter,tp,LOCATION_GRAVE,0,1,nil))
+	local mg=Duel.GetMatchingGroup(c8400623.cfilter,tp,LOCATION_MZONE,0,nil)
+	local gg=not Duel.IsPlayerAffectedByEffect(tp,69832741) and Duel.GetMatchingGroup(c8400623.cfilter,tp,LOCATION_GRAVE,0,nil) 
+		or Group.CreateGroup()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return (mg:GetCount()>0 and (ft>0 or (mg:IsExists(c8400623.mzfilter,1,nil) and ft>-1))) 
+		or (gg:GetCount()>0 and ft>0)
 end
 function c8400623.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g

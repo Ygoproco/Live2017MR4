@@ -14,41 +14,35 @@ end
 function c511002323.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsRace(RACE_FAIRY)
 end
+function c511002323.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
+	return true
+end
 function c511002323.costfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:GetLevel()==1 and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
-function c511002323.filter(c,g,sg,e,tp)
-	sg:AddCard(c)
-	local res
-	if sg:GetCount()<4 then
-		res=g:IsExists(c511002323.filter,1,sg,g,sg,e,tp)
-	else
-		res=Duel.IsExistingMatchingCard(c511002323.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,sg,e,tp)
-	end
-	sg:RemoveCard(c)
-	return res
+function c511002323.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and Duel.IsExistingMatchingCard(c511002323.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,sg,e,tp)
 end
 function c511002323.spfilter(c,e,tp)
 	return c:IsRace(RACE_FAIRY) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
-function c511002323.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local cg=Duel.GetMatchingGroup(c511002323.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	if chk==0 then return cg:IsExists(c511002323.filter,1,nil,cg,Group.CreateGroup(),e,tp) end
-	local rg=Group.CreateGroup()
-	while rg:GetCount()<4 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=Group.SelectUnselect(cg:Filter(c511002323.filter,rg,cg,rg,e,tp),rg,tp)
-		if rg:IsContains(tc) then
-			rg:RemoveCard(tc)
+function c511002323.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local chkcost=e:GetLabel()==1 and true or false
+	local rg=Duel.GetMatchingGroup(c511002323.costfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then 
+		if chkcost then
+			e:SetLabel(0)
+			return ft>-4 and rg:GetCount()>3 and aux.SelectUnselectGroup(rg,e,tp,4,4,c511002323.rescon,0)
 		else
-			rg:AddCard(tc)
+			return ft>0 and Duel.IsExistingMatchingCard(c511002323.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp)
 		end
 	end
-	Duel.Remove(rg,POS_FACEUP,REASON_COST)
-end
-function c511002323.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c511002323.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,e,tp) end
+	if chkcost then
+		local g=aux.SelectUnselectGroup(rg,e,tp,4,4,c511002323.rescon,1,tp,HINTMSG_REMOVE)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function c511002323.activate(e,tp,eg,ep,ev,re,r,rp)

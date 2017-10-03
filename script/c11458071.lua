@@ -29,23 +29,33 @@ function c11458071.initial_effect(c)
 	e3:SetOperation(c11458071.rmop)
 	c:RegisterEffect(e3)
 end
+function c11458071.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c11458071.atchk1,1,nil,sg)
+end
+function c11458071.atchk1(c,sg)
+	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_DARK) and sg:FilterCount(c11458071.atchk2,c)==3
+end
+function c11458071.atchk2(c)
+	return c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT)
+end
 function c11458071.spfilter(c,rac,att)
 	return c:IsRace(rac) and c:IsAttribute(att) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c11458071.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,nil,RACE_FAIRY,ATTRIBUTE_LIGHT)
-		and Duel.IsExistingMatchingCard(c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,RACE_FIEND,ATTRIBUTE_DARK)
+	local rg1=Duel.GetMatchingGroup(c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,RACE_FAIRY,ATTRIBUTE_LIGHT)
+	local rg2=Duel.GetMatchingGroup(c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,RACE_FIEND,ATTRIBUTE_DARK)
+	local rg=rg1:Clone()
+	rg:Merge(rg2)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-4 and rg1:GetCount()>2 and rg2:GetCount()>0 
+		and aux.SelectUnselectGroup(rg,e,tp,4,4,c11458071.rescon,0)
 end
 function c11458071.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,3,nil,RACE_FAIRY,ATTRIBUTE_LIGHT)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,RACE_FIEND,ATTRIBUTE_DARK)
-	g1:Merge(g2)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
+	local rg=Duel.GetMatchingGroup(c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,RACE_FAIRY,ATTRIBUTE_LIGHT)
+	rg:Merge(Duel.GetMatchingGroup(c11458071.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,RACE_FIEND,ATTRIBUTE_DARK))
+	local g=aux.SelectUnselectGroup(rg,e,tp,4,4,c11458071.rescon,1,tp,HINTMSG_REMOVE)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c11458071.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetAttackAnnouncedCount()==0 end

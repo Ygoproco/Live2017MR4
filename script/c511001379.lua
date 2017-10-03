@@ -11,25 +11,7 @@ function c511001379.initial_effect(c)
 	e1:SetTarget(c511001379.damtg)
 	e1:SetOperation(c511001379.damop)
 	c:RegisterEffect(e1)
-	if not c511001379.global_check then
-		c511001379.global_check=true
-		--register
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511001379.atkchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function c511001379.atkchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
-		Duel.CreateToken(tp,419)
-		Duel.CreateToken(1-tp,419)
-		Duel.RegisterFlagEffect(tp,419,nil,0,1)
-		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
-	end
+	aux.CallToken(419)
 end
 function c511001379.cfilter(c,tp)
 	local val=0

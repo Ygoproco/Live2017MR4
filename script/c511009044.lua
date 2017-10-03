@@ -9,6 +9,7 @@ function c511009044.initial_effect(c)
 	e1:SetCondition(c511009044.condition)
 	e1:SetOperation(c511009044.activate)
 	c:RegisterEffect(e1)
+	aux.CallToken(420)
 	if not c511009044.global_check then
 		c511009044.global_check=true
 		c511009044[0]=true
@@ -23,13 +24,6 @@ function c511009044.initial_effect(c)
 		ge2:SetCountLimit(1)
 		ge2:SetOperation(c511009044.clear)
 		Duel.RegisterEffect(ge2,0)
-		local ge3=Effect.CreateEffect(c)
-		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge3:SetCode(EVENT_ADJUST)
-		ge3:SetCountLimit(1)
-		ge3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge3:SetOperation(c511009044.archchk)
-		Duel.RegisterEffect(ge3,0)
 	end
 end
 function c511009044.checkop(e,tp,eg,ep,ev,re,r,rp)
@@ -37,13 +31,6 @@ function c511009044.checkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511009044.clear(e,tp,eg,ep,ev,re,r,rp)
 	c511009044[0]=false
-end
-function c511009044.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
 end
 function c511009044.cfilter(c)
 	return c:IsFaceup() and c:IsRed()

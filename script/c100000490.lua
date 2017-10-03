@@ -13,87 +13,52 @@ end
 function c100000490.filter(c,e)
 	return c:IsFaceup() and c:IsCanBeEffectTarget(e) and not c:IsType(TYPE_TOKEN)
 end
-function c100000490.cfilter(c)
-	return not c:IsHasEffect(EFFECT_XYZ_MATERIAL)
-end
-function c100000490.mfilter(c,g,matg,tp)
-	g:RemoveCard(c)
-	matg:AddCard(c)
-	local res=Duel.IsExistingMatchingCard(c100000490.xyzfilterchk,tp,LOCATION_EXTRA,0,1,nil,tg)
-		and (Duel.IsExistingMatchingCard(c100000490.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,tg,tg:GetCount(),PLAYER_NONE) 
-		or g:IsExists(c100000490.mfilter,1,nil,mg,tg,tp))
-	g:AddCard(c)
-	matg:RemoveCard(c)
-	return res
-end
-function c100000490.xyzfilterchk(c,mg)
-	return not mg:IsExists(function(mc) return c.xyz_filter and not c.xyz_filter(mc) end,1,nil) and c.maxxyzct and mg:GetCount()<=c.maxxyzct
-end
-function c100000490.xyzfilter(c,mg,ct,tp)
-	if tp~=PLAYER_NONE then
-		local g=mg:Filter(Card.IsControler,nil,tp)
-		local tc=g:GetFirst()
+function c100000490.xyzfilter(c,mg,sc,set)
+	local reset={}
+	if not set then
+		local tc=mg:GetFirst()
 		while tc do
-			local e1=Effect.CreateEffect(c)
+			local e1=Effect.CreateEffect(sc)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 			e1:SetCode(EFFECT_XYZ_MATERIAL)
-			e1:SetReset(RESET_EVENT+RESET_MSCHANGE)
 			tc:RegisterEffect(e1)
+			table.insert(reset,e1)
 			tc=g:GetNext()
 		end
 	end
-	local res=false
-	if not ct then
-		res=c:IsXyzSummonable(mg)
-	else
-		res=c:IsXyzSummonable(mg,ct,ct)
-	end
-	if tp~=PLAYER_NONE then
-		tc=g:GetFirst()
-		while tc do
-			tc:ResetEffect(RESET_MSCHANGE,RESET_EVENT)
-			tc=g:GetNext()
-		end
+	local res=c:IsXyzSummonable(mg,mg:GetCount(),mg:GetCount())
+	for _,te in ipairs(reset) do
+		te:Reset()
 	end
 	return res
+end
+function c100000490.rescon(sg,e,tp,mg)
+	return Duel.IsExistingMatchingCard(c100000490.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,sg,e:GetHandler())
+end
+function c100000490.rescon2(sg,e,tp,mg)
+	return Duel.IsExistingMatchingCard(c100000490.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,sg,e:GetHandler(),true)
 end
 function c100000490.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local mg=Duel.GetMatchingGroup(c100000490.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,e)
-	if chk==0 then return Duel.IsExistingMatchingCard(c100000490.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,mg,nil,tp) end
-	local g=mg:Filter(Card.IsControler,nil,tp)
+	if chk==0 then return aux.SelectUnselectGroup(mg,e,tp,nil,nil,c100000490.rescon,0) end
+	local reset={}
 	local tc=g:GetFirst()
 	while tc do
-		local e1=Effect.CreateEffect(c)
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e1:SetCode(EFFECT_XYZ_MATERIAL)
-		e1:SetReset(RESET_EVENT+RESET_MSCHANGE)
 		tc:RegisterEffect(e1)
+		table.insert(reset,e1)
 		tc=g:GetNext()
 	end
-	local tg=Group.CreateGroup()
-	::start::
-	local cancel=Duel.IsExistingMatchingCard(c100000490.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,tg,tg:GetCount())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local tc=Group.SelectUnselect(mg:Filter(c100000490.mfilter,tg,mg,tg,tp),tg,tp,cancel,cancel)
-	if not tc then goto jump end
-	if mg:IsContains(tc) then
-		mg:RemoveCard(tc)
-		tg:AddCard(tc)
-	else
-		mg:AddCard(tc)
-		tg:RemoveCard(tc)
-	end
-	goto start
-	::jump::
+	local tg=aux.SelectUnselectGroup(mg,e,tp,nil,nil,c100000490.rescon2,1,tp,HINTMSG_XMATERIAL,c100000490.rescon2)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-	tc=g:GetFirst()
-	while tc do
-		tc:ResetEffect(RESET_MSCHANGE,RESET_EVENT)
-		tc=g:GetNext()
+	for _,te in ipairs(reset) do
+		te:Reset()
 	end
 end
 function c100000490.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -107,7 +72,7 @@ function c100000490.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 		tc=g:GetNext()
 	end
-	local xyzg=Duel.GetMatchingGroup(c100000490.xyzfilter,tp,LOCATION_EXTRA,0,nil,g,g:GetCount(),PLAYER_NONE)
+	local xyzg=Duel.GetMatchingGroup(c100000490.xyzfilter,tp,LOCATION_EXTRA,0,nil,g,e:GetHandler(),true)
 	if xyzg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()

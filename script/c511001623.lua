@@ -16,33 +16,15 @@ end
 function c511001623.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsType(TYPE_XYZ)
 end
-function c511001623.filterchk(c,g,sg)
-	sg:AddCard(c)
-	local res
-	if sg:GetCount()<3 then
-		res=g:IsExists(c511001623.filterchk,1,sg,g,sg,tp)
-	else
-		res=Duel.GetLocationCountFromEx(tp,tp,sg)>0
-	end
-	sg:RemoveCard(c)
-	return res
+function c511001623.rescon(sg,e,tp,mg)
+	return Duel.GetLocationCountFromEx(tp,tp,sg)>0
 end
 function c511001623.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE+LOCATION_GRAVE) and chkc:IsControler(tp) and c511001623.filter(chkc) end
 	local g=Duel.GetMatchingGroup(c511001623.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,e)
-	local sg=Group.CreateGroup()
-	if chk==0 then return g:IsExists(c511001623.filterchk,1,nil,g,sg,tp)
+	if chk==0 then return aux.SelectUnselectGroup(g,e,tp,3,3,c511001623.rescon,0) 
 		and Duel.IsExistingMatchingCard(c511001623.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
-	while sg:GetCount()<3 do
-		local tg=g:Filter(c511001623.filterchk,sg,g,sg,tp)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=Group.SelectUnselect(tg,sg,tp)
-		if sg:IsContains(tc) then
-			sg:RemoveCard(tc)
-		else
-			sg:AddCard(tc)
-		end
-	end
+	local sg=aux.SelectUnselectGroup(g,e,tp,3,3,c511001623.rescon,1,tp,HINTMSG_REMOVE)
 	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,3,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)

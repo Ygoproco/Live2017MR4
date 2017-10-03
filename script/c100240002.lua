@@ -15,7 +15,7 @@ function c100240002.initial_effect(c)
 end
 c100240002.material_setcode={0x93,0x1093}
 function c100240002.matfilter(c)
-	return c:GetSequence()>4
+	return c:GetSequence()>4 and c:IsLocation(LOCATION_MZONE)
 end
 function c100240002.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
