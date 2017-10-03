@@ -753,9 +753,9 @@ function Auxiliary.SelectUnselectLoop(c,sg,mg,e,tp,minc,maxc,rescon)
 	if sg:GetCount()<minc then
 		res=mg:IsExists(Auxiliary.SelectUnselectLoop,1,sg,sg,mg,e,tp,minc,maxc,rescon)
 	elseif sg:GetCount()<maxc then
-		res=(not rescon and rescon(sg,e,tp,mg)) or mg:IsExists(Auxiliary.SelectUnselectLoop,1,sg,sg,mg,e,tp,minc,maxc,rescon)
+		res=(not rescon or rescon(sg,e,tp,mg)) or mg:IsExists(Auxiliary.SelectUnselectLoop,1,sg,sg,mg,e,tp,minc,maxc,rescon)
 	else
-		res=(not rescon and rescon(sg,e,tp,mg))
+		res=(not rescon or rescon(sg,e,tp,mg))
 	end
 	sg:RemoveCard(c)
 	return res
@@ -768,7 +768,7 @@ function Auxiliary.SelectUnselectGroup(g,e,tp,minc,maxc,rescon,chk,seltp,hintmsg
 	local sg=Group.CreateGroup()
 	while true do
 		local cancel=sg:GetCount()>=minc and (not cancelcon or cancelcon(sg,e,tp,g))
-		local mg=g:Filter(Auxiliary.SelectUnselectLoop,sg,sg,g,e,tp,minc,maxc)
+		local mg=g:Filter(Auxiliary.SelectUnselectLoop,sg,sg,g,e,tp,minc,maxc,rescon)
 		if (breakcon and breakcon(sg,e,tp,mg)) or mg:GetCount()<=0 then break end
 		Duel.Hint(HINT_SELECTMSG,seltp,hintmsg)
 		local tc=mg:SelectUnselect(sg,seltp,cancel,cancel)
