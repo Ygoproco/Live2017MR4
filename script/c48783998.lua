@@ -40,7 +40,7 @@ function c48783998.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local g=nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	if not (Duel.IsExistingMatchingCard(c91188343.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)) then
+	if not (Duel.IsExistingMatchingCard(c48783998.envfilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456)) then
 		g=Duel.SelectMatchingCard(tp,c48783998.filter1,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	else
 		g=Duel.SelectMatchingCard(tp,c48783998.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp)

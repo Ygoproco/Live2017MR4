@@ -30,14 +30,14 @@ function c93085839.spfilter(c)
 	return c:IsSetCard(0x107a) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c93085839.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c93085839.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c93085839.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,2,e:GetHandler())
+	local rg=Duel.GetMatchingGroup(c93085839.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and rg:GetCount()>1 
+		and aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),0) end
+	local g=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c93085839.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c93085839.spop(e,tp,eg,ep,ev,re,r,rp)

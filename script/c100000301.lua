@@ -26,13 +26,14 @@ end
 function c100000301.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c100000301.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,nil)
+	local rg=Duel.GetMatchingGroup(c100000301.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and rg:GetCount()>2 
+		and aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),0)
 end
 function c100000301.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c100000301.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,3,3,nil)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
+	local rg=Duel.GetMatchingGroup(c100000301.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c100000301.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGraveAsCost,tp,LOCATION_MZONE,0,1,nil)	end

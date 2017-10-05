@@ -9,14 +9,18 @@ function c511000056.initial_effect(c)
 	e1:SetOperation(c511000056.activate)
 	c:RegisterEffect(e1)
 end
+c511000056.tempcard=nil
 function c511000056.filter1(c,ntg,tp)
-	return c:IsFaceup() and c:GetLevel()>0 and c:IsType(TYPE_TUNER) and ntg:IsExists(c511000056.chkfilter,1,nil,ntg,Group.FromCards(c),tp)
+	if c:IsFacedown() or c:GetLevel()<=0 or not c:IsType(TYPE_TUNER) then return false end
+	c511000056.tempcard=c
+	local res=aux.SelectUnselectGroup(ntg,nil,tp,nil,nil,c511000056.rescon,0)
+	c511000056.tempcard=nil
+	return res
 end
-function c511000056.chkfilter(c,g,sg,tp)
-	sg:AddCard(c)
-	local res=(Duel.GetLocationCountFromEx(tp,tp,sg)>1 and sg:CheckWithSumEqual(Card.GetLevel,7,sg:GetCount(),sg:GetCount()))
-		or g:IsExists(c511000056.chkfilter,1,sg,g,sg,tp)
-	sg:RemoveCard(c)
+function c511000056.rescon(sg,e,tp,mg)
+	sg:AddCard(c511000056.tempcard)
+	local res=Duel.GetLocationCountFromEx(tp,tp,sg)>1 and sg:CheckWithSumEqual(Card.GetLevel,7,sg:GetCount(),sg:GetCount())
+	sg:RemoveCard(c511000056.tempcard)
 	return res
 end
 function c511000056.filter2(c)
@@ -45,26 +49,13 @@ function c511000056.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c511000056.filter1,tp,LOCATION_MZONE,0,1,1,nil,nt,tp)
 	local tc=g:GetFirst()
 	if tc then
-		local sg=Group.FromCards(tc)
-		::start::
-			local cancel=sg:GetCount()>1 and Duel.GetLocationCountFromEx(tp,tp,sg)>1 and sg:CheckWithSumEqual(Card.GetLevel,7,sg:GetCount(),sg:GetCount())
-			local mg=nt:Filter(c511000056.chkfilter,sg,g,sg,tp)
-			if mg:GetCount()<=0 then goto jump end
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-			local tc2=Group.SelectUnselect(mg,sg,tp,cancel,cancel)
-			if not tc2 then goto jump end
-			if tc==tc2 then goto start end
-			if sg:IsContains(tc2) then
-				sg:RemoveCard(tc2)
-			else
-				sg:AddCard(tc2)
-			end
-			goto start
-		::jump::
-		Duel.SendtoGrave(sg,REASON_EFFECT)
+		c511000056.tempcard=tc
+		local sg=aux.SelectUnselectGroup(mg,e,tp,nil,nil,c511000056.rescon,1,tp,HINTMSG_TOGRAVE,c511000056.rescon)
+		c511000056.tempcard=nil
+		sg:AddCard(tc)
 		local g1=Duel.GetMatchingGroup(c511000056.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp,2403771)
 		local g2=Duel.GetMatchingGroup(c511000056.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp,25862681)
-		if g1:GetCount()>0 and g2:GetCount()>0 and Duel.GetLocationCountFromEx(tp)>1 then
+		if Duel.SendtoGrave(sg,REASON_EFFECT)>0 and g1:GetCount()>0 and g2:GetCount()>0 and Duel.GetLocationCountFromEx(tp)>1 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg1=g1:Select(tp,1,1,nil)
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

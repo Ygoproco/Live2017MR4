@@ -24,23 +24,29 @@ function c9596126.initial_effect(c)
 	e2:SetOperation(c9596126.rmop)
 	c:RegisterEffect(e2)
 end
+function c9596126.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c9596126.atchk1,1,nil,sg)
+end
+function c9596126.atchk1(c,sg)
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and sg:FilterCount(Card.IsAttribute,c,ATTRIBUTE_DARK)==1
+end
 function c9596126.spfilter(c,att)
 	return c:IsAttribute(att) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c9596126.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) 
-		and Duel.IsExistingMatchingCard(c9596126.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,ATTRIBUTE_LIGHT)
-		and Duel.IsExistingMatchingCard(c9596126.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,ATTRIBUTE_DARK)
+	local rg1=Duel.GetMatchingGroup(c9596126.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_LIGHT)
+	local rg2=Duel.GetMatchingGroup(c9596126.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_DARK)
+	local rg=rg1:Clone()
+	rg:Merge(rg2)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and rg1:GetCount()>0 and rg2:GetCount()>0 
+		and aux.SelectUnselectGroup(rg,e,tp,2,2,c9596126.rescon,0)
 end
 function c9596126.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c9596126.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,ATTRIBUTE_LIGHT)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c9596126.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,ATTRIBUTE_DARK)
-	g1:Merge(g2)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
+	local rg=Duel.GetMatchingGroup(c9596126.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,ATTRIBUTE_LIGHT+ATTRIBUTE_DARK)
+	local g=aux.SelectUnselectGroup(rg,e,tp,2,2,c9596126.rescon,1,tp,HINTMSG_REMOVE)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c9596126.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetAttackAnnouncedCount()==0 end

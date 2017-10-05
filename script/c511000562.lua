@@ -21,22 +21,9 @@ function c511000562.initial_effect(c)
 	e2:SetCondition(c511000562.cbcon)
 	e2:SetOperation(c511000562.cbop)
 	c:RegisterEffect(e2)
-	if not c511000562.global_check then
-		c511000562.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetCountLimit(1)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetOperation(c511000562.chk)
-		Duel.RegisterEffect(ge1,0)
-	end
+	aux.CallToken(300)
 end
 c511000562.dm=true
-function c511000562.chk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,300)
-	Duel.CreateToken(1-tp,300)
-end
 function c511000562.filter(c)
 	return c:IsFaceup() and c:IsCode(22702055)
 end

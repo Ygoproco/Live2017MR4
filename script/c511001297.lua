@@ -11,23 +11,7 @@ function c511001297.initial_effect(c)
 	e1:SetTarget(c511001297.target)
 	e1:SetOperation(c511001297.activate)
 	c:RegisterEffect(e1)
-	if not c511001297.global_check then
-		c511001297.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511001297.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function c511001297.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
+	aux.CallToken(420)
 end
 function c511001297.cfilter(c)
 	return c:IsFaceup() and c:IsBattleguard()

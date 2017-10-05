@@ -26,28 +26,22 @@ function c79407975.initial_effect(c)
 	e3:SetOperation(c79407975.atkop)
 	c:RegisterEffect(e3)
 end
+function c79407975.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:GetClassCount(Card.GetCode)==7
+end
 function c79407975.spfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c79407975.spcon(e,c)
 	if c==nil then return true end
-	if not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)<=0 then return false end
-	local g=Duel.GetMatchingGroup(c79407975.spfilter,c:GetControler(),LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	local ct=g:GetClassCount(Card.GetCode)
-	return ct>=7
+	local tp=c:GetControler()
+	local rg=Duel.GetMatchingGroup(c79407975.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-7 and rg:GetCount()>6 and aux.SelectUnselectGroup(rg,e,tp,7,7,c79407975.rescon,0)
 end
 function c79407975.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.GetMatchingGroup(c79407975.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	local rg=Group.CreateGroup()
-	for i=1,7 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=g:Select(tp,1,1,nil):GetFirst()
-		if tc then
-			rg:AddCard(tc)
-			g:Remove(Card.IsCode,nil,tc:GetCode())
-		end
-	end
-	Duel.Remove(rg,POS_FACEUP,REASON_COST)
+	local rg=Duel.GetMatchingGroup(c79407975.spfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=aux.SelectUnselectGroup(rg,e,tp,7,7,c79407975.rescon,1,tp,HINTMSG_REMOVE)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c79407975.cfilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and aux.SpElimFilter(c,true,true)

@@ -26,13 +26,15 @@ function c46237548.spcfilter(c)
 end
 function c46237548.spcon(e,c)
 	if c==nil then return true end
-	return (Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741)) 
-		and Duel.GetMatchingGroupCount(Card.IsType,c:GetControler(),LOCATION_GRAVE,0,nil,TYPE_NORMAL)==3
-		and Duel.IsExistingMatchingCard(c46237548.spcfilter,c:GetControler(),LOCATION_MZONE+LOCATION_GRAVE,0,2,nil)
+	local tp=c:GetControler()
+	local rg=Duel.GetMatchingGroup(c46237548.spcfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and rg:GetCount()>1 
+		and Duel.GetMatchingGroupCount(Card.IsType,c:GetControler(),LOCATION_GRAVE,0,nil,TYPE_NORMAL)==3 
+		and aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),0)
 end
 function c46237548.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c46237548.spcfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,2,2,nil)
+	local rg=Duel.GetMatchingGroup(c46237548.spcfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local g=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c46237548.tgfilter(c,e,tp)

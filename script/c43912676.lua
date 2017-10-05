@@ -33,30 +33,13 @@ end
 function c43912676.cfilter(c)
 	return c:IsRace(RACE_WYRM) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
-function c43912676.filter(c,g,sg)
-	sg:AddCard(c)
-	local res
-	if sg:GetCount()<3 then
-		res=g:IsExists(c43912676.filter,1,sg,g,sg)
-	else
-		res=Duel.IsExistingTarget(aux.TRUE,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,sg)
-	end
-	sg:RemoveCard(c)
-	return res
+function c43912676.rescon(sg,e,tp,mg)
+	return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,sg)
 end
 function c43912676.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local cg=Duel.GetMatchingGroup(c43912676.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
-	if chk==0 then return cg:IsExists(c43912676.filter,1,nil,cg,Group.CreateGroup()) end
-	local rg=Group.CreateGroup()
-	while rg:GetCount()<3 do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local tc=Group.SelectUnselect(cg:Filter(c43912676.filter,rg,cg,rg),rg,tp)
-		if rg:IsContains(tc) then
-			rg:RemoveCard(tc)
-		else
-			rg:AddCard(tc)
-		end
-	end
+	if chk==0 then return aux.SelectUnselectGroup(cg,e,tp,3,3,c43912676.rescon,0) end
+	local rg=aux.SelectUnselectGroup(cg,e,tp,3,3,c43912676.rescon,1,tp,HINTMSG_REMOVE)
 	Duel.Remove(rg,POS_FACEUP,REASON_COST)
 end
 function c43912676.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

@@ -13,13 +13,6 @@ end
 function c511000657.cfilter(c)
 	return c:IsRace(RACE_DINOSAUR) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
-function c511000657.filter(c,g,sg,e,tp)
-	sg:AddCard(c)
-	local res=Duel.IsExistingMatchingCard(c511000657.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp,sg:GetCount())
-		or g:IsExists(c6733059.filter,1,sg,g,sg,e,tp)
-	sg:RemoveCard(c)
-	return res
-end
 function c511000657.spfilter(c,e,tp,lv)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==lv
 end
@@ -27,29 +20,16 @@ function c511000657.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	if chk==0 then return true end
 end
+function c511000657.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and Duel.IsExistingMatchingCard(c511000657.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp,sg:GetCount())
+end
 function c511000657.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local cg=Duel.GetMatchingGroupCount(c511000657.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+	local cg=Duel.GetMatchingGroup(c511000657.cfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
-		return cg:IsExists(c511000657.filter,1,nil,cg,Group.CreateGroup(),e,tp)
-			and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or Duel.IsPlayerAffectedByEffect(tp,69832741)) end
-	local rg=Group.CreateGroup()
-	local tc
-	::start::
-		local cancel=rg:GetCount()>0 and Duel.IsExistingMatchingCard(c511000657.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp,rg:GetCount())
-		local g=cg:Filter(c511000657.filter,rg,cg,rg,e,tp)
-		if g:GetCount()<=0 then goto jump end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		tc=Group.SelectUnselect(g,rg,tp,cancel,cancel)
-		if not tc then goto jump end
-		if rg:IsContains(tc) then
-			rg:RemoveCard(tc)
-		else
-			rg:AddCard(tc)
-		end
-		goto start
-	::jump::
+		return aux.SelectUnselectGroup(cg,e,tp,nil,nil,c511000657.rescon,0) end
+	local rg=aux.SelectUnselectGroup(mg,e,tp,nil,nil,c511000657.rescon,1,tp,HINTMSG_REMOVE,c511000657.rescon)
 	Duel.SetTargetParam(rg:GetCount())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)

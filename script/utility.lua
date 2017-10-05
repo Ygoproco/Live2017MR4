@@ -60,6 +60,30 @@ function Card.RegisterEffect(c,e,forced,...)
 		c:RegisterEffect(e2)
 	end
 end
+function Card.IsColumn(c,seq,tp,loc)
+	if not c:IsOnField() then return false end
+	local cseq=c:GetSequence()
+	local seq=seq
+	local loc=loc and loc or c:GetLocation()
+	local tp=tp and tp or c:GetControler()
+	if c:IsLocation(LOCATION_MZONE) then
+		if cseq==5 then cseq=1 end
+		if cseq==6 then cseq=3 end
+	else
+		if cseq==6 then cseq=5 end
+	end
+	if loc==LOCATION_MZONE then
+		if seq==5 then seq=1 end
+		if seq==6 then seq=3 end
+	else
+		if cseq==6 then cseq=5 end
+	end
+	if c:IsControler(tp) then
+		return cseq==seq
+	else
+		return cseq==4-seq
+	end
+end
 
 function Auxiliary.Stringid(code,id)
 	return code*16+id
@@ -703,6 +727,68 @@ function Auxiliary.ResetEffects(g,eff)
 			v:Reset()
 		end
 	end
+end
+Auxiliary.CalledTokens={}
+function Auxiliary.CallToken(code)
+	if not Auxiliary.CalledTokens[code] then
+		Auxiliary.CalledTokens[code]=true
+		local ge=Effect.GlobalEffect()
+		ge:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge:SetCode(EVENT_ADJUST)
+		ge:SetCountLimit(1)
+		ge:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge:SetOperation(function()
+			Duel.CreateToken(0,code)
+			Duel.CreateToken(1,code)
+		end)
+		Duel.RegisterEffect(ge,0)
+	end
+end
+--utility entry for SelectUnselect loops
+--returns bool if chk==0, returns Group if chk==1
+function Auxiliary.SelectUnselectLoop(c,sg,mg,e,tp,minc,maxc,rescon)
+	local res
+	if sg:GetCount()>=maxc then return false end
+	sg:AddCard(c)
+	if sg:GetCount()<minc then
+		res=mg:IsExists(Auxiliary.SelectUnselectLoop,1,sg,sg,mg,e,tp,minc,maxc,rescon)
+	elseif sg:GetCount()<maxc then
+		res=(not rescon or rescon(sg,e,tp,mg)) or mg:IsExists(Auxiliary.SelectUnselectLoop,1,sg,sg,mg,e,tp,minc,maxc,rescon)
+	else
+		res=(not rescon or rescon(sg,e,tp,mg))
+	end
+	sg:RemoveCard(c)
+	return res
+end
+function Auxiliary.SelectUnselectGroup(g,e,tp,minc,maxc,rescon,chk,seltp,hintmsg,cancelcon,breakcon)
+	local minc=minc and minc or 1
+	local maxc=maxc and maxc or 99
+	if chk==0 then return g:IsExists(Auxiliary.SelectUnselectLoop,1,nil,Group.CreateGroup(),g,e,tp,minc,maxc,rescon) end
+	local hintmsg=hintmsg and hintmsg or 0
+	local sg=Group.CreateGroup()
+	while true do
+		local cancel=sg:GetCount()>=minc and (not cancelcon or cancelcon(sg,e,tp,g))
+		local mg=g:Filter(Auxiliary.SelectUnselectLoop,sg,sg,g,e,tp,minc,maxc,rescon)
+		if (breakcon and breakcon(sg,e,tp,mg)) or mg:GetCount()<=0 then break end
+		Duel.Hint(HINT_SELECTMSG,seltp,hintmsg)
+		local tc=mg:SelectUnselect(sg,seltp,cancel,cancel)
+		if sg:IsContains(tc) then
+			sg:RemoveCard(tc)
+		else
+			sg:AddCard(tc)
+		end
+	end
+	return sg
+end
+--check for free Zone for monsters to be Special Summoned except from Extra Deck
+function Auxiliary.MZFilter(c,tp)
+	return c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5 and c:IsControler(tp)
+end
+--check for Free Monster Zones
+function Auxiliary.ChkfMMZ(sumcount)
+	return	function(sg,e,tp,mg)
+				return sg:FilterCount(Auxiliary.MZFilter,nil,tp)+Duel.GetLocationCount(tp,LOCATION_MZONE)>=sumcount
+			end
 end
 
 function loadutility(file)

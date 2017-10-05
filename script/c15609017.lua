@@ -18,22 +18,11 @@ end
 function c15609017.costfilter(c)
 	return c:IsSetCard(0x2016) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
-function c15609017.filter(c,g,sg,card)
-	sg:AddCard(c)
-	local res
-	if sg:GetCount()==1 then
-		sg:AddCard(card)
-		local des=Duel.IsExistingTarget(aux.TRUE,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,sg)
-		sg:RemoveCard(card)
-		res=des or g:IsExists(c15609017.filter,1,sg,g,sg,card)
-	elseif sg:GetCount()==2 then
-		sg:AddCard(card)
-		res=Duel.IsExistingTarget(aux.TRUE,0,LOCATION_ONFIELD,LOCATION_ONFIELD,2,sg)
-		sg:RemoveCard(card)
-	else
-		res=false
-	end
-	sg:RemoveCard(c)
+function c15609017.rescon(sg,e,tp,mg)
+	local ct=sg:GetCount()
+	sg:AddCard(e:GetHandler())
+	local res=Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,ct,sg)
+	sg:RemoveCard(e:GetHandler())
 	return res
 end
 function c15609017.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -43,29 +32,11 @@ function c15609017.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then
 		if e:GetLabel()==1 then
 			e:SetLabel(0)
-			return rg:IsExists(c15609017.filter,1,nil,rg,Group.CreateGroup(),c)
+			return aux.SelectUnselectGroup(rg,e,tp,nil,2,c15609017.rescon,0)
 		else return false end
 	end
 	e:SetLabel(0)
-	local rsg=Group.CreateGroup()
-	local tc
-	::start::
-		rsg:AddCard(c)
-		local cancel=rsg:GetCount()>0 
-			and Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,rsg:GetCount(),rsg)
-		rsg:RemoveCard(c)
-		local g=rg:Filter(c15609017.filter,rsg,rg,rsg,c)
-		if g:GetCount()<=0 then goto jump end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		tc=Group.SelectUnselect(g,rsg,tp,cancel,cancel)
-		if not tc then goto jump end
-		if rsg:IsContains(tc) then
-			rsg:RemoveCard(tc)
-		else
-			rsg:AddCard(tc)
-		end
-		goto start
-	::jump::
+	local rsg=aux.SelectUnselectGroup(rg,e,tp,nil,2,c15609017.rescon,1,tp,HINTMSG_REMOVE,c15609017.rescon)
 	local ct=Duel.Remove(rsg,POS_FACEUP,REASON_COST)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,ct,ct,e:GetHandler())

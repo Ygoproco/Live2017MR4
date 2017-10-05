@@ -1,6 +1,6 @@
 --Goyo Arrow
 function c511002224.initial_effect(c)
-	aux.AddEquipProcedure(c,nil,aux.FilterBoolFunction(function(c) return c:IsGoyo() end))
+	aux.AddEquipProcedure(c,nil,function(c) return c:IsGoyo() end)
 	--damage
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_DAMAGE)
@@ -11,23 +11,7 @@ function c511002224.initial_effect(c)
 	e4:SetTarget(c511002224.damtg)
 	e4:SetOperation(c511002224.damop)
 	c:RegisterEffect(e4)
-	if not c511009341.global_check then
-		c511009341.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511009341.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function c511009341.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
+	aux.CallToken(420)
 end
 function c511002224.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ec=e:GetHandler():GetEquipTarget()
