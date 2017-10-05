@@ -2,13 +2,14 @@
 function c511002274.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DISABLE_SUMMON+CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_DISABLE_SUMMON+CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_SPSUMMON)
 	e1:SetCondition(c511002274.condition)
 	e1:SetTarget(c511002274.target)
 	e1:SetOperation(c511002274.activate)
 	c:RegisterEffect(e1)
+	aux.CallToken(419)
 end
 function c511002274.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0 and rp~=tp
@@ -19,7 +20,7 @@ function c511002274.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,eg:GetCount(),0,0)
 end
 function c511002274.cfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsRace(0x80000000) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
+	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_YOKAI) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true)
 end
 function c511002274.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCode(68722455)

@@ -9,6 +9,7 @@ function c511002371.initial_effect(c)
 	e3:SetTarget(c511002371.tdtg)
 	e3:SetOperation(c511002371.tdop)
 	c:RegisterEffect(e3)
+	aux.CallToken(419)
 end
 function c511002371.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -16,7 +17,7 @@ function c511002371.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
 end
 function c511002371.rfilter(c)
-	return c:IsLocation(LOCATION_DECK+LOCATION_EXTRA) and c:IsRace(0x80000000) and bit.band(c:GetPreviousPosition(),POS_FACEUP)~=0
+	return c:IsLocation(LOCATION_DECK+LOCATION_EXTRA) and c:IsRace(RACE_YOKAI) and bit.band(c:GetPreviousPosition(),POS_FACEUP)~=0
 end
 function c511002371.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())

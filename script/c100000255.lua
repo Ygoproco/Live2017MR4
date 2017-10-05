@@ -9,13 +9,14 @@ function c100000255.initial_effect(c)
 	e1:SetTarget(c100000255.target)
 	e1:SetOperation(c100000255.activate)
 	c:RegisterEffect(e1)
+	aux.CallToken(419)
 end
 function c100000255.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,1000)
-	else Duel.PayLPCost(tp,1000) end
+	if chk==0 then return Duel.CheckLPCost(tp,1000) end
+	Duel.PayLPCost(tp,1000)
 end
 function c100000255.spfilter(c,e,tp)
-	return c:IsLevelBelow(4) and c:IsRace(0x80000000) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(4) and c:IsRace(RACE_YOKAI) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000255.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
@@ -24,7 +25,7 @@ function c100000255.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000255.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	local g=Duel.GetMatchingGroup(c100000255.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
+	local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(c100000255.spfilter),tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
 	if g:GetCount()>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:Select(tp,2,2,nil)

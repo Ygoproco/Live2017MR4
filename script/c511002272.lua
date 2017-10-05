@@ -11,11 +11,12 @@ function c511002272.initial_effect(c)
 	e2:SetTarget(c511002272.destg)
 	e2:SetOperation(c511002272.desop)
 	c:RegisterEffect(e2)
+	aux.CallToken(419)
 end
 function c511002272.descon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
 	local d=Duel.GetAttackTarget()
-	return ec==Duel.GetAttacker() and d and d:IsDefensePos() and ec:IsRace(0x80000000)
+	return ec==Duel.GetAttacker() and d and d:IsDefensePos() and ec:IsRace(RACE_YOKAI)
 end
 function c511002272.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
