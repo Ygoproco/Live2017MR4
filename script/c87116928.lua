@@ -1,10 +1,10 @@
 --Chimeratech Megafleet Dragon
 --Scripted by Eerie Code
-function c100240002.initial_effect(c)
+function c87116928.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMixRep(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1093),1,99,c100240002.matfilter)
-	aux.AddContactFusion(c,c100240002.contactfil,c100240002.contactop,c100240002.splimit)
+	aux.AddFusionProcMixRep(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1093),1,99,c87116928.matfilter)
+	aux.AddContactFusion(c,c87116928.contactfil,c87116928.contactop,c87116928.splimit)
 	--cannot be fusion material
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -13,20 +13,20 @@ function c100240002.initial_effect(c)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 end
-c100240002.material_setcode={0x93,0x1093}
-function c100240002.matfilter(c)
+c87116928.material_setcode={0x93,0x1093}
+function c87116928.matfilter(c)
 	return c:GetSequence()>4 and c:IsLocation(LOCATION_MZONE)
 end
-function c100240002.splimit(e,se,sp,st)
+function c87116928.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
-function c100240002.contactfil(tp)
-	return Duel.GetMatchingGroup(c100240002.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,tp)
+function c87116928.contactfil(tp)
+	return Duel.GetMatchingGroup(c87116928.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,tp)
 end
-function c100240002.cfilter(c,tp)
+function c87116928.cfilter(c,tp)
 	return c:IsAbleToGraveAsCost() and (c:IsControler(tp) or c:IsFaceup())
 end
-function c100240002.contactop(g,tp,c)
+function c87116928.contactop(g,tp,c)
 	Duel.SendtoGrave(g,REASON_COST+REASON_MATERIAL)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
