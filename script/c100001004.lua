@@ -8,9 +8,10 @@ function c100001004.initial_effect(c)
 	e1:SetTarget(c100001004.tg)
 	e1:SetOperation(c100001004.op)
 	c:RegisterEffect(e1)
+	aux.CallToken(419)
 end
 function c100001004.filter(c,e,tp)
-	return c:IsRace(0x80000000) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsRace(RACE_YOKAI) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100001004.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
@@ -22,7 +23,7 @@ function c100001004.op(e,tp,eg,ep,ev,re,r,rp)
 	if ft<=0 then return end
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c100001004.filter,tp,LOCATION_GRAVE,0,ft,ft,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c100001004.filter),tp,LOCATION_GRAVE,0,ft,ft,nil,e,tp)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		while tc do

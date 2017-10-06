@@ -14,9 +14,10 @@ function c100000256.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(c100000256.val)
 	c:RegisterEffect(e2)
+	aux.CallToken(419)
 end
 function c100000256.filter(c)
-	return c:IsFaceup() and c:IsRace(0x80000000)
+	return c:IsFaceup() and c:IsRace(RACE_YOKAI)
 end
 function c100000256.val(e,c)
 	return Duel.GetMatchingGroupCount(c100000256.filter,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())*200

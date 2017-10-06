@@ -11,6 +11,7 @@ function c511002270.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_GRAVE,LOCATION_GRAVE)
 	e2:SetCode(EFFECT_CHANGE_RACE)
-	e2:SetValue(0x80000000)
+	e2:SetValue(function() return RACE_YOKAI end)
 	c:RegisterEffect(e2)
+	aux.CallToken(419)
 end

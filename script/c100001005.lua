@@ -9,9 +9,10 @@ function c100001005.initial_effect(c)
 	e1:SetCost(c100001005.cost)
 	e1:SetOperation(c100001005.operation)
 	c:RegisterEffect(e1)
+	aux.CallToken(419)
 end
 function c100001005.cfilter(c)
-	return c:IsRace(0x80000000) and c:IsAbleToGraveAsCost()
+	return c:IsRace(RACE_YOKAI) and c:IsAbleToGraveAsCost()
 end
 function c100001005.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100001005.cfilter,tp,LOCATION_HAND,0,1,nil) end
