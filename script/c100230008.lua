@@ -34,7 +34,7 @@ function c100230008.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c100230008.ffilter(c,fc,sub,mg,sg)
-	return not sg or sg:FilterCount(aux.TRUE,c)==0 or sg:IsExists(Card.IsFusionAttribute,1,c,c:GetFusionAttribute()) or not sg:IsExists(Card.IsRace,1,c,c:GetRace())
+	return not sg or sg:FilterCount(aux.TRUE,c)==0 or sg:IsExists(Card.IsAttribute,1,c,c:GetAttribute()) or not sg:IsExists(Card.IsRace,1,c,c:GetRace())
 end
 function c100230008.tglimit(e,c)
 	return c:IsAttribute(e:GetHandler():GetAttribute())
