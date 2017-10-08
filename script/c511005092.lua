@@ -1,5 +1,6 @@
 --Sealed Duel
 --rescripted by MLD
+--credits to andre
 function c511005092.initial_effect(c)
 	--Pre-draw
 	local e1=Effect.CreateEffect(c)
@@ -226,6 +227,7 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(sg,nil,-2,REASON_RULE)
 		return
 	end
+	Duel.SendtoDeck(Duel.GetFieldGroup(0,0x43,0x43),nil,-2,REASON_RULE)
 	for p=0,1 do
 		local ca=Duel.CreateToken(p,511005092)
 		Duel.Remove(ca,POS_FACEUP,REASON_RULE)
@@ -330,9 +332,9 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 					repeat
 						tempn=Duel.GetRandomNumber(1,4)
 					until tempn~=3 and selectpack[tempn]
-					code=Duel.GetRandomNumber(1,#pack[tempn][3])
+					code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
 				else
-					code=Duel.GetRandomNumber(1,#pack[packnum][rarity])
+					code=pack[packnum][rarity][Duel.GetRandomNumber(1,#pack[packnum][rarity])]
 				end
 				local finalcode=c511005092.alternate(code,anime)
 				g:AddCard(Duel.CreateToken(p,finalcode))
