@@ -50,19 +50,20 @@ function c101002085.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.ConfirmCards(1-tp,tc)
 	Duel.ShuffleHand(tp)
 	e:SetLabelObject(tc)
+	tc:CreateEffectRelation(e)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
 end
 function c101002085.activate(e,tp,eg,ep,ev,re,r,rp)
 	local rc=e:GetLabelObject()
 	if not rc or not rc:IsRelateToEffect(e) or not rc:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,false,true)
-		or not not Duel.IsPlayerCanSpecialSummonCount(tp,2) then return false end
+		or not Duel.IsPlayerCanSpecialSummonCount(tp,2) then return false end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local bs=Duel.IsPlayerAffectedByEffect(tp,59822133)
 	local lv=rc:GetLevel()
 	local g=Duel.GetMatchingGroup(c101002085.filter,tp,LOCATION_REMOVED,0,nil,e,tp)
 	local sg=Group.CreateGroup()
-	while g:GetCount()>0 and ft>0 and lv>0 then
+	while g:GetCount()>0 and ft>0 and lv>0 do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sc=g:FilterSelect(tp,c101002085.spfilter,1,1,nil,lv,ft,g,sg,bs):GetFirst()
 		sg:AddCard(sc)
