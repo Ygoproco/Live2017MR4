@@ -88,6 +88,6 @@ function c37433748.dirop(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetType(EFFECT_TYPE_EQUIP)
 	e3:SetProperty(EFFECT_CANNOT_DISABLE)
 	e3:SetCode(EFFECT_DIRECT_ATTACK)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	c:RegisterEffect(e3)
 end
