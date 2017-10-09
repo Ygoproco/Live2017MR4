@@ -33,6 +33,7 @@ function c700000011.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local code=e:GetHandler():GetCode()
 	c700000011.announce_filter={0x99,OPCODE_ISSETCARD,code,OPCODE_ISCODE,OPCODE_NOT,OPCODE_AND,TYPE_MONSTER,OPCODE_ISTYPE,OPCODE_AND}
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	local ac=Duel.AnnounceCardFilter(tp,table.unpack(c700000011.announce_filter))
 	Duel.SetTargetParam(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD_FILTER)

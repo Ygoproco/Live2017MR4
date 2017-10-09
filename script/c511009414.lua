@@ -46,16 +46,9 @@ function c511009414.lvcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511009414.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local t={}
-	local i=1
-	local p=1
-	local lv=e:GetHandler():GetLevel()
-	for i=1,4 do 
-		if lv~=i then t[p]=i p=p+1 end
-	end
-	t[p]=nil
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(26082117,1))
-	Duel.SetTargetParam(Duel.AnnounceNumber(tp,table.unpack(t)))
+	Duel.Hint(HINT_SELECTMSG,tp,HINGMSG_LVRANK)
+	local lv=Duel.AnnounceLevel(tp,1,4,e:GetHandler():GetLevel())
+	Duel.SetTargetParam(lv)
 end
 function c511009414.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local lv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
