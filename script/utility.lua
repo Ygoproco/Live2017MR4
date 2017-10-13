@@ -5,6 +5,21 @@ POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
 RACE_CYBERS=RACE_CYBERSE
 TYPE_EXTRA=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
 
+function Auxiliary.FilterMustbemat(c,summon_type,sc)
+	local eff={c:GetCardEffect(EFFECT_MUST_BE_MATERIAL)}
+	if eff[1]==nil then return false end
+	for i,f in ipairs(eff) do
+		if type(f:GetValue())=='function' then
+			if f:GetValue()(c,summon_type,sc) then return true end
+		end
+	end
+	return false
+end
+function Group.Includes(g1,g2)
+	local g1p=g1:Clone()
+	g1p:Sub(g2)
+	return g1p:GetCount()+g2:GetCount()==g1:GetCount()
+end
 function Auxiliary.ExtraLinked(c,emc,card,eg)
 	eg:AddCard(c)
 	local res
@@ -273,10 +288,10 @@ function Auxiliary.IsMaterialListSetCard(c,...)
 	return false
 end
 function Auxiliary.IsCodeListed(c,...)
-	if not c.card_code_list then return false end
+	if not c.listed_names then return false end
 	local codes={...}
 	for _,code in ipairs(codes) do
-		for _,ccode in ipairs(c.card_code_list) do
+		for _,ccode in ipairs(c.listed_names) do
 			if code==ccode then return true end
 		end
 	end
