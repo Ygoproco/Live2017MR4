@@ -78,7 +78,7 @@ function c101003052.splimit(e,c,tp,sumtp,sumpos)
 	local g=Duel.GetMatchingGroup(c101003052.limfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if g:GetCount()<=0 then return false end
 	local mg,lk=g:GetMinGroup(Card.GetLink)
-	return lk>c:GetLink() and bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
+	return bit.band(sumtp,SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK and lk and lk>c:GetLink()
 end
 function c101003052.atktg(e,c)
 	return not c:IsType(TYPE_LINK)
