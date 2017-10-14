@@ -3,7 +3,7 @@
 --Scripted by Eerie Code
 function c101003050.initial_effect(c)
 	--link summon
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_FIRE),2,2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_FIRE),2,2)
 	c:EnableReviveLimit()
 	--atk/def
 	local e1=Effect.CreateEffect(c)
