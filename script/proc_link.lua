@@ -45,7 +45,7 @@ function Auxiliary.LinkCondition(f,minc,maxc,specialchk)
 				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local mg=Duel.GetMatchingGroup(Auxiliary.LConditionFilter,tp,LOCATION_MZONE,0,nil,f,c,tp)
-				local mustg=mg:Filter(aux.FilterMustbemat,nil,SUMMON_TYPE_LINK,c)
+				local mustg=aux.GetMustbematGroup(SUMMON_TYPE_LINK,c,tp)
 				local sg=Group.CreateGroup()
 				return mg:IsExists(Auxiliary.LCheckRecursive,1,nil,tp,sg,mg,mustg,c,0,minc,maxc,f,specialchk)
 			end
@@ -53,7 +53,7 @@ end
 function Auxiliary.LinkTarget(f,minc,maxc,specialchk)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c)
 				local mg=Duel.GetMatchingGroup(Auxiliary.LConditionFilter,tp,LOCATION_MZONE,0,nil,f,c,tp)
-				local mustg=mg:Filter(aux.FilterMustbemat,nil,SUMMON_TYPE_LINK,c)
+				local mustg=aux.GetMustbematGroup(SUMMON_TYPE_LINK,c,tp)
 				local sg=Group.CreateGroup()
 				local cancel=false
 				if mustg:GetCount()>0 then
