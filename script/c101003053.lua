@@ -53,14 +53,24 @@ function c101003053.spop1(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local g=Duel.GetMatchingGroup(c101003053.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
 	if ft<1 or g:GetCount()==0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=g:Select(tp,1,1,nil)
-	g:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
-	if ft>1 and g:GetCount()>0 and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.SelectYesNo(tp,aux.Stringid(101003053,2)) then
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	local sg=Group.CreateGroup()
+	while sg:GetCount()<math.min(ft,2) do
+		local cancel=sg:GetCount()>0
+		local cg=g
+		if sg:GetCount()>0 then
+			cg=g:Filter(aux.NOT(Card.IsCode),nil,sg:GetFirst():GetCode())
+		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg2=g:Select(tp,1,1,nil)
-		sg:AddCard(sg2:GetFirst())
+		local tc=Group.SelectUnselect(cg,sg,tp,cancel,cancel,1,2)
+		if not tc then break end
+		if not sg:IsContains(tc) then
+		    	sg:AddCard(tc)
+		else
+		    	sg:RemoveCard(tc)
+		end
 	end
+	if sg:GetCount()==0 then return end
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c101003053.spcon(e,tp,eg,ep,ev,re,r,rp)
