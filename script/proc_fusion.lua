@@ -283,7 +283,6 @@ function Auxiliary.FOperationMixRep(insf,sub,fun1,minc,maxc,...)
 				local notfusion=(chkfnf>>8)&0xf~=0
 				local contact=chkfnf>>12~=0
 				local sub=(sub or notfusion) and not contact
-				local mustg=aux.GetMustbematGroup(SUMMON_TYPE_FUSION,c,tp)
 				local sg=Group.CreateGroup()
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,eg,tp,c,mg,REASON_FUSION)
 				if contact then mustg:Clear() end
