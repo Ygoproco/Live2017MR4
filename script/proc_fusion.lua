@@ -84,8 +84,8 @@ function Auxiliary.FOperationMix(insf,sub,...)
 				local contact=chkfnf>>12~=0
 				local sub=(sub or notfusion) and not contact
 				local mg=eg:Filter(Auxiliary.FConditionFilterMix,c,c,sub,sub,contact,tp,table.unpack(funs))
-				if contact then mustg:Clear() end
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,eg,tp,c,mg,REASON_FUSION)
+				if contact then mustg:Clear() end
 				local sg=Group.CreateGroup()
 				if gc then
 					if gc.KeepAlive then
@@ -251,8 +251,8 @@ function Auxiliary.FConditionMixRep(insf,sub,fun1,minc,maxc,...)
 				local contact=chkfnf>>12~=0
 				local sub=(sub or notfusion) and not contact
 				local mg=g:Filter(Auxiliary.FConditionFilterMix,c,c,sub,sub,contact,tp,fun1,table.unpack(funs))
-				if contact then mustg:Clear() end
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,eg,tp,c,mg,REASON_FUSION)
+				if contact then mustg:Clear() end
 				if not mg:Includes(mustg) or mustg:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
 				if gc then
 					if gc.KeepAlive then
