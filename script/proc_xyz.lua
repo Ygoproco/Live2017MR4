@@ -632,11 +632,6 @@ function Auxiliary.XyzTarget2(alterf,op)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c,og,min,max)
 				local cancel=not og and Duel.GetCurrentChain()<=0
 				Auxiliary.ProcCancellable=cancel
-				local mustg=aux.GetMustbematGroup(SUMMON_TYPE_XYZ,c,tp)
-				if (og and not og:Includes(mustg)) or mustg:GetCount()>1
-					or (mustg:GetCount()==1 and not mustg:IsExists(Auxiliary.XyzAlterFilter,1,nil,alterf,c,e,tp,op)) then
-					return false
-				end
 				if og and not min then
 					og:KeepAlive()
 					e:SetLabelObject(og)
