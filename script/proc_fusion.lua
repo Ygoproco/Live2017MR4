@@ -70,8 +70,8 @@ function Auxiliary.FConditionMix(insf,sub,...)
 					end
 				end
 				local sg=Group.CreateGroup()
-				mustg:Merge(mg)
-				return mustg:IsExists(Auxiliary.FSelectMix,1,nil,tp,mg,sg,mustg,c,sub,sub,chkf,table.unpack(funs))
+				mg:Merge(mustg)
+				return mg:IsExists(Auxiliary.FSelectMix,1,nil,tp,mg,sg,mustg,c,sub,sub,chkf,table.unpack(funs))
 			end
 end
 function Auxiliary.FOperationMix(insf,sub,...)
