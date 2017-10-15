@@ -61,13 +61,8 @@ function Auxiliary.FConditionMix(insf,sub,...)
 				if contact then mustg:Clear() end
 				if not mg:Includes(mustg) or mustg:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
 				if gc then
-					if gc.KeepAlive then
-						if gc:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
-						mustg:Merge(gc)
-					else
-						if not gc:IsCanBeFusionMaterial(c) then return false end
-						mustg:AddCard(gc)
-					end
+					if gc:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
+					mustg:Merge(gc)
 				end
 				local sg=Group.CreateGroup()
 				mg:Merge(mustg)
@@ -88,11 +83,7 @@ function Auxiliary.FOperationMix(insf,sub,...)
 				if contact then mustg:Clear() end
 				local sg=Group.CreateGroup()
 				if gc then
-					if gc.KeepAlive then
-						mustg:Merge(gc)
-					else
-						mustg:AddCard(gc)
-					end
+					mustg:Merge(gc)
 				end
 				for tc in aux.Next(mustg) do
 					sg:AddCard(tc)
@@ -123,7 +114,6 @@ function Auxiliary.FOperationMix(insf,sub,...)
 					end
 				end
 				if sfhchk then Duel.ShuffleHand(tp) end
-				if gc then sg:RemoveCard(gc) end
 				Duel.SetFusionMaterial(sg)
 			end
 end
@@ -255,13 +245,8 @@ function Auxiliary.FConditionMixRep(insf,sub,fun1,minc,maxc,...)
 				if contact then mustg:Clear() end
 				if not mg:Includes(mustg) or mustg:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
 				if gc then
-					if gc.KeepAlive then
-						if gc:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
-						mustg:Merge(gc)
-					else
-						if not gc:IsCanBeFusionMaterial(c) then return false end
-						mustg:AddCard(gc)
-					end
+					if gc:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
+					mustg:Merge(gc)
 				end
 				local sg=Group.CreateGroup()
 				mg:Merge(mustg)
@@ -283,11 +268,7 @@ function Auxiliary.FOperationMixRep(insf,sub,fun1,minc,maxc,...)
 				if contact then mustg:Clear() end
 				if not mg:Includes(mustg) or mustg:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
 				if gc then
-					if gc.KeepAlive then
-						mustg:Merge(gc)
-					else
-						mustg:AddCard(gc)
-					end
+					mustg:Merge(gc)
 				end
 				sg:Merge(mustg)
 				local p=tp
@@ -312,7 +293,6 @@ function Auxiliary.FOperationMixRep(insf,sub,fun1,minc,maxc,...)
 					end
 				end
 				if sfhchk then Duel.ShuffleHand(tp) end
-				if gc then sg:RemoveCard(gc) end
 				Duel.SetFusionMaterial(sg)
 			end
 end
