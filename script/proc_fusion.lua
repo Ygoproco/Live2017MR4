@@ -56,10 +56,10 @@ function Auxiliary.FConditionMix(insf,sub,...)
 				local notfusion=(chkfnf>>8)&0xf~=0
 				local contact=chkfnf>>12~=0
 				local sub=(sub or notfusion) and not contact
-				if contact then mustg:Clear() end
 				local mg=g:Filter(Auxiliary.FConditionFilterMix,c,c,sub,sub,contact,tp,table.unpack(funs))
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,eg,tp,c,mg,REASON_FUSION)
 				if not mg:Includes(mustg) or mustg:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
+				if contact then mustg:Clear() end
 				if gc then
 					if gc.KeepAlive then
 						if gc:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
@@ -83,9 +83,9 @@ function Auxiliary.FOperationMix(insf,sub,...)
 				local notfusion=(chkfnf>>8)&0xf~=0
 				local contact=chkfnf>>12~=0
 				local sub=(sub or notfusion) and not contact
-				if contact then mustg:Clear() end
 				local mg=eg:Filter(Auxiliary.FConditionFilterMix,c,c,sub,sub,contact,tp,table.unpack(funs))
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,eg,tp,c,mg,REASON_FUSION)
+				if contact then mustg:Clear() end
 				local sg=Group.CreateGroup()
 				if gc then
 					if gc.KeepAlive then
@@ -250,10 +250,10 @@ function Auxiliary.FConditionMixRep(insf,sub,fun1,minc,maxc,...)
 				local notfusion=(chkfnf>>8)&0xf~=0
 				local contact=chkfnf>>12~=0
 				local sub=(sub or notfusion) and not contact
-				if contact then mustg:Clear() end
 				local mg=g:Filter(Auxiliary.FConditionFilterMix,c,c,sub,sub,contact,tp,fun1,table.unpack(funs))
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,eg,tp,c,mg,REASON_FUSION)
 				if not mg:Includes(mustg) or mustg:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
+				if contact then mustg:Clear() end
 				if gc then
 					if gc.KeepAlive then
 						if gc:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
@@ -278,10 +278,10 @@ function Auxiliary.FOperationMixRep(insf,sub,fun1,minc,maxc,...)
 				local contact=chkfnf>>12~=0
 				local sub=(sub or notfusion) and not contact
 				local mustg=aux.GetMustbematGroup(SUMMON_TYPE_FUSION,c,tp)
-				if contact then mustg:Clear() end
 				local sg=Group.CreateGroup()
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,eg,tp,c,mg,REASON_FUSION)
 				if not mg:Includes(mustg) or mustg:IsExists(aux.NOT(Card.IsCanBeFusionMaterial),1,nil,c) then return false end
+				if contact then mustg:Clear() end
 				if gc then
 					if gc.KeepAlive then
 						mustg:Merge(gc)
