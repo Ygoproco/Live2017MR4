@@ -1,6 +1,5 @@
 --Contacting "C"
 --接触するＧ
---Scripted by Eerie Code
 function c101003037.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
@@ -21,9 +20,9 @@ function c101003037.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCode(EFFECT_MUST_BE_MATERIAL)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetTargetRange(1,0)
-	e3:SetValue(c101003037.spval)
+	e3:SetValue(REASON_FUSION+REASON_SYNCHRO+REASON_XYZ+REASON_LINK)
 	c:RegisterEffect(e3)
 end
 function c101003037.cfilter(c,tp)
@@ -34,15 +33,12 @@ function c101003037.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c101003037.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)>0
-	and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c101003037.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)>0 then
-	Duel.SpecialSummon(c,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
+		Duel.SpecialSummon(c,0,tp,1-tp,false,false,POS_FACEUP_DEFENSE)
 	end
-end
-function c101003037.spval(c,sumtype,sc)
-	return (sumtype & (SUMMON_TYPE_FUSION|SUMMON_TYPE_SYNCHRO|SUMMON_TYPE_XYZ|SUMMON_TYPE_LINK))~=0
 end
