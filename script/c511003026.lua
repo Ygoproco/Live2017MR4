@@ -13,7 +13,7 @@ end
 function c511003026.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0
 		and Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,564)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	local ac=Duel.AnnounceCard(tp)
 	Duel.SetTargetParam(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)

@@ -1,5 +1,6 @@
 --Sealed Duel
 --rescripted by MLD
+--credits to andre and AlphaKretin
 function c511005092.initial_effect(c)
 	--Pre-draw
 	local e1=Effect.CreateEffect(c)
@@ -226,13 +227,14 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(sg,nil,-2,REASON_RULE)
 		return
 	end
+	local startct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+	Duel.SendtoDeck(Duel.GetFieldGroup(0,0x43,0x43),nil,-2,REASON_RULE)
 	for p=0,1 do
 		local ca=Duel.CreateToken(p,511005092)
 		Duel.Remove(ca,POS_FACEUP,REASON_RULE)
 	end
 	--pack selection
 	local ca=Duel.CreateToken(p,511005092)
-	local startct=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
 	local pack1=Duel.CreateToken(tp,511003041)
 	local pack2=Duel.CreateToken(tp,511003042)
 	local pack3=Duel.CreateToken(tp,511003043)
@@ -330,9 +332,9 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 					repeat
 						tempn=Duel.GetRandomNumber(1,4)
 					until tempn~=3 and selectpack[tempn]
-					code=Duel.GetRandomNumber(1,#pack[tempn][3])
+					code=pack[tempn][3][Duel.GetRandomNumber(1,#pack[tempn][3])]
 				else
-					code=Duel.GetRandomNumber(1,#pack[packnum][rarity])
+					code=pack[packnum][rarity][Duel.GetRandomNumber(1,#pack[packnum][rarity])]
 				end
 				local finalcode=c511005092.alternate(code,anime)
 				g:AddCard(Duel.CreateToken(p,finalcode))
@@ -346,7 +348,7 @@ function c511005092.op(e,tp,eg,ep,ev,re,r,rp)
 	for p=0,1 do
 		--card removal up to 20
 		local ct=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)-20
-		if ct>0 and Duel.SelectYesNo(0,aux.Stringid(4002,7)) then
+		if ct>0 and Duel.SelectYesNo(p,aux.Stringid(4002,7)) then
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
 			local rg=Duel.GetFieldGroup(p,LOCATION_DECK,0):Select(p,1,ct,nil)
 			Duel.SendtoDeck(rg,nil,-2,REASON_RULE)

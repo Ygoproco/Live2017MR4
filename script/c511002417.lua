@@ -12,6 +12,7 @@ function c511002417.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0 and Duel.IsPlayerCanSpecialSummon(1-tp) 
 		and Duel.IsExistingMatchingCard(nil,tp,0,LOCATION_DECK,1,nil) end
 	c511002417.announce_filter={TYPE_MONSTER,OPCODE_ISTYPE}
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CODE)
 	local ac=Duel.AnnounceCardFilter(tp,table.unpack(c511002417.announce_filter))
 	Duel.SetTargetParam(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD_FILTER)
