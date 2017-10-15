@@ -613,11 +613,6 @@ function Auxiliary.XyzCondition2(alterf,op)
 				if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 				local tp=c:GetControler()
 				local mg=nil
-				local mustg=aux.GetMustbematGroup(SUMMON_TYPE_XYZ,c,tp)
-				if (og and not og:Includes(mustg)) or mustg:GetCount()>1
-					or (mustg:GetCount()==1 and not mustg:IsExists(Auxiliary.XyzAlterFilter,1,nil,alterf,c,e,tp,op)) then
-					return false
-				end
 				if og then
 					mg=og
 				else
