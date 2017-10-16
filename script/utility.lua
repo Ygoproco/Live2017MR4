@@ -788,8 +788,9 @@ function Auxiliary.SelectUnselectGroup(g,e,tp,minc,maxc,rescon,chk,seltp,hintmsg
 		local cancel=sg:GetCount()>=minc and (not cancelcon or cancelcon(sg,e,tp,g))
 		local mg=g:Filter(Auxiliary.SelectUnselectLoop,sg,sg,g,e,tp,minc,maxc,rescon)
 		if (breakcon and breakcon(sg,e,tp,mg)) or mg:GetCount()<=0 then break end
+		local maxhint=math.min(maxc,mg:GetCount()+sg:GetCount())
 		Duel.Hint(HINT_SELECTMSG,seltp,hintmsg)
-		local tc=mg:SelectUnselect(sg,seltp,cancel,cancel)
+		local tc=mg:SelectUnselect(sg,seltp,cancel,cancel,minc,maxhint)
 		if sg:IsContains(tc) then
 			sg:RemoveCard(tc)
 		else
