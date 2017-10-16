@@ -619,7 +619,7 @@ function Auxiliary.XyzCondition2(alterf,op)
 					mg=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)
 				end
 				local mustg=Auxiliary.GetMustBeMaterialGroup(tp,og,tp,c,mg,REASON_XYZ)
-				if mustg:GetCount()>1 or (min and min>1) or mg:Includes(mustg) then return false end
+				if mustg:GetCount()>1 or (min and min>1) or not mg:Includes(mustg) then return false end
 				local mustc=mustg:GetFirst()
 				if mustc then
 					return Auxiliary.XyzAlterFilter(mustc,alterf,c,e,tp,op)
