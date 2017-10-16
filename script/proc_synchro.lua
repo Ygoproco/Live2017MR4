@@ -61,7 +61,6 @@ function Auxiliary.SynCondition(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,
 				if mg then
 					dg=mg
 					g=mg:Filter(Card.IsCanBeSynchroMaterial,c,c)
-					if not g:Includes(pg) then return false end
 					mgchk=true
 				else
 					dg=Duel.GetMatchingGroup(function(mc) return mc:IsFaceup() and (mc:IsControler(tp) or mc:IsCanBeSynchroMaterial(c)) end,tp,LOCATION_MZONE,LOCATION_MZONE,c)
@@ -476,15 +475,14 @@ end
 function Auxiliary.SynTarget(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,req2,reqct2,reqm)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c,smat,mg)
 				local sg=Group.CreateGroup()
-        local lv=c:GetLevel()
-        local mgchk
+				local lv=c:GetLevel()
+				local mgchk
 				local g
 				local dg
 				if mg then
 					mgchk=true
 					dg=mg
 					g=mg:Filter(Card.IsCanBeSynchroMaterial,c,c)
-					if not g:Includes(pg) then return false end
 				else
 					mgchk=false
 					dg=Duel.GetMatchingGroup(function(mc) return mc:IsFaceup() and (mc:IsControler(tp) or mc:IsCanBeSynchroMaterial(c)) end,tp,LOCATION_MZONE,LOCATION_MZONE,c)
@@ -815,8 +813,7 @@ function Auxiliary.MajesticSynchroCheck1(c,g,sg,card1,card2,card3,lv,sc,tp,pg,f1
 	if sg:GetCount()<3 then
 		res=g:IsExists(Auxiliary.MajesticSynchroCheck1,1,sg,g,sg,card1,card2,card3,lv,sc,tp,pg,f1,cbt1,f2,cbt2,f3,cbt3,...)
 	else
-		res=sg:Includes(pg) 
-			and Auxiliary.MajesticSynchroCheck2(sg,card1,card2,card3,lv,sc,tp,f1,cbt1,f2,cbt2,f3,cbt3,...)
+		res=sg:Includes(pg) and Auxiliary.MajesticSynchroCheck2(sg,card1,card2,card3,lv,sc,tp,f1,cbt1,f2,cbt2,f3,cbt3,...)
 	end
 	g:Merge(rg)
 	sg:RemoveCard(c)
@@ -941,15 +938,14 @@ function Auxiliary.MajesticSynTarget(f1,cbt1,f2,cbt2,f3,cbt3,...)
 	local t={...}
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,c,smat,mg)
 				local sg=Group.CreateGroup()
-        local lv=c:GetLevel()
-        local mgchk
+				local lv=c:GetLevel()
+				local mgchk
 				local dg
 				local g
 				if mg then
 					mgchk=true
 					dg=mg
 					g=mg:Filter(Card.IsCanBeSynchroMaterial,c,c)
-					if not g:Includes(pg) then return false end
 				else
 					mgchk=false
 					dg=Duel.GetMatchingGroup(function(mc) return mc:IsFaceup() and (mc:IsControler(tp) or mc:IsCanBeSynchroMaterial(c)) end,tp,LOCATION_MZONE,LOCATION_MZONE,c)
@@ -1278,7 +1274,6 @@ function Auxiliary.DarkSynTarget(f1,f2,plv,nlv,...)
 					mgchk=true
 					dg=mg
 					g=mg:Filter(Card.IsCanBeSynchroMaterial,c,c)
-					if not g:Includes(pg) then return false end
 				else
 					mgchk=false
 					dg=Duel.GetMatchingGroup(function(mc) return mc:IsFaceup() and (mc:IsControler(tp) or mc:IsCanBeSynchroMaterial(c)) end,tp,LOCATION_MZONE,LOCATION_MZONE,c)

@@ -5,12 +5,12 @@ POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
 RACE_CYBERS=RACE_CYBERSE
 TYPE_EXTRA=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
 
-function Auxiliary.GetMustBeMaterialGroup(tp,eg,sump,sc,g,r)
-	--- eg all default materials, g - valid materials
+function Auxiliary.GetMustBeMaterialGroup(tp,eg,sump,sc,mg,r)
+	--- eg all default materials, mg - valid materials
 	local eff={Duel.GetPlayerEffect(tp,EFFECT_MUST_BE_MATERIAL)}
 	local g=Group.CreateGroup()
 	for _,te in ipairs(eff) do
-		local val=type(te:GetValue())=='function' and te:GetValue()(te,eg,sump,sc,g) or te:GetValue()
+		local val=type(te:GetValue())=='function' and te:GetValue()(te,eg,sump,sc,mg) or te:GetValue()
 		if val&r>0 then
 			g:AddCard(te:GetHandler())
 		end
