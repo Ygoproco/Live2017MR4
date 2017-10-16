@@ -126,7 +126,6 @@ function Auxiliary.FOperationMix(insf,sub,...)
 					end
 				end
 				if sfhchk then Duel.ShuffleHand(tp) end
-				if gc then sg:RemoveCard(gc) end
 				Duel.SetFusionMaterial(sg)
 			end
 end
@@ -317,7 +316,6 @@ function Auxiliary.FOperationMixRep(insf,sub,fun1,minc,maxc,...)
 					end
 				end
 				if sfhchk then Duel.ShuffleHand(tp) end
-				if gc then sg:RemoveCard(gc) end
 				Duel.SetFusionMaterial(sg)
 			end
 end
