@@ -3,7 +3,7 @@
 --Scripted by Eerie Code
 function c100223081.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddLinkProcedure(c,aux.FilterBoolFunction(Card.IsLevel,3),2,2)
+	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsLevel,3),2,2)
 	--indestructable
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -28,6 +28,7 @@ function c100223081.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,100223081)
 	e3:SetLabel(0)
 	e3:SetCost(c100223081.atkcost)
 	e3:SetTarget(c100223081.atktg)
@@ -47,7 +48,7 @@ function c100223081.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.SendtoGrave(g,REASON_EFFECT+REASON_REPLACE)
 		return true
 	else return false end
-endend
+end
 function c100223081.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
 	return true
