@@ -34,8 +34,9 @@ end
 function c511001513.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc==eg:GetFirst() end
 	if chk==0 then return eg:GetFirst():IsCanBeEffectTarget(e) end
-	e:GetHandler():SetTurnCounter(0)
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local c=e:GetHandler()
+	c:SetTurnCounter(0)
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetRange(LOCATION_SZONE)
@@ -44,23 +45,35 @@ function c511001513.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e1:SetCondition(c511001513.tgcon)
 	e1:SetOperation(c511001513.tgop)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
-	e:GetHandler():RegisterEffect(e1)
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCode(1082946)
+	e2:SetLabelObject(e1)
+	e2:SetOwnerPlayer(tp)
+	e2:SetOperation(c511001513.reset)
+	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
+	c:RegisterEffect(e2)
 	Duel.SetTargetCard(eg)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_CHAIN_SOLVING)
-	e1:SetReset(RESET_CHAIN)
-	e1:SetLabel(Duel.GetCurrentChain())
-	e1:SetLabelObject(e)
-	e1:SetOperation(Auxiliary.EquipEquip)
-	Duel.RegisterEffect(e1,tp)
+	local e3=Effect.CreateEffect(e:GetHandler())
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_CHAIN_SOLVING)
+	e3:SetReset(RESET_CHAIN)
+	e3:SetLabel(Duel.GetCurrentChain())
+	e3:SetLabelObject(e)
+	e3:SetOperation(aux.EquipEquip)
+	Duel.RegisterEffect(e3,tp)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,Duel.GetAttacker():GetAttack())
+end
+function c511001513.reset(e,tp,eg,ep,ev,re,r,rp)
+	c511001513.tgop(e:GetLabelObject(),tp,eg,ep,ev,e,r,rp)
 end
 function c511001513.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.NegateAttack()
 		Duel.Damage(1-tp,Duel.GetAttacker():GetAttack(),REASON_EFFECT)
 	end
@@ -70,11 +83,11 @@ function c511001513.tgcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001513.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=c:GetTurnCounter()
-	ct=ct+1
+	local ct=c:GetTurnCounter()+1
 	c:SetTurnCounter(ct)
 	if ct==3 then
 		Duel.SendtoGrave(c,REASON_EFFECT)
+		if re and re.Reset then re:Reset() end
 	end
 end
 function c511001513.btcon(e,tp,eg,ep,ev,re,r,rp)
