@@ -25,7 +25,7 @@ function c40240595.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or tc:GetControler()~=tp or tc:IsFacedown() or not tc:IsRelateToEffect(e) then
+	if not tc or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 or tc:IsControler(1-tp) or tc:IsFacedown() or not tc:IsRelateToEffect(e) then
 		Duel.SendtoGrave(c,REASON_EFFECT)
 		return
 	end
@@ -60,29 +60,15 @@ function c40240595.eqop(e,tp,eg,ep,ev,re,r,rp)
 	e4:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e4)
 	c:SetTurnCounter(0)
-	--to be added/removed once ruling is confirmed
-	--[[local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
-	e5:SetCode(1082946)
-	e5:SetLabelObject(e2)
-	e5:SetOwnerPlayer(tp)
-	e5:SetOperation(c40240595.reset)
-	e5:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e5)]]
 end
 function c40240595.checkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c40240595.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=c:GetTurnCounter()
-	ct=ct+1
+	local ct=c:GetTurnCounter()+1
 	c:SetTurnCounter(ct)
 end
 function c40240595.eqlimit(e,c)
 	return c==e:GetLabelObject()
-end
-function c40240595.reset(e,tp,eg,ep,ev,re,r,rp)
-	c40240595.checkop(e:GetLabelObject(),tp,eg,ep,ev,re,r,rp)
 end
