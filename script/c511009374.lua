@@ -48,9 +48,10 @@ function c511009374.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511009374.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	e:GetHandler():SetTurnCounter(0)
+	local c=e:GetHandler()
+	c:SetTurnCounter(0)
 	--destroy
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
@@ -60,21 +61,30 @@ function c511009374.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCondition(c511009374.descon)
 	e1:SetOperation(c511009374.desop)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,e:GetLabel())
-	e:GetHandler():RegisterEffect(e1)
-	e:GetHandler():RegisterFlagEffect(1082946,RESET_PHASE+PHASE_END+RESET_OPPO_TURN,0,e:GetLabel())
-	c511009374[e:GetHandler()]=e1
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE)
+	e2:SetCode(1082946)
+	e2:SetLabelObject(e1)
+	e2:SetOwnerPlayer(tp)
+	e2:SetOperation(c511009374.reset)
+	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,e:GetLabel())
+	c:RegisterEffect(e2)
+end
+function c511009374.reset(e,tp,eg,ep,ev,re,r,rp)
+	c511009374.desop(e:GetLabelObject(),tp,eg,ep,ev,e,r,rp)
 end
 function c511009374.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
 function c511009374.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=c:GetTurnCounter()
-	ct=ct+1
+	local ct=c:GetTurnCounter()+1
 	c:SetTurnCounter(ct)
 	if ct==e:GetLabel() then
 		Duel.Destroy(c,REASON_RULE)
-		c:ResetFlagEffect(1082946)
+		if re and re.Reset then re:Reset() end
 	end
 end
 function c511009374.damval(e,re,val,r,rp,rc)
