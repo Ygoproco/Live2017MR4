@@ -18,11 +18,12 @@ function c511001113.initial_effect(c)
 	e2:SetOperation(c511001113.desop)
 	c:RegisterEffect(e2)
 end
+c511001113.toss_coin=true
 function c511001113.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_BATTLE_PHASE)==0 end
+	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0 end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_BP)
+	e1:SetCode(EFFECT_CANNOT_ATTACK_ANNOUNCE)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
 	e1:SetTargetRange(1,0)
 	e1:SetReset(RESET_PHASE+PHASE_END)
@@ -52,10 +53,12 @@ function c511001113.desop(e,tp,eg,ep,ev,re,r,rp)
 	local coin=Duel.SelectOption(tp,60,61)
 	local res=Duel.TossCoin(tp,1)
 	if coin~=res then
-		Duel.Remove(tc2,POS_FACEUP,REASON_EFFECT)
-		Duel.Damage(1-tp,tc2:GetBaseAttack(),REASON_EFFECT)
+		if Duel.Remove(tc2,POS_FACEUP,REASON_EFFECT)>0 then
+			Duel.Damage(1-tp,tc2:GetBaseAttack(),REASON_EFFECT)
+		end
 	else
-		Duel.Remove(tc1,POS_FACEUP,REASON_EFFECT)
-		Duel.Damage(tp,tc1:GetBaseAttack(),REASON_EFFECT)
+		if Duel.Remove(tc1,POS_FACEUP,REASON_EFFECT)>0 then
+			Duel.Damage(tp,tc1:GetBaseAttack(),REASON_EFFECT)
+		end
 	end
 end

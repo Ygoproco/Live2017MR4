@@ -110,10 +110,7 @@ function c110000000.initial_effect(c)
 	c:RegisterEffect(ee)
 end
 function c110000000.ctcon2(e,re)
-	return not re:GetHandler():IsCode(100100103) and re:GetOwner()~=e:GetOwner()
-end
-function c110000000.filter(c)
-	return c:GetCode()~=110000000
+	return re:GetOwner()~=e:GetOwner() and e:GetHandler():GetFlagEffect(110000000)==0
 end
 function c110000000.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)

@@ -10,7 +10,7 @@ function c511002823.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002823.filter1(c,e)
-	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
+	return c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial() and (not e or not c:IsImmuneToEffect(e))
 end
 function c511002823.filter2(c,e,tp,m,f)
 	return c:IsType(TYPE_FUSION) and (not f or f(c)) and c:IsSetCard(0x7) 
@@ -18,7 +18,7 @@ function c511002823.filter2(c,e,tp,m,f)
 end
 function c511002823.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
-		local mg1=Duel.GetMatchingGroup(c511002823.filter1,tp,LOCATION_GRAVE,0,nil,e)
+		local mg1=Duel.GetMatchingGroup(c511002823.filter1,tp,LOCATION_GRAVE,0,nil)
 		local res=Duel.IsExistingMatchingCard(c511002823.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)

@@ -21,6 +21,7 @@ function c511007015.initial_effect(c)
 	e2:SetOperation(c511007015.coinop)
 	c:RegisterEffect(e2)
 end
+c511007015.toss_coin=true
 function c511007015.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)
