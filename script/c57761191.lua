@@ -93,7 +93,7 @@ function c57761191.valcheck(e,c)
 	local typ=0
 	local tc=g:GetFirst()
 	while tc do
-		typ=bit.bor(typ,bit.band(tc:GetOriginalType(),0x7))
+		typ=typ|tc:GetOriginalType()&0x7
 		tc=g:GetNext()
 	end
 	e:SetLabel(typ)
@@ -113,13 +113,13 @@ function c57761191.regop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(c57761191.efilter)
 	e1:SetLabel(typ)
 	c:RegisterEffect(e1)
-	if bit.band(typ,TYPE_MONSTER)~=0 then
+	if typ&TYPE_MONSTER~=0 then
 		c:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(57761191,2))
 	end
-	if bit.band(typ,TYPE_SPELL)~=0 then
+	if typ&TYPE_SPELL~=0 then
 		c:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(57761191,3))
 	end
-	if bit.band(typ,TYPE_TRAP)~=0 then
+	if typ&TYPE_TRAP~=0 then
 		c:RegisterFlagEffect(0,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(57761191,4))
 	end
 end
