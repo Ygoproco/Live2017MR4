@@ -27,7 +27,7 @@ function c511002877.cona(e)
 	return e:GetHandler():IsAttackPos()
 end
 function c511002877.refval(e,re,val,r,rp,rc)
-	return rp~=e:GetHandlerPlayer() and bit.band(r,REASON_EFFECT)~=0
+	return rp~=e:GetHandlerPlayer() and r&REASON_EFFECT~=0
 end
 function c511002877.surop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
