@@ -33,21 +33,18 @@ function c75119040.initial_effect(c)
 	e3:SetOperation(c75119040.spop)
 	c:RegisterEffect(e3)
 end
-function c75119040.filter(c)
-	return c:IsFaceup() and c:IsCode(94365540)
+function c75119040.cfilter(c)
+	return c:IsSetCard(0x10b) and c:IsType(TYPE_MONSTER)
 end
-function c75119040.atkcon(e,c)
-	if c==nil then return true end
-	if Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)<=0 then return false end
-	return Duel.GetMatchingGroup(Card.IsSetCard,c:GetControler(),LOCATION_GRAVE,0,nil,0x10b):GetClassCount(Card.GetCode)>=3
-	and Duel.IsExistingMatchingCard(c75119040.filter,e:GetHandlerPlayer(),LOCATION_GRAVE,0,1,nil)
+function c75119040.atkcon(e)
+	local g=Duel.GetMatchingGroup(c75119040.cfilter,e:GetHandler():GetControler(),LOCATION_GRAVE,0,nil)
+	return g:GetClassCount(Card.GetCode)>=3 and g:IsExists(Card.IsCode,1,nil,94365540)
 end
 function c75119040.atkfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10b) 
+	return c:IsFaceup() and c:IsSetCard(0x10b)
 end
 function c75119040.atkval(e,c)
-	local lg=c:GetLinkedGroup():Filter(c75119040.atkfilter,nil)
-	return lg:GetCount()*600
+	return c:GetLinkedGroup():FilterCount(c75119040.atkfilter,nil)*500
 end
 function c75119040.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return aux.gbspcon(e,tp,eg,ep,ev,re,r,rp)
