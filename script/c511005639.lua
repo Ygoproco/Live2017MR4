@@ -33,20 +33,16 @@ function c511005639.initial_effect(c)
 	e5:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e5)
 end
-
-
-
+c511005639.toss_coin=true
 function c511005639.spcon(e,c)
-if c==nil then return true end
-return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-3 and Duel.GetTributeCount(c)>=3
 end
 function c511005639.spop(e,tp,eg,ep,ev,re,r,rp,c)
-local g=Duel.SelectTribute(tp,c,3,3)
-c:SetMaterial(g)
-Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
+	local g=Duel.SelectTribute(tp,c,3,3)
+	c:SetMaterial(g)
+	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
-
-
 function c511005639.cointg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)

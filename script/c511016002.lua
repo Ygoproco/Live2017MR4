@@ -51,6 +51,7 @@ function c511016002.initial_effect(c)
 		end
 	end
 end
+c511016002.toss_coin=true
 function c511016002.poscon(e)
 	return e:GetHandler():IsPosition(POS_FACEUP_ATTACK)
 end

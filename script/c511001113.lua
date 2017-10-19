@@ -18,6 +18,7 @@ function c511001113.initial_effect(c)
 	e2:SetOperation(c511001113.desop)
 	c:RegisterEffect(e2)
 end
+c511001113.toss_coin=true
 function c511001113.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetActivityCount(tp,ACTIVITY_ATTACK)==0 end
 	local e1=Effect.CreateEffect(e:GetHandler())
