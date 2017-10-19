@@ -44,34 +44,45 @@ end
 function c57761191.otfilter(c)
 	return c:IsType(TYPE_CONTINUOUS) and c:IsReleasable()
 end
+function c57761191.val(c,sc,ma)
+	local eff3={c:GetCardEffect(EFFECT_TRIPLE_TRIBUTE)}
+	if ma>=3 then
+		for _,te in ipairs(eff3) do
+			if te:GetValue()(te,sc) then return 0x30001 end
+		end
+	end
+	local eff2={c:GetCardEffect(EFFECT_DOUBLE_TRIBUTE)}
+	for _,te in ipairs(eff2) do
+		if te:GetValue()(te,sc) then return 0x20001 end
+	end
+	return 1
+end
+function c57761191.req(c)
+	return c:IsType(TYPE_CONTINUOUS) and c:IsLocation(LOCATION_SZONE)
+end
+function c57761191.rescon(sg,e,tp,mg)
+	local c=e:GetHandler()
+	if not sg:IsExists(c57761191.req,1,nil) or not aux.ChkfMMZ(1)(sg,e,tp,mg) then return false end
+	local ct=sg:GetCount()
+	return sg:CheckWithSumEqual(c57761191.val,3,ct,ct,c,3)
+end
 function c57761191.ttcon(e,c,minc)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
-	return minc<=3 and (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and mg:GetCount()>=3
-		or Duel.CheckTribute(c,1) and mg:GetCount()>=2
-		or Duel.CheckTribute(c,2) and mg:GetCount()>=1
-		or Duel.CheckTribute(c,3))
+	local g=Duel.GetTributeGroup(c)
+	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
+	g:Merge(exg)
+	return minc<=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-ma and aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,0)
 end
 function c57761191.ttop(e,tp,eg,ep,ev,re,r,rp,c)
-	local mg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local g=Group.CreateGroup()
-	local ct=3
-	while mg:GetCount()>0 and (ct>2 and Duel.CheckTribute(c,ct-2) or ct>1 and Duel.CheckTribute(c,ct-1) or ct>0 and ft>0)
-		and (not Duel.CheckTribute(c,ct) or Duel.SelectYesNo(tp,aux.Stringid(57761191,0))) do
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-		local g1=mg:Select(tp,1,1,nil)
-		g:Merge(g1)
-		mg:Sub(g1)
-		ct=ct-1
-	end
-	if g:GetCount()<3 then
-		local g2=Duel.SelectTribute(tp,c,3-g:GetCount(),3-g:GetCount())
-		g:Merge(g2)
-	end
-	c:SetMaterial(g)
-	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
+	local g=Duel.GetTributeGroup(c)
+	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
+	g:Merge(exg)
+	local mi,ma=c:GetTributeRequirement()
+	if mi<1 then mi=1 end
+	local sg=aux.SelectUnselectGroup(g,e,tp,mi,ma,c57761191.rescon,1,tp,HINTMSG_RELEASE)
+	c:SetMaterial(sg)
+	Duel.Release(sg,REASON_SUMMON+REASON_MATERIAL)
 end
 function c57761191.setcon(e,c,minc)
 	if not c then return true end
