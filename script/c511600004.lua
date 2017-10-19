@@ -20,9 +20,8 @@ function c511600004.activate(e,tp,eg,ep,ev,re,r,rp)
 	local card=rs:GetFirst()
 	if card==nil then return end
 	if Duel.Remove(card,POS_FACEDOWN,REASON_EFFECT)>0 and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
-		local ph=Duel.GetCurrentPhase()
-		local cp=Duel.GetTurnPlayer()
-		local e1=Effect.CreateEffect(e:GetHandler())
+		local c=e:GetHandler()
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetRange(LOCATION_REMOVED)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -32,20 +31,32 @@ function c511600004.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(c511600004.thop)
 		e1:SetLabel(1)
 		card:RegisterEffect(e1)
-		e:GetHandler():RegisterFlagEffect(1082946,RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,3)
-		c511600004[e:GetHandler()]=e1
+		local descnum=tp==c:GetOwner() and 0 or 1
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetDescription(aux.Stringid(49587034,descnum))
+		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+		e3:SetCode(1082946)
+		e3:SetLabelObject(e1)
+		e3:SetOwnerPlayer(tp)
+		e3:SetOperation(c511600004.reset)
+		e3:SetReset(RESET_PHASE+PHASE_STANDBY+RESET_OPPO_TURN,4)
+		c:RegisterEffect(e3)
 	end
+end
+function c511600004.reset(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetLabelObject() then e:Reset() return end
+	c511600004.thop(e:GetLabelObject(),tp,eg,ep,ev,e,r,rp)
 end
 function c511600004.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c511600004.thop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetLabel()
+	local ct=e:GetLabel()+1
 	e:GetOwner():SetTurnCounter(ct)
-	if ct==4 then
+	e:SetLabel(ct+1)
+	if ct==3 then
 		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-		e:GetOwner():ResetFlagEffect(1082946)
-	else
-		e:SetLabel(ct+1)
+		if re and re.Reset then re:Reset() end
 	end
 end

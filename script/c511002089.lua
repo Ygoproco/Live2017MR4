@@ -28,39 +28,55 @@ function c511002089.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ChangePosition(ec,POS_FACEDOWN)
 		ec:SetStatus(STATUS_ACTIVATE_DISABLED,false)
 		Duel.RaiseEvent(ec,EVENT_SSET,e,REASON_EFFECT,tp,tp,0)
-		local e1=Effect.CreateEffect(e:GetHandler())
+		local c=e:GetHandler()
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CANNOT_TRIGGER)
-		if Duel.GetTurnPlayer()==tp and ec:IsControler(tp) then
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
-		elseif Duel.GetTurnPlayer()==tp and ec:IsControler(1-tp) then
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_SELF_TURN,3)
-		elseif Duel.GetTurnPlayer()~=tp and ec:IsControler(1-tp) then
+		if Duel.GetTurnPlayer()==ec:GetControler() then
 			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
 		else
 			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_SELF_TURN,3)
 		end
 		e1:SetValue(1)
 		ec:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
+		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_PHASE+PHASE_END)
 		e2:SetCountLimit(1)
+		e2:SetLabelObject(e1)
 		e2:SetCondition(c511002089.turncon)
 		e2:SetOperation(c511002089.turnop)
 		e2:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
 		Duel.RegisterEffect(e2,Duel.GetTurnPlayer())
+		local descnum=tp==c:GetOwner() and 0 or 1
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetDescription(aux.Stringid(4931121,descnum))
+		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE)
+		e3:SetCode(1082946)
+		e3:SetLabelObject(e2)
+		e3:SetOwnerPlayer(tp)
+		e3:SetOperation(c511002089.reset)
+		if Duel.GetTurnPlayer()==tp then
+			e3:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,3)
+		else
+			e3:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,3)
+		end
+		c:RegisterEffect(e3)
 	end
+end
+function c511002089.reset(e,tp,eg,ep,ev,re,r,rp)
+	c511002089.turnop(e:GetLabelObject(),tp,eg,ep,ev,e,r,rp)
 end
 function c511002089.turncon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
 function c511002089.turnop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetLabel()
-	ct=ct+1
+	local ct=e:GetLabel()+1
 	e:SetLabel(ct)
 	e:GetHandler():SetTurnCounter(ct)
 	if ct==3 then
-		e:GetOwner():ResetFlagEffect(1082946)
+		if e:GetLabelObject() then e:GetLabelObject():Reset() end
+		if re and re.Reset then re:Reset() end
 	end
 end
