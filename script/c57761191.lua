@@ -72,15 +72,13 @@ function c57761191.ttcon(e,c,minc)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
 	g:Merge(exg)
-	return minc<=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-ma and aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,0)
+	return minc<=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,0)
 end
 function c57761191.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
 	g:Merge(exg)
-	local mi,ma=c:GetTributeRequirement()
-	if mi<1 then mi=1 end
-	local sg=aux.SelectUnselectGroup(g,e,tp,mi,ma,c57761191.rescon,1,tp,HINTMSG_RELEASE)
+	local sg=aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,1,tp,HINTMSG_RELEASE)
 	c:SetMaterial(sg)
 	Duel.Release(sg,REASON_SUMMON+REASON_MATERIAL)
 end
