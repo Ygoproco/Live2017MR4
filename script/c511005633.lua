@@ -1,5 +1,6 @@
 --Light Barrier (ANIME)
 --scripted by GameMaster(GM)
+--cleaned up by MLD
 function c511005633.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -14,6 +15,7 @@ function c511005633.initial_effect(c)
 	e2:SetDescription(aux.Stringid(73206827,0))
 	e2:SetCategory(CATEGORY_COIN)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e2:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1)
 	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -70,47 +72,37 @@ function c511005633.initial_effect(c)
 	e7:SetTarget(c511005633.tg5)
 	e7:SetCondition(c511005633.effectcon)
 	c:RegisterEffect(e7)
-	
 end
 --e2
 function c511005633.coincon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
-
 function c511005633.cointg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,1)
 end
-
-
-
 function c511005633.coinop(e,tp,eg,ep,ev,re,r,rp)
- local c=e:GetHandler()
+	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
+	c:ResetFlagEffect(511005633)--reset coin flip description
 	local res=0
 	res=Duel.TossCoin(tp,1) 
+	c:RegisterFlagEffect(511005633,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,res,63-res)-- set hint to the coin flip
 	if res==0 then
 		c:RegisterFlagEffect(73206828,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,2)
-          end
+	end
 end
-
- 
- 
-
 --e3
 function c511005633.effectcon(e)
 	local c=e:GetHandler()
 	return c:GetFlagEffect(73206828)==0 or c:IsHasEffect(EFFECT_CANNOT_DISABLE)
 end
-
 --e4
 function c511005633.reccon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=eg:GetFirst()
 	return rc:IsRelateToBattle()  and rc:IsFaceup() and rc:IsControler(tp) and c:GetFlagEffect(73206828)==0
 end
-
-
 function c511005633.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local tc=eg:GetFirst():GetBattleTarget()
@@ -125,8 +117,6 @@ function c511005633.recop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
-
-
 --e5
 function c511005633.tg5(e,c)
 	return c:IsType(TYPE_MONSTER) and not c:IsSetCard(0x5)
@@ -135,16 +125,12 @@ function c511005633.con5(e)
 	local c=e:GetHandler()
 	return e:GetHandler():GetFlagEffectLabel(73206828)==1
 end
-
 --e6
-
 function c511005633.reccon2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=eg:GetFirst()
 	return rc:IsRelateToBattle()  and rc:IsFaceup() and rc:IsControler(1-tp) and c:GetFlagEffect(73206828)==0
-	end	
-
-
+end
 function c511005633.rectg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local tc=eg:GetFirst():GetBattleTarget()
@@ -159,4 +145,3 @@ function c511005633.recop2(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
-

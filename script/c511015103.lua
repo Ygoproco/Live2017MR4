@@ -111,7 +111,7 @@ function c511015103.activate(e,tp,eg,ep,ev,re,r,rp)
 		local ftex=Duel.GetLocationCountFromEx(tp)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		local sg=Group.CreateGroup()
-    local tc
+		local tc
 		::start::
 			local cancel=sg:GetCount()>0 and (ftt==0 or ect==0) and Duel.IsExistingMatchingCard(c511015103.xyzfilter,tp,LOCATION_EXTRA,0,1,sg,sg,mc)
 			local tg=g:Filter(c511015103.mfilter,sg,g,sg,tp,ft,ftex,ftt,ect,e,true)
