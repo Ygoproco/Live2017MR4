@@ -42,7 +42,6 @@ function c91182675.initial_effect(c)
 	e4:SetOperation(c91182675.spop)
 	c:RegisterEffect(e4)
 end
-c91182675.spell_counter_permit=99
 function c91182675.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 end
