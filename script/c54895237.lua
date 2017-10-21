@@ -1,6 +1,5 @@
 --晴天気ベンガーラ
 --Sunny Weathery Bengala
---Scripted by Eerie Code
 function c54895237.initial_effect(c)
 	--spsummon (grave)
 	local e1=Effect.CreateEffect(c)
@@ -32,31 +31,31 @@ function c54895237.initial_effect(c)
 	e3:SetLabelObject(e2)
 	c:RegisterEffect(e3)
 end
-function c54895237.gspcfilter(c,tp)
+function c54895237.gspcfilter(c,ft,tp,sft)
 	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and c:IsAbleToGraveAsCost()
+		and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
+		and (sft>0 or (c:IsLocation(LOCATION_SZONE) and c:GetSequence()<5))
 		and Duel.IsExistingMatchingCard(c54895237.gspfilter,tp,LOCATION_HAND,0,1,nil,c,tp)
 end
 function c54895237.gspfilter(c,cc,tp)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x109)
-		and not c:IsForbidden() and c:CheckUniqueOnField(tp,LOCATION_ONFIELD,cc)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x109) and not c:IsForbidden() and c:CheckUniqueOnField(tp,LOCATION_ONFIELD,cc)
 end
 function c54895237.gspcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c54895237.gspcfilter,tp,LOCATION_SZONE,0,1,nil,tp) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local sft=Duel.GetLocationCount(tp,LOCATION_SZONE)
+	if chk==0 then return ft>-1 and sft>-1 and Duel.IsExistingMatchingCard(c54895237.gspcfilter,tp,LOCATION_ONFIELD,0,1,nil,ft,tp,sft) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c54895237.gspcfilter,tp,LOCATION_SZONE,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,c54895237.gspcfilter,tp,LOCATION_ONFIELD,0,1,1,nil,ft,tp,sft)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c54895237.gsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetLocationCount(tp,LOCATION_SZONE)>-1
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
+	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c54895237.gspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e)
-		and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_DEFENSE)>0
 		and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		local tc=Duel.SelectMatchingCard(tp,c54895237.gspfilter,tp,LOCATION_HAND,0,1,1,nil,nil,tp):GetFirst()

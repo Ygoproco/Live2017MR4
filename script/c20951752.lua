@@ -50,9 +50,12 @@ end
 function c20951752.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabel()==1
 end
+function c20951752.cfilter(c,tp)
+	return c:GetSequence()<5 and c:IsControler(tp)
+end
 function c20951752.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
 	local g=Duel.GetReleaseGroup(tp)
+	if chk==0 then return g:GetCount()>0 and g:FilterCount(c20951752.cfilter,nil,tp)+Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	local ct=g:FilterCount(Card.IsRace,nil,RACE_FAIRY)
 	Duel.Release(g,REASON_COST)
 	e:GetLabelObject():SetLabel(ct)

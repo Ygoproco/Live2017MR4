@@ -20,11 +20,11 @@ function c100000445.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c100000445.spfilter(c,e,tp)
-	return c:IsCode(100000045) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsCode(100000045) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000445.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c100000445.spfilter,tp,0x13,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(aux.NecroValleyFilter(c100000445.spfilter),tp,0x13,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0x13)
 end
 function c100000445.activate(e,tp,eg,ep,ev,re,r,rp)

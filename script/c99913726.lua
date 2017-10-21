@@ -1,6 +1,5 @@
 --捕食植物ドロソフィルム・ヒドラ
 --Predator Plant Drosophyllum Hydra
---Scripted by Eerie Code
 function c99913726.initial_effect(c)
 	--special summon rule
 	local e1=Effect.CreateEffect(c)
@@ -26,34 +25,25 @@ function c99913726.initial_effect(c)
 	e2:SetOperation(c99913726.atkop)
 	c:RegisterEffect(e2)
 end
-
-function c99913726.hspfilter(c)
-	return c:GetCounter(0x1041)>0 and c:IsReleasable()
+function c99913726.hspfilter(c,ft,tp)
+	return c:GetCounter(0x1041)>0 and c:IsReleasable() and (ft>0 or (c:GetSequence()<5 and c:IsControler(tp))) and (c:IsFaceup() or c:IsControler(tp))
 end
 function c99913726.hspcon(e,c)
 	if c==nil then return true end
-	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(c99913726.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if g:GetCount()==0 then return false end
-	if g:IsExists(Card.IsControler,1,nil,tp) then
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-	else
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
 	end
+	local tp=c:GetControler()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-1 and Duel.IsExistingMatchingCard(c99913726.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,ft,tp)
 end
 function c99913726.hspop(e,tp,eg,ep,ev,re,r,rp,c)
-	local tp=c:GetControler()
-	local lc=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local g=nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-	if lc<0 then
-		g=Duel.SelectMatchingCard(tp,c99913726.hspfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	else
-		g=Duel.SelectMatchingCard(tp,c99913726.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-	end
+	local g=Duel.SelectMatchingCard(tp,c99913726.hspfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,Duel.GetLocationCount(tp,LOCATION_MZONE),tp)
 	Duel.Release(g,REASON_COST)
 end
-
 function c99913726.atkcfil(c)
 	return c:IsSetCard(0x10f3) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true) 
 		and Duel.IsExistingTarget(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,1,c)

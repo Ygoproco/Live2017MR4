@@ -29,9 +29,12 @@ function c65196094.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function c65196094.splimit(e,c,tp,sumtp,sumpos)
-	return bit.band(sumtp,SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO
+	return sumtp&SUMMON_TYPE_SYNCHRO==SUMMON_TYPE_SYNCHRO
 end
 function c65196094.cfilter(c,e,tp,g,maxc)
+	local tmax=maxc
+	if c:GetSequence()<5 then tmax=tmax-1 end
+	if tmax<=0 then return end
 	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO) and c:IsAbleToExtraAsCost()
 		and g:CheckWithSumEqual(Card.GetLevel,c:GetLevel(),1,maxc)
 end
@@ -46,7 +49,6 @@ function c65196094.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then
 		if e:GetLabel()==0 then return false end
 		e:SetLabel(0)
-		if maxc<=0 then return end
 		local spg=Duel.GetMatchingGroup(c65196094.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
 		return Duel.IsExistingMatchingCard(c65196094.cfilter,tp,LOCATION_MZONE,0,1,nil,e,tp,spg,maxc)
 	end

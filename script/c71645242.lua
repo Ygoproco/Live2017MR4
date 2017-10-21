@@ -88,6 +88,9 @@ function c71645242.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.SpecialSummonComplete()
 end
+function c71645242.mzfilter(c,tp)
+	return c:IsControler(tp) and c:GetSequence()<5
+end
 function c71645242.desfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_PLANT)
 end
@@ -98,9 +101,8 @@ function c71645242.sptg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c71645242.filter2(chkc,e:GetLabel(),e,tp) end
 	local g=Duel.GetMatchingGroup(c71645242.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local atk=g:GetSum(Card.GetAttack)
-	local sc=g:FilterCount(Card.IsControler,nil,tp)
 	if chk==0 then return g:GetCount()>0
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>-sc
+		and g:FilterCount(c71645242.mzfilter,nil,tp)+Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c71645242.filter2,tp,LOCATION_GRAVE,0,1,nil,atk,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=Duel.SelectTarget(tp,c71645242.filter2,tp,LOCATION_GRAVE,0,1,1,nil,atk,e,tp)
