@@ -34,26 +34,38 @@ end
 function c4335427.spfilter(c,tpe)
 	return c:IsFaceup() and c:IsType(tpe) and c:IsAbleToRemoveAsCost()
 end
+function c4335427.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c4335427.chk,1,nil,sg,Group.CreateGroup(),TYPE_RITUAL,TYPE_FUSION,TYPE_SYNCHRO,TYPE_XYZ)
+end
+function c4335427.chk(c,sg,g,tpe,...)
+	if not c:IsType(tpe) then return false end
+	local res
+	if ... then
+		g:AddCard(c)
+		res=sg:IsExists(c4335427.chk,1,g,sg,g,...)
+		g:RemoveCard(c)
+	else
+		res=true
+	end
+	return res
+end
 function c4335427.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,TYPE_RITUAL)
-		and Duel.IsExistingMatchingCard(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,TYPE_FUSION)
-		and Duel.IsExistingMatchingCard(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,TYPE_SYNCHRO)
-		and Duel.IsExistingMatchingCard(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,TYPE_XYZ)
+	local g1=Duel.GetMatchingGroup(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_RITUAL)
+	local g2=Duel.GetMatchingGroup(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_FUSION)
+	local g3=Duel.GetMatchingGroup(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_SYNCHRO)
+	local g4=Duel.GetMatchingGroup(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_XYZ)
+	local g=g1:Clone()
+	g:Merge(g2)
+	g:Merge(g3)
+	g:Merge(g4)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-4 and g1:GetCount()>0 and g2:GetCount()>0 and g3:GetCount()>0 and g4:GetCount()>0 
+		and aux.SelectUnselectGroup(g,e,tp,4,4,c4335427.rescon,0)
 end
 function c4335427.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,TYPE_RITUAL)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,TYPE_FUSION)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g3=Duel.SelectMatchingCard(tp,c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,TYPE_SYNCHRO)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g4=Duel.SelectMatchingCard(tp,c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,TYPE_XYZ)
-	g1:Merge(g2)
-	g1:Merge(g3)
-	g1:Merge(g4)
+	local g=Duel.GetMatchingGroup(c4335427.spfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_RITUAL+TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ)
+	local sg=aux.SelectUnselectGroup(g,e,tp,4,4,c4335427.rescon,1,tp,HINTMSG_REMOVE)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end
 function c4335427.rmfilter(c)

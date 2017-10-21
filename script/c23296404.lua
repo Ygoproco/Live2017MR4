@@ -29,26 +29,11 @@ end
 function c23296404.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and c23296404.desfilter(chkc) end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ct=-ft+1
-	if chk==0 then return ct<=3 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingTarget(c23296404.desfilter,tp,LOCATION_ONFIELD,0,3,nil)
-		and (ct<=0 or Duel.IsExistingTarget(c23296404.desfilter,tp,LOCATION_MZONE,0,ct,nil)) end
-	local g=nil
-	if ct>0 then
-		local tg=Duel.GetMatchingGroup(c23296404.desfilter2,tp,LOCATION_ONFIELD,0,nil,e)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		g=tg:FilterSelect(tp,Card.IsLocation,ct,ct,nil,LOCATION_MZONE)
-		if ct<3 then
-			tg:Sub(g)
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-			local g2=tg:Select(tp,3-ct,3-ct,nil)
-			g:Merge(g2)
-		end
-		Duel.SetTargetCard(g)
-	else
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		g=Duel.SelectTarget(tp,c23296404.desfilter,tp,LOCATION_ONFIELD,0,3,3,nil)
-	end
+	local g=Duel.GetMatchingGroup(c23296404.desfilter2,tp,LOCATION_ONFIELD,0,nil,e)
+	if chk==0 then return ft>-3 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and g:GetCount()>2 and aux.SelectUnselectGroup(g,e,tp,3,3,aux.ChkfMMZ(1),0) end
+	local sg=aux.SelectUnselectGroup(g,e,tp,3,3,aux.ChkfMMZ(1),1,tp,HINTMSG_DESTROY)
+	Duel.SetTargetCard(sg)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,3,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
@@ -77,7 +62,7 @@ function c23296404.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c23296404.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
+	if tc and tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)~=0 and tc:IsLocation(LOCATION_HAND) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local g=Duel.SelectMatchingCard(tp,c23296404.tdfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 		Duel.SendtoDeck(g,nil,1,REASON_EFFECT)

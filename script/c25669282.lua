@@ -23,11 +23,13 @@ function c25669282.initial_effect(c)
 	e2:SetOperation(c25669282.spop)
 	c:RegisterEffect(e2)
 end
-function c25669282.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xeb) and c:IsAbleToRemoveAsCost()
+function c25669282.cfilter(c,ft)
+	return c:IsFaceup() and c:IsSetCard(0xeb) and c:IsAbleToRemoveAsCost() and (ft>1 or c:GetSequence()<5)
 end
 function c25669282.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c25669282.cfilter,tp,LOCATION_MZONE,0,1,nil) end
+	e:SetLabel(1)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return ft>-1 and Duel.IsExistingMatchingCard(c25669282.cfilter,tp,LOCATION_MZONE,0,1,nil,ft) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c25669282.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
@@ -40,9 +42,11 @@ function c25669282.spfilter2(c,e,tp,code)
 	return c:IsSetCard(0xeb) and not c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c25669282.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c25669282.spfilter1,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then
+		if e:GetLabel()==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return false end
+		e:SetLabel(0)
+		return not Duel.IsPlayerAffectedByEffect(tp,59822133)
+			and Duel.IsExistingMatchingCard(c25669282.spfilter1,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function c25669282.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -74,7 +78,7 @@ function c25669282.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c25669282.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		tc:EnableDualState()
 	end
 end

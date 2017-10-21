@@ -87,17 +87,16 @@ function c67385964.filter(c,e,tp)
 	return not c:IsCode(67385964) and c:IsSetCard(0x19) and c:IsCanBeSpecialSummoned(e,114,tp,false,false)
 end
 function c67385964.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c67385964.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if e:GetHandler():GetSequence()<5 then ft=ft+1 end
+	if chk==0 then return ft>0 and Duel.IsExistingMatchingCard(c67385964.filter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c67385964.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c67385964.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if tc then
-		Duel.SpecialSummon(tc,114,tp,tp,false,false,POS_FACEUP)
+	local tc=Duel.SelectMatchingCard(tp,c67385964.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
+	if tc and Duel.SpecialSummon(tc,114,tp,tp,false,false,POS_FACEUP)>0 then
 		tc:RegisterFlagEffect(tc:GetOriginalCode(),RESET_EVENT+0x1ff0000,0,0)
 	end
 end
