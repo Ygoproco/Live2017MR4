@@ -15,6 +15,20 @@ function c100008001.initial_effect(c)
 	e2:SetValue(c100008001.value)
 	c:RegisterEffect(e2)
 	e1:SetLabelObject(e2)
+	--4064256 chk
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(4064256)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetTargetRange(1,1)
+	e3:SetLabelObject(e2)
+	e3:SetValue(c100008001.val)
+	c:RegisterEffect(e3)
+end
+function c100008001.val(e,c,re,chk)
+	if chk==0 then return true end
+	return e:GetLabelObject():GetLabel()
 end
 function c100008001.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

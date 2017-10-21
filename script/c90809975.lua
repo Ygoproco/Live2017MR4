@@ -77,20 +77,21 @@ end
 function c90809975.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 		local cat=e:GetCategory()
-		if bit.band(re:GetHandler():GetOriginalType(),TYPE_MONSTER)~=0 then
-			e:SetCategory(bit.bor(cat,CATEGORY_SPECIAL_SUMMON))
+		if re:GetHandler():GetOriginalType()&TYPE_MONSTER~=0 then
+			e:SetCategory(cat|CATEGORY_SPECIAL_SUMMON)
 		else
-			e:SetCategory(bit.band(cat,bit.bnot(CATEGORY_SPECIAL_SUMMON)))
+			e:SetCategory(cat&~CATEGORY_SPECIAL_SUMMON)
 		end
 	end
 end
 function c90809975.negop(e,tp,eg,ep,ev,re,r,rp)
 	local rc=re:GetHandler()
 	if not Duel.NegateActivation(ev) then return end
-	if rc:IsRelateToEffect(re) and Duel.Destroy(eg,REASON_EFFECT)~=0 and not rc:IsLocation(LOCATION_HAND+LOCATION_DECK) then
+	if rc:IsRelateToEffect(re) and Duel.Destroy(eg,REASON_EFFECT)~=0 and not rc:IsLocation(LOCATION_HAND+LOCATION_DECK) 
+		and aux.nvfilter(c) then
 		if rc:IsType(TYPE_MONSTER) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 			and rc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE)
 			and Duel.SelectYesNo(tp,aux.Stringid(90809975,2)) then

@@ -60,6 +60,8 @@ function c35371948.operation(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and tc:IsFacedown() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 		e:SetLabelObject(tc)
+		c:ResetFlagEffect(35371948)
+		tc:ResetFlagEffect(35371948)
 		local fid=c:GetFieldID()
 		c:RegisterFlagEffect(35371948,RESET_EVENT+0x1fe0000,0,1,fid)
 		tc:RegisterFlagEffect(35371948,RESET_EVENT+0x1fe0000,0,1,fid)
@@ -95,6 +97,16 @@ function c35371948.operation(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCondition(c35371948.agcon)
 		e3:SetOperation(c35371948.agop)
 		Duel.RegisterEffect(e3,1-tp)
+		--activate check
+		local e4=Effect.CreateEffect(c)
+		e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e4:SetCode(EVENT_CHAINING)
+		e4:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DRAW)
+		e4:SetLabel(tc:GetFieldID())
+		e4:SetLabelObject(e3)
+		e4:SetOperation(c35371948.rstop2)
+		Duel.RegisterEffect(e4,tp)
 	end
 end
 function c35371948.rcon(e)
@@ -131,12 +143,20 @@ function c35371948.agop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	Duel.SendtoGrave(tc,REASON_RULE)
 end
+function c35371948.rstop2(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	if tc:GetFlagEffectLabel(35371948)~=e:GetLabel() then return end
+	local c=e:GetHandler()
+	c:CancelCardTarget(tc)
+	local te=e:GetLabelObject()
+	tc:ResetFlagEffect(35371948)
+	if te then te:Reset() end
+end
 function c35371948.damcon1(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and eg:GetFirst():IsSetCard(0xfb)
 end
 function c35371948.damcon2(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and bit.band(r,REASON_BATTLE)==0 and re
-		and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0xfb)
+	return ep~=tp and r&REASON_BATTLE==0 and re and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0xfb)
 end
 function c35371948.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,35371948)
