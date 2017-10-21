@@ -59,14 +59,7 @@ function c511000440.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chain=Duel.GetCurrentChain()-1
 	local td=Duel.GetAttackTarget()
 	if td and Duel.NegateAttack() and td:IsFaceup() and td:IsRelateToEffect(e) then
-		local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
-		local nseq=0
-		if s==1 then nseq=0
-		elseif s==2 then nseq=1
-		elseif s==4 then nseq=2
-		elseif s==8 then nseq=3
-		else nseq=4 end
-		Duel.MoveSequence(td,nseq)
+		Duel.MoveSequence(td,math.log(Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0),2))
 		local acg=Duel.GetMatchingGroup(c511000440.filter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,e,tp,eg,ep,ev,re,r,rp,chain)
 		if acg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(28265983,0)) then
 			local tc=acg:Select(tp,1,1,nil):GetFirst()
