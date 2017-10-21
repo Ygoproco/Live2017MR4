@@ -35,7 +35,6 @@ function c24429467.initial_effect(c)
 	e4:SetOperation(c24429467.thop)
 	c:RegisterEffect(e4)
 end
-c24429467.spell_counter_permit=99
 function c24429467.acop(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_PLAYER)
 	local c=e:GetHandler()
