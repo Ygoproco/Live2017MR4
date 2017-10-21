@@ -18,12 +18,18 @@ function c5288597.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c5288597.cfilter(c,e,tp,ft)
 	local lv=c:GetOriginalLevel()
-	local rc=nil
-	local att=nil
-	if Duel.IsPlayerAffectedByEffect(tp,4064256) then rc=RACE_ZOMBIE
-	else rc=c:GetOriginalRace() end
-	if Duel.IsPlayerAffectedByEffect(tp,12644061) and c:IsSetCard(0x1034) then att=ATTRIBUTE_DARK
-	else att=c:GetOriginalAttribute() end
+	local rc=c:GetOriginalRace()
+	local att=c:GetOriginalAttribute()
+	local eff4064256={Duel.GetPlayerEffect(tp,4064256)}
+	for _,te in ipairs(eff4064256) do
+		local val=te:GetValue()
+		if val and val(te,c,e,0) then rc=val(te,c,e,1) end
+	end
+	local eff12644061={Duel.GetPlayerEffect(tp,12644061)}
+	for _,te in ipairs(eff12644061) do
+		local val=te:GetValue()
+		if val and val(te,c,e,0) then att=val(te,c,e,1) end
+	end
 	return c:GetOriginalType()&TYPE_MONSTER~=0 and lv>0 and c:IsFaceup() and c:IsAbleToGraveAsCost() and (ft>0 or c:GetSequence()<5)
 		and Duel.IsExistingMatchingCard(c5288597.spfilter,tp,LOCATION_DECK,0,1,nil,lv+1,rc,att,e,tp)
 end
