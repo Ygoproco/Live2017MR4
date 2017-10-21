@@ -27,18 +27,20 @@ function c18378582.initial_effect(c)
 	e3:SetOperation(c18378582.desop)
 	c:RegisterEffect(e3)
 end
-function c18378582.rfilter(c,code)
-	return c:IsFaceup() and c:IsCode(code)
+function c18378582.rfilter(c,ft)
+	return c:IsFaceup() and c:IsCode(66073051) and (ft>0 or c:GetSequence()<5)
 end
 function c18378582.envfilter(c)
 	return c:IsFaceup() and c:IsCode(56433456)
 end
 function c18378582.spcon(e,c)
 	if c==nil then return Duel.IsExistingMatchingCard(c18378582.envfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(56433456) end
-	return Duel.CheckReleaseGroup(c:GetControler(),c18378582.rfilter,1,nil,66073051)
+	local tp=c:GetControler()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-1 and Duel.CheckReleaseGroup(tp,c18378582.rfilter,1,nil,ft)
 end
 function c18378582.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.SelectReleaseGroup(tp,c18378582.rfilter,1,1,nil,66073051)
+	local g=Duel.SelectReleaseGroup(tp,c18378582.rfilter,1,1,nil,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	Duel.Release(g,REASON_COST)
 end
 function c18378582.cfilter(c)

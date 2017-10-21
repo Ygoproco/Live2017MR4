@@ -40,12 +40,17 @@ end
 function c12510878.envfilter(c)
 	return c:IsFaceup() and c:IsCode(56433456)
 end
+function c12510878.cfilter(c,ft,tp)
+	return c:IsCode(18036057) and (ft>0 or (c:GetSequence()<5 and c:IsControler(tp))) and (c:IsFaceup() or c:IsControler(tp))
+end
 function c12510878.spcon(e,c)
 	if c==nil then return true end
-	return Duel.CheckReleaseGroup(c:GetControler(),Card.IsCode,1,nil,18036057)
+	local tp=c:GetControler()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	return ft>-1 and Duel.CheckReleaseGroup(tp,c12510878.cfilter,1,nil,ft,tp)
 end
 function c12510878.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.SelectReleaseGroup(c:GetControler(),Card.IsCode,1,1,nil,18036057)
+	local g=Duel.SelectReleaseGroup(tp,c12510878.cfilter,1,1,nil,Duel.GetLocationCount(tp,LOCATION_MZONE),tp)
 	Duel.Release(g,REASON_COST)
 end
 function c12510878.condition(e,tp,eg,ep,ev,re,r,rp)

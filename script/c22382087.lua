@@ -22,13 +22,14 @@ function c22382087.initial_effect(c)
 	e2:SetOperation(c22382087.thop)
 	c:RegisterEffect(e2)
 end
-function c22382087.cfilter(c)
-	return c:IsSummonType(SUMMON_TYPE_ADVANCE) and c:IsAbleToHandAsCost()
+function c22382087.cfilter(c,ft)
+	return c:IsSummonType(SUMMON_TYPE_ADVANCE) and c:IsAbleToHandAsCost() and (ft>0 or c:GetSequence()<5)
 end
 function c22382087.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c22382087.cfilter,tp,LOCATION_MZONE,0,1,nil) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return Duel.IsExistingMatchingCard(c22382087.cfilter,tp,LOCATION_MZONE,0,1,nil,ft) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectMatchingCard(tp,c22382087.cfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c22382087.cfilter,tp,LOCATION_MZONE,0,1,1,nil,ft)
 	Duel.SendtoHand(g,nil,REASON_COST)
 end
 function c22382087.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
