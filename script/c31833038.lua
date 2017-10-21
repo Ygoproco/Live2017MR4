@@ -53,7 +53,7 @@ end
 function c31833038.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -70,8 +70,7 @@ function c31833038.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local tc=Duel.GetAttackTarget()
 	if chk==0 then
-		if not c:IsType(TYPE_LINK) then return false end
-		local zone=bit.band(c:GetLinkedZone(),0x1f)
+		local zone=c:GetLinkedZone()&0x1f
 		return Duel.GetAttacker()==c and tc and tc:IsControlerCanBeChanged(false,zone)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,tc,1,0,0)
@@ -80,7 +79,7 @@ function c31833038.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()
 	local c=e:GetHandler()
 	if tc then
-		local zone=bit.band(c:GetLinkedZone(),0x1f)
+		local zone=c:GetLinkedZone()&0x1f
 		if Duel.GetControl(tc,tp,0,0,zone)~=0 then
 			tc:RegisterFlagEffect(31833038,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,2)
 			local e1=Effect.CreateEffect(c)

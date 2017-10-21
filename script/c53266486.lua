@@ -1,6 +1,5 @@
 --アネスヴァレット・ドラゴン
 --Anesvullet Dragon
---Scripted by Eerie Code
 function c53266486.initial_effect(c)
 	--destroy
 	local e1=Effect.CreateEffect(c)
@@ -8,7 +7,6 @@ function c53266486.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,53266486)
 	e1:SetCondition(c53266486.descon)

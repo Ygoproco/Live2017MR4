@@ -75,12 +75,8 @@ function c61397885.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e4)
 	end
 end
-function c61397885.filter(c)
-	return c:IsFaceup() and c:IsCode(22702055)
-end
 function c61397885.handcon(e)
-	return Duel.IsExistingMatchingCard(c61397885.filter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		or Duel.IsEnvironment(22702055)
+	return Duel.IsEnvironment(22702055)
 end
 function c61397885.efilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_NORMAL)
@@ -98,7 +94,7 @@ function c61397885.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c61397885.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
+	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c61397885.eqfilter),tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,tc)
 	local eq=g:GetFirst()
