@@ -71,7 +71,7 @@ function c511000440.activate(e,tp,eg,ep,ev,re,r,rp)
 			e:SetCategory(te:GetCategory())
 			e:SetProperty(te:GetProperty())
 			Duel.ClearTargetCard()
-			if bit.band(tpe,TYPE_FIELD)~=0 then
+			if (tpe&TYPE_FIELD)~=0 then
 				local fc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
 				if Duel.IsDuelType(DUEL_OBSOLETE_RULING) then
 					if fc then Duel.Destroy(fc,REASON_RULE) end
@@ -85,7 +85,7 @@ function c511000440.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 			Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 			tc:CreateEffectRelation(te)
-			if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 and not tc:IsHasEffect(EFFECT_REMAIN_FIELD) then
+			if (tpe&TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 and not tc:IsHasEffect(EFFECT_REMAIN_FIELD) then
 				tc:CancelToGrave(false)
 			end
 			if te:GetCode()==EVENT_CHAINING then
