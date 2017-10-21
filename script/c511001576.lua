@@ -16,7 +16,7 @@ function c511001576.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001576.filter(c,e,tp)
 	local ct=c.minxyzct
-	return c:IsSetCard(0x48) and c:IsType(TYPE_XYZ) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsSetCard(0x48) and c:IsType(TYPE_XYZ)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and ct
 		and Duel.IsExistingMatchingCard(c511001576.atfilter,tp,LOCATION_GRAVE,0,ct,c)
 end
@@ -31,7 +31,7 @@ end
 function c511001576.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511001576.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511001576.filter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
