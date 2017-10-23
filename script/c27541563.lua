@@ -12,25 +12,16 @@ function c27541563.initial_effect(c)
 	e2:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_CHAINING)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e2:SetCountLimit(1,27541563)
 	e2:SetCondition(c27541563.discon)
 	e2:SetCost(c27541563.discost)
 	e2:SetTarget(c27541563.distg)
 	e2:SetOperation(c27541563.disop)
 	c:RegisterEffect(e2)
-	local e0=e2:Clone()
-	e0:SetType(EFFECT_TYPE_QUICK_O)
-	e0:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e0:SetRange(LOCATION_SZONE)
-	c:RegisterEffect(e0)
-	--cannot disable
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_CANNOT_DISABLE)
+	local e3=e2:Clone()
+	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(LOCATION_ONFIELD,0)
-	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-	e3:SetTarget(c27541563.distarget)
 	c:RegisterEffect(e3)
 	--inactivatable
 	local e4=Effect.CreateEffect(c)
@@ -62,8 +53,8 @@ function c27541563.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c27541563.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
@@ -76,8 +67,5 @@ end
 function c27541563.effectfilter(e,ct)
 	local p=e:GetHandler():GetControler()
 	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
-	return p==tp and te:GetHandler():IsSetCard(0x103) and bit.band(loc,LOCATION_ONFIELD)~=0
-end
-function c27541563.distarget(e,c)
-	return c:IsSetCard(0x103)
+	return p==tp and te:GetHandler():IsSetCard(0x103) and loc&LOCATION_ONFIELD~=0
 end

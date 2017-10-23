@@ -1,6 +1,5 @@
 --輪廻のパーシアス
 --Reincarnating Parshath
---Scripted by Eerie Code
 function c42444868.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -52,7 +51,7 @@ function c42444868.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsAbleToDeck() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_TODECK,eg,1,0,0)
-		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK+LOCATION_EXTRA)
 	end
 end
 function c42444868.spfilter(c,e,tp)

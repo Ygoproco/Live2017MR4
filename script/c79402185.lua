@@ -22,20 +22,33 @@ function c79402185.initial_effect(c)
 	e2:SetOperation(c79402185.thop)
 	c:RegisterEffect(e2)
 end
+function c79402185.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c79402185.chk,1,nil,sg)
+end
+function c79402185.chk(c,sg)
+	return c:IsCode(58071123) and sg:IsExists(Card.IsCode,2,c,43017476)
+end
 function c79402185.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroupEx(tp,Card.IsCode,2,nil,43017476)
-		and Duel.CheckReleaseGroupEx(tp,Card.IsCode,1,nil,58071123) end
-	local g1=Duel.SelectReleaseGroupEx(tp,Card.IsCode,2,2,nil,43017476)
-	local g2=Duel.SelectReleaseGroupEx(tp,Card.IsCode,1,1,nil,58071123)
-	g1:Merge(g2)
-	Duel.Release(g1,REASON_COST)
+	e:SetLabel(1)
+	local rg=Duel.GetReleaseGroup(tp,true)
+	local g1=rg:Filter(Card.IsCode,nil,43017476)
+	local g2=rg:Filter(Card.IsCode,nil,58071123)
+	local g=g1:Clone()
+	g:Merge(g2)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and g1:GetCount()>1 and g2:GetCount()>0 and g:GetCount()>2 
+		and aux.SelectUnselectGroup(g,e,tp,3,3,c79402185.rescon,0) end
+	local sg=aux.SelectUnselectGroup(g,e,tp,3,3,c79402185.rescon,1,tp,HINTMSG_RELEASE)
+	Duel.Release(sg,REASON_COST)
 end
 function c79402185.filter(c,e,tp)
 	return (c:IsCode(85066822) or c:IsCode(6022371)) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
 function c79402185.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3
-		and Duel.IsExistingMatchingCard(c79402185.filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
+	if chk==0 then
+		if e:GetLabel()==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c79402185.filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp)
+	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
 end
 function c79402185.activate(e,tp,eg,ep,ev,re,r,rp)

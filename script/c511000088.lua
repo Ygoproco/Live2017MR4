@@ -11,7 +11,7 @@ function c511000088.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000088.filter(c,e,tp)
-	return c:IsCode(511000089) and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsCode(511000089) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
 function c511000088.cfilter(c,code)
 	return c:IsCode(code) and c:IsPosition(POS_FACEUP_ATTACK)
@@ -39,7 +39,7 @@ end
 function c511000088.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511000088.filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511000088.filter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc and Duel.SpecialSummon(g,0,tp,tp,true,true,POS_FACEUP)>0 then
 		tc:CompleteProcedure()

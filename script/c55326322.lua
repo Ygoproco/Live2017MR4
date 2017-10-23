@@ -21,31 +21,25 @@ function c55326322.initial_effect(c)
 	e2:SetOperation(c55326322.tkop)
 	c:RegisterEffect(e2)
 end
-function c55326322.desfilter(c)
-	return c:IsFaceup()
+function c55326322.desfilter(c,ft)
+	return c:IsFaceup() and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
 end
 function c55326322.spfilter(c,e,tp)
 	return c:IsSetCard(0xea) and c:IsType(TYPE_TUNER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c55326322.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(e:GetLabel()) and chkc:IsControler(tp) and c55326322.desfilter(chkc) end
-	if chk==0 then
-		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		if ft<-1 then return false end
-		local loc=LOCATION_ONFIELD
-		if ft==0 then loc=LOCATION_MZONE end
-		e:SetLabel(loc)
-		return Duel.IsExistingTarget(c55326322.desfilter,tp,loc,0,1,nil)
-			and Duel.IsExistingMatchingCard(c55326322.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp)
-	end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and c55326322.desfilter(chkc,ft) end
+	if chk==0 then return ft>-1 and Duel.IsExistingTarget(c55326322.desfilter,tp,LOCATION_ONFIELD,0,1,nil,ft)
+		and Duel.IsExistingMatchingCard(c55326322.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c55326322.desfilter,tp,e:GetLabel(),0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c55326322.desfilter,tp,LOCATION_ONFIELD,0,1,1,nil,ft)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c55326322.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,c55326322.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)

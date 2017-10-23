@@ -11,24 +11,25 @@ function c64815084.initial_effect(c)
 	e1:SetOperation(c64815084.activate)
 	c:RegisterEffect(e1)
 end
-function c64815084.filter(c)
-	return c:IsFaceup() and c:IsRace(RACE_REPTILE)
+function c64815084.filter(c,ft)
+	return c:IsFaceup() and c:IsRace(RACE_REPTILE) and (ft>0 or c:GetSequence()<5)
 end
 function c64815084.spfilter(c,e,tp)
 	return c:IsSetCard(0x304e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE)
 end
 function c64815084.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c64815084.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c64815084.filter,tp,LOCATION_MZONE,0,1,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c64815084.filter(chkc,ft) end
+	if chk==0 then return ft>-1 and Duel.IsExistingTarget(c64815084.filter,tp,LOCATION_MZONE,0,1,nil,ft)
 		and Duel.IsExistingMatchingCard(c64815084.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c64815084.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c64815084.filter,tp,LOCATION_MZONE,0,1,1,nil,ft)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c64815084.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,c64815084.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)

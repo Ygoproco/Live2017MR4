@@ -7,6 +7,7 @@ function c100223031.initial_effect(c)
 	aux.AddLinkProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_DRAGON),2,2)
 	--to hand
 	local e1=Effect.CreateEffect(c)
+	e1:SetRange(LOCATION_MZONE)
 	e1:SetDescription(aux.Stringid(100223031,0))
 	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_QUICK_O)

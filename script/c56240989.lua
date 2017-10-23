@@ -38,16 +38,16 @@ function c56240989.filter2(c,g)
 	return g:IsExists(Card.IsCode,1,c,c:GetCode())
 end
 function c56240989.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if e:GetHandler():GetSequence()<5 then ft=ft+1 end
 	if chk==0 then
 		local g=Duel.GetMatchingGroup(c56240989.filter,tp,LOCATION_DECK,0,nil,e,tp)
-		return not Duel.IsPlayerAffectedByEffect(tp,59822133)
-			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and g:IsExists(c56240989.filter2,1,nil,g)
+		return ft>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) and g:IsExists(c56240989.filter2,1,nil,g)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function c56240989.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) or Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c56240989.filter,tp,LOCATION_DECK,0,nil,e,tp)
 	local dg=g:Filter(c56240989.filter2,nil,g)

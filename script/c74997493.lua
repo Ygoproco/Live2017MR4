@@ -1,6 +1,5 @@
 --鎖龍蛇－スカルデット
 --Skulldeat, the Chained Dracoserpent
---Script by nekrozar
 function c74997493.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddLinkProcedure(c,nil,2,nil,c74997493.lkcheck)

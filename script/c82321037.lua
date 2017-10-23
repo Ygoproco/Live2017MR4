@@ -27,17 +27,17 @@ end
 function c82321037.locfilter(c,tp)
 	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)
 end
+function c82321037.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_WATER)
+end
 function c82321037.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local loc=LOCATION_MZONE+LOCATION_HAND
-	if ft<0 then loc=LOCATION_MZONE end
 	local loc2=0
 	if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_MZONE end
-	local g=Duel.GetMatchingGroup(c82321037.desfilter,tp,loc,loc2,c)
-	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and g:GetCount()>=2 and g:IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_WATER)
-		and (ft>0 or g:IsExists(c82321037.locfilter,-ft+1,nil,tp)) end
+	local g=Duel.GetMatchingGroup(c82321037.desfilter,tp,LOCATION_MZONE+LOCATION_HAND,loc2,c)
+	if chk==0 then return ft>-2 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and g:GetCount()>=2 and aux.SelectUnselectGroup(g,e,tp,2,2,c82321037.rescon,0) end
 	if (g:GetCount()==2 and g:FilterCount(Card.IsLocation,nil,LOCATION_HAND)==1) or not g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,2,0,0)
 	else
@@ -51,29 +51,12 @@ end
 function c82321037.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local loc=LOCATION_MZONE+LOCATION_HAND
-	if ft<0 then loc=LOCATION_MZONE end
 	local loc2=0
 	if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_MZONE end
-	local g=Duel.GetMatchingGroup(c82321037.desfilter,tp,loc,loc2,c)
-	if g:GetCount()<2 or not g:IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_WATER) then return end
-	local g1=nil local g2=nil
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	if ft<1 then
-		g1=g:FilterSelect(tp,c82321037.locfilter,1,1,nil,tp)
-	else
-		g1=g:Select(tp,1,1,nil)
-	end
-	g:RemoveCard(g1:GetFirst())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	if g1:GetFirst():IsAttribute(ATTRIBUTE_WATER) then
-		g2=g:Select(tp,1,1,nil)
-	else
-		g2=g:FilterSelect(tp,Card.IsAttribute,1,1,nil,ATTRIBUTE_WATER)
-	end
-	g1:Merge(g2)
-	local rm=g1:IsExists(Card.IsAttribute,2,nil,ATTRIBUTE_WATER)
-	if Duel.Destroy(g1,REASON_EFFECT)==2 then
+	local g=Duel.GetMatchingGroup(c82321037.desfilter,tp,LOCATION_MZONE+LOCATION_HAND,loc2,c)
+	local sg=aux.SelectUnselectGroup(g,e,tp,2,2,c82321037.rescon,1,tp,HINTMSG_DESTROY)
+	local rm=sg:IsExists(Card.IsAttribute,2,nil,ATTRIBUTE_WATER)
+	if Duel.Destroy(sg,REASON_EFFECT)==2 then
 		if not c:IsRelateToEffect(e) then return end
 		if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 then
 			return
