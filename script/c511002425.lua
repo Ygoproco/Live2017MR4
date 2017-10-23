@@ -57,7 +57,6 @@ function c511002425.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg2=Duel.SelectMatchingCard(tp,c511002425.filter2,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,1,sg1:GetFirst(),e,tp)
 	sg1:Merge(sg2)
-	if sg1:IsExists(Card.IsHasEffect,1,nil,EFFECT_NECRO_VALLEY) then return end
 	Duel.SpecialSummon(sg1,0,tp,p,false,false,POS_FACEUP)
 end
 function c511002425.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)

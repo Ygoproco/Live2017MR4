@@ -47,18 +47,9 @@ function c511001273.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e5:SetValue(c511001273.indes)
+	e5:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsSetCard,0x48)))
 	c:RegisterEffect(e5)
-	if not c511001273.global_check then
-		c511001273.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511001273.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	aux.CallToken(37279508)
 end
 c511001273.xyz_number=37
 function c511001273.atkcon(e,tp,eg,ep,ev,re,r,rp)
@@ -86,7 +77,7 @@ function c511001273.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001273.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if bit.band(c:GetPreviousLocation(),LOCATION_MZONE)~=0 and c:IsReason(REASON_DESTROY) then
+	if c:GetPreviousLocation()&LOCATION_MZONE~=0 and c:IsReason(REASON_DESTROY) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(511001273,1))
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -133,17 +124,16 @@ function c511001273.selop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
 end
 function c511001273.numspcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1)
 end
 function c511001273.numspfilter(c,e,tp)
 	return c:IsSetCard(0x48) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c511001273.numsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return false end
 	if chk==0 then return true end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c511001273.numspfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,aux.NecroValleyFilter(c511001273.numspfilter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c511001273.numspop(e,tp,eg,ep,ev,re,r,rp)
@@ -152,11 +142,4 @@ function c511001273.numspop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
-end
-function c511001273.indes(e,c)
-	return not c:IsSetCard(0x48)
-end
-function c511001273.numchk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,37279508)
-	Duel.CreateToken(1-tp,37279508)
 end

@@ -32,8 +32,7 @@ function c511002085.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsPreviousLocation(LOCATION_ONFIELD) and (c:GetEquipTarget()~=nil or c:IsReason(REASON_LOST_TARGET)) and c:IsLocation(LOCATION_GRAVE)
 end
 function c511002085.filter(c,e,tp)
-	return c:IsType(TYPE_TUNER) and c:IsRace(RACE_WINDBEAST) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-		and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsType(TYPE_TUNER) and c:IsRace(RACE_WINDBEAST) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002085.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 

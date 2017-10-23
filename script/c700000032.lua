@@ -42,7 +42,7 @@ function c700000032.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c700000032.pccon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function c700000032.pctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
@@ -76,8 +76,8 @@ function c700000032.nbcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c700000032.mgfilter(c,e,tp,sync)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
-		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+		and c:GetReason()&0x80008==0x80008 and c:GetReasonCard()==sync
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and c:IsCanBeEffectTarget(e)
 end
 function c700000032.nbtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

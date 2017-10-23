@@ -17,9 +17,9 @@ function c511002390.filter(c,e,tp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=mg:GetCount()+1 and not mg:IsExists(c511002390.mgfilter,1,nil,e,tp,c)
 end
 function c511002390.mgfilter(c,e,tp,card)
-	return not c:IsControler(tp) or not c:IsLocation(LOCATION_GRAVE)
-		or bit.band(c:GetReason(),REASON_COST)~=REASON_COST or c:GetReasonCard()~=card
-		or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+		and c:GetReason()&REASON_COST==REASON_COST and c:GetReasonCard()==card
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002390.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511002390.filter(chkc,e,tp) end
@@ -32,13 +32,9 @@ function c511002390.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if not tc or not tc:IsRelateToEffect(e) or tc:IsFacedown() then return end
 	local mg=tc:GetMaterial()
-	local sumable=true
-	if Duel.SendtoGrave(tc,REASON_EFFECT)==0 or mg:GetCount()==0
-		or mg:GetCount()>Duel.GetLocationCount(tp,LOCATION_MZONE)
-		or mg:IsExists(c511002390.mgfilter,1,nil,e,tp,tc) then
-		sumable=false
-	end
-	if sumable then
+	local ct=mg:GetCount()
+	if Duel.SendtoGrave(tc,REASON_EFFECT)>0 and ct>0 and (ct==1 or not Duel.IsPlayerAffectedByEffect(tp,59822133)) and ct<=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		and mg:FilterCount(aux.NecroValleyFilter(c511002390.mgfilter),nil,e,tp,tc)==ct then
 		Duel.BreakEffect()
 		Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
 	end

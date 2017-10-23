@@ -39,10 +39,10 @@ function c511001515.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c511001515.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsDestructable() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,400)
 end
@@ -58,23 +58,23 @@ function c511001515.sumcon(e,tp,eg,ep,ev,re,r,rp)
 		and c:GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
 function c511001515.mgfilter(c,e,tp,sync)
-	return not c:IsControler(tp) or not c:IsLocation(LOCATION_GRAVE)
-		or bit.band(c:GetReason(),0x80008)~=0x80008 or c:GetReasonCard()~=sync
-		or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+		and c:GetReason()&0x80008==0x80008 and c:GetReasonCard()==sync
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001515.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg=e:GetHandler():GetMaterial()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if chk==0 then return mg:GetCount()>0 and ft>=mg:GetCount() 
-		and not mg:IsExists(c511001515.mgfilter,1,nil,e,tp,e:GetHandler()) end
+		and mg:FilterCount(c511001515.mgfilter,nil,e,tp,e:GetHandler())==mg:GetCount() end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,mg,mg:GetCount(),tp,0)
 end
 function c511001515.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local mg=e:GetHandler():GetMaterial()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	if mg:GetCount()>ft 
-		or mg:IsExists(c511001515.mgfilter,1,nil,e,tp,e:GetHandler()) then return end
-	Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
+	if mg:GetCount()<=ft and mg:FilterCount(aux.NecroValleyFilter(c511001515.mgfilter),nil,e,tp,e:GetHandler())==mg:GetCount() then
+		Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
