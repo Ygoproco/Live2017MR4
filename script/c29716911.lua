@@ -30,13 +30,12 @@ function c29716911.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and c29716911.atkfilter(chkc) and chkc~=c end
 	if chk==0 then return Duel.IsExistingTarget(c29716911.atkfilter,tp,LOCATION_MZONE,0,1,c) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c29716911.atkfilter,tp,LOCATION_MZONE,0,1,1,c)
-	Duel.SetOperationInfo(0,CATEGORY_ATKCHANGE,g,1,0,0)
+	Duel.SelectTarget(tp,c29716911.atkfilter,tp,LOCATION_MZONE,0,1,1,c)
 end
 function c29716911.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -53,7 +52,7 @@ function c29716911.rcon(e)
 	return e:GetOwner():IsHasCardTarget(e:GetHandler())
 end
 function c29716911.condition(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,0x41)==0x41 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
+	return r&0x41==0x41 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 end
 function c29716911.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

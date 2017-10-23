@@ -1,6 +1,5 @@
 --白棘鱏
 --White Stingray
---Scripted by Eerie Code
 function c49930315.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -23,7 +22,7 @@ function c49930315.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c49930315.cfilter(c)
-	return c:IsAttribute(ATTRIBUTE_WATER)
+	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsDiscardable()
 end
 function c49930315.spcon(e,c)
 	if c==nil then return true end

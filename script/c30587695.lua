@@ -13,13 +13,14 @@ function c30587695.initial_effect(c)
 	e1:SetOperation(c30587695.spop)
 	c:RegisterEffect(e1)
 end
-function c30587695.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGraveAsCost()
+function c30587695.cfilter(c,ft)
+	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToGraveAsCost() and (ft>0 or (c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5))
 end
 function c30587695.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c30587695.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return Duel.IsExistingMatchingCard(c30587695.cfilter,tp,LOCATION_ONFIELD,0,1,nil,ft) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c30587695.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c30587695.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil,ft)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c30587695.filter(c,e,tp)
@@ -27,7 +28,7 @@ function c30587695.filter(c,e,tp)
 end
 function c30587695.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c30587695.filter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
 		and Duel.IsExistingTarget(c30587695.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c30587695.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
@@ -35,7 +36,7 @@ function c30587695.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c30587695.spop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end

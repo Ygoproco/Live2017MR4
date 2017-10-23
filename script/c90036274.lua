@@ -41,25 +41,30 @@ function c90036274.initial_effect(c)
 	e3:SetOperation(c90036274.penop)
 	c:RegisterEffect(e3)
 end
-function c90036274.cfilter1(c,tp)
-	return c:IsFaceup() and c:IsSetCard(0x2016) and c:IsType(TYPE_TUNER) and c:IsAbleToGraveAsCost() and c:IsLevelBelow(7)
-		and Duel.IsExistingMatchingCard(c90036274.cfilter2,tp,LOCATION_MZONE,0,1,c,c:GetLevel())
+function c90036274.cfilter1(c)
+	return c:IsFaceup() and c:IsSetCard(0x2016) and c:IsType(TYPE_TUNER) and c:IsAbleToGraveAsCost()
 end
-function c90036274.cfilter2(c,lv)
-	return c:IsFaceup() and c:IsNotTuner() and c:GetLevel()==7-lv and c:IsAbleToGraveAsCost()
+function c90036274.cfilter2(c)
+	return c:IsFaceup() and c:IsNotTuner() and c:IsAbleToGraveAsCost()
+end
+function c90036274.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c90036274.chk,1,nil,sg) and sg:CheckWithSumEqual(Card.GetLevel,7,2,2)
+end
+function c90036274.chk(c,sg)
+	return c90036274.cfilter1(c) and sg:IsExists(c90036274.cfilter2,1,c)
 end
 function c90036274.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c90036274.cfilter1,tp,LOCATION_MZONE,0,1,nil,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectMatchingCard(tp,c90036274.cfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g2=Duel.SelectMatchingCard(tp,c90036274.cfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst(),g1:GetFirst():GetLevel())
-	g1:Merge(g2)
-	Duel.SendtoGrave(g1,REASON_COST)
+	local g1=Duel.GetMatchingGroup(c90036274.cfilter1,tp,LOCATION_MZONE,0,nil)
+	local g2=Duel.GetMatchingGroup(c90036274.cfilter2,tp,LOCATION_MZONE,0,nil)
+	local g=g1:Clone()
+	g:Merge(g2)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and g1:GetCount()>0 and g2:GetCount()>0 
+		and aux.SelectUnselectGroup(g,e,tp,2,2,c90036274.rescon,0) end
+	local sg=aux.SelectUnselectGroup(g,e,tp,2,2,c90036274.rescon,1,tp,HINTMSG_TOGRAVE)
+	Duel.SendtoGrave(sg,REASON_COST)
 end
 function c90036274.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c90036274.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -113,7 +118,7 @@ function c90036274.disop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c90036274.pencon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
+	return r&REASON_EFFECT+REASON_BATTLE~=0 and c:IsPreviousLocation(LOCATION_MZONE) and c:IsFaceup()
 end
 function c90036274.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1) end

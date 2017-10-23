@@ -59,14 +59,7 @@ function c511000440.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chain=Duel.GetCurrentChain()-1
 	local td=Duel.GetAttackTarget()
 	if td and Duel.NegateAttack() and td:IsFaceup() and td:IsRelateToEffect(e) then
-		local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
-		local nseq=0
-		if s==1 then nseq=0
-		elseif s==2 then nseq=1
-		elseif s==4 then nseq=2
-		elseif s==8 then nseq=3
-		else nseq=4 end
-		Duel.MoveSequence(td,nseq)
+		Duel.MoveSequence(td,math.log(Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0),2))
 		local acg=Duel.GetMatchingGroup(c511000440.filter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,e,tp,eg,ep,ev,re,r,rp,chain)
 		if acg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(28265983,0)) then
 			local tc=acg:Select(tp,1,1,nil):GetFirst()
@@ -78,7 +71,7 @@ function c511000440.activate(e,tp,eg,ep,ev,re,r,rp)
 			e:SetCategory(te:GetCategory())
 			e:SetProperty(te:GetProperty())
 			Duel.ClearTargetCard()
-			if bit.band(tpe,TYPE_FIELD)~=0 then
+			if (tpe&TYPE_FIELD)~=0 then
 				local fc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
 				if Duel.IsDuelType(DUEL_OBSOLETE_RULING) then
 					if fc then Duel.Destroy(fc,REASON_RULE) end
@@ -92,7 +85,7 @@ function c511000440.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 			Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 			tc:CreateEffectRelation(te)
-			if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 and not tc:IsHasEffect(EFFECT_REMAIN_FIELD) then
+			if (tpe&TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 and not tc:IsHasEffect(EFFECT_REMAIN_FIELD) then
 				tc:CancelToGrave(false)
 			end
 			if te:GetCode()==EVENT_CHAINING then
