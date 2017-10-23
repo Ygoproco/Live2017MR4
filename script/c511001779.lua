@@ -16,18 +16,9 @@ function c511001779.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e2:SetValue(c511001779.indes)
+	e2:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsSetCard,0x48)))
 	c:RegisterEffect(e2)
-	if not c511001779.global_check then
-		c511001779.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511001779.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end
+	aux.CallToken(55067058)
 end
 c511001779.xyz_number=19
 function c511001779.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -39,9 +30,6 @@ function c511001779.filter(c)
 	g=g:Filter(c511001779.mfilter,nil)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and g:GetCount()>0
 end
-function c511001779.mfilter(c)
-	return c:IsLocation(LOCATION_GRAVE) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
-end
 function c511001779.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511001779.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler()) end
 end
@@ -51,16 +39,9 @@ function c511001779.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
-		local mat=tc:GetMaterial():Filter(c511001779.mfilter,nil)
+		local mat=tc:GetMaterial():Filter(aux.NecroValleyFilter(Card.IsLocation),nil,LOCATION_GRAVE)
 		if not tc:IsImmuneToEffect(e) then
 			Duel.Overlay(tc,mat)
 		end
 	end
-end
-function c511001779.numchk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,55067058)
-	Duel.CreateToken(1-tp,55067058)
-end
-function c511001779.indes(e,c)
-	return not c:IsSetCard(0x48)
 end

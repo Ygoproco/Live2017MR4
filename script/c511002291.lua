@@ -15,23 +15,7 @@ function c511002291.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	if not c511002291.global_check then
-		c511002291.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511002291.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function c511002291.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
+	aux.CallToken(420)
 end
 function c511002291.filter(c,e,tp)
 	return c:IsSphere() and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

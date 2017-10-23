@@ -48,25 +48,28 @@ function c511002704.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 function c511002704.sumcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
 end
 function c511002704.mgfilter(c,e,tp,fusc)
-	return not c:IsControler(tp) or not c:IsLocation(LOCATION_GRAVE)
-		or bit.band(c:GetReason(),0x40008)~=0x40008 or c:GetReasonCard()~=fusc
-		or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+		and c:GetReason()&0x40008==0x40008 and c:GetReasonCard()==fusc
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002704.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local mg=e:GetHandler():GetMaterial()
+	local c=e:GetHandler()
+	local mg=c:GetMaterial()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if chk==0 then return mg:GetCount()>0 and ft>=mg:GetCount() 
-		and not mg:IsExists(c511002704.mgfilter,1,nil,e,tp,e:GetHandler()) end
+		and mg:FilterCount(c511002704.mgfilter,nil,e,tp,c)==mg:GetCount() end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,mg,mg:GetCount(),tp,0)
 end
 function c511002704.sumop(e,tp,eg,ep,ev,re,r,rp)
-	local mg=e:GetHandler():GetMaterial()
+	local c=e:GetHandler()
+	local mg=c:GetMaterial()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	if mg:GetCount()>ft or mg:IsExists(c511002704.mgfilter,1,nil,e,tp,e:GetHandler()) then return end
-	Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
+	if mg:GetCount()<=ft and mg:FilterCount(aux.NecroValleyFilter(c511002704.mgfilter),nil,e,tp,c)==mg:GetCount() then
+		Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
