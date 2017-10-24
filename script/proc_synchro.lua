@@ -73,9 +73,11 @@ function Auxiliary.SynCondition(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,
 					if smat.KeepAlive then
 						if smat:IsExists(aux.NOT(Card.IsCanBeSynchroMaterial),1,nil,c) then return false end
 						pg:Merge(smat)
+						g:Merge(smat)
 					else
 						if not smat:IsCanBeSynchroMaterial(c) then return false end
 						pg:AddCard(smat)
+						g:AddCard(smat)
 					end
 				end
 				if g:IsExists(Auxiliary.SynchroCheckFilterChk,1,nil,f1,f2,sub1,sub2,c,tp) then
@@ -492,8 +494,10 @@ function Auxiliary.SynTarget(f1,min1,max1,f2,min2,max2,sub1,sub2,req1,reqct1,req
 				if smat then
 					if smat.KeepAlive then
 						pg:Merge(smat)
+						g:Merge(smat)
 					else
 						pg:AddCard(smat)
+						g:AddCard(smat)
 					end
 				end
 				local tg
@@ -912,9 +916,11 @@ function Auxiliary.MajesticSynCondition(f1,cbt1,f2,cbt2,f3,cbt3,...)
 					if smat.KeepAlive then
 						if smat:IsExists(aux.NOT(Card.IsCanBeSynchroMaterial),1,nil,c) then return false end
 						pg:Merge(smat)
+						g:Merge(smat)
 					else
 						if not smat:IsCanBeSynchroMaterial(c) then return false end
 						pg:AddCard(smat)
+						g:AddCard(smat)
 					end
 				end
 				if not mgchk then
@@ -955,8 +961,10 @@ function Auxiliary.MajesticSynTarget(f1,cbt1,f2,cbt2,f3,cbt3,...)
 				if smat then
 					if smat.KeepAlive then
 						pg:Merge(smat)
+						g:Merge(smat)
 					else
 						pg:AddCard(smat)
+						g:AddCard(smat)
 					end
 				end
 				if not mgchk then
@@ -1233,9 +1241,11 @@ function Auxiliary.DarkSynCondition(f1,f2,plv,nlv,...)
 					if smat.KeepAlive then
 						if smat:IsExists(aux.NOT(Card.IsCanBeSynchroMaterial),1,nil,c) then return false end
 						pg:Merge(smat)
+						g:Merge(smat)
 					else
 						if not smat:IsCanBeSynchroMaterial(c) then return false end
 						pg:AddCard(smat)
+						g:AddCard(smat)
 					end
 				end
 				if not mgchk then
@@ -1283,8 +1293,10 @@ function Auxiliary.DarkSynTarget(f1,f2,plv,nlv,...)
 				if smat then
 					if smat.KeepAlive then
 						pg:Merge(smat)
+						g:Merge(smat)
 					else
 						pg:AddCard(smat)
+						g:AddCard(smat)
 					end
 				end
 				if not mgchk then
