@@ -25,6 +25,11 @@ function c100000301.filter(c)
 end
 function c100000301.spcon(e,c)
 	if c==nil then return true end
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
 	local tp=c:GetControler()
 	local rg=Duel.GetMatchingGroup(c100000301.filter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and rg:GetCount()>2 

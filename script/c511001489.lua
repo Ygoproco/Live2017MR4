@@ -43,6 +43,11 @@ function c511001489.initial_effect(c)
 end
 function c511001489.hspcon(e,c)
 	if c==nil then return true end
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-1
 		and Duel.CheckReleaseGroup(c:GetControler(),Card.IsCode,1,nil,3643300)
 end
@@ -105,13 +110,9 @@ function c511001489.op(e,tp,eg,ep,ev,re,r,rp,val,r,rc)
 end
 function c511001489.damop(e,re,val,r,rp,rc)
 	local cc=Duel.GetCurrentChain()
-	if cc==0 or bit.band(r,REASON_EFFECT)==0 then return end
+	if cc==0 or r&REASON_EFFECT==0 then return end
 	return val*2
 end
-function c511001489.ffilter(c)
-	return c:IsFaceup() and c:IsCode(22702055)
-end
 function c511001489.econ(e)
-	return Duel.IsExistingMatchingCard(c511001489.ffilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		or Duel.IsEnvironment(22702055)
+	return Duel.IsEnvironment(22702055)
 end
