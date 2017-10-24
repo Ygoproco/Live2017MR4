@@ -17,9 +17,9 @@ function c90200789.initial_effect(c)
 	e2:SetOperation(c90200789.desop)
 	c:RegisterEffect(e2)
 end
-function c90200789.filter1(c,tp,slv)
+function c90200789.filter1(c,tp,slv,ft)
 	local lv1=c:GetLevel()
-	return c:IsFaceup() and c:IsSetCard(0x2b) and lv1>0
+	return c:IsFaceup() and c:IsSetCard(0x2b) and lv1>0 and (ft>0 or c:GetSequence()<5)
 		and Duel.IsExistingTarget(c90200789.filter2,tp,0,LOCATION_MZONE,1,nil,lv1,slv)
 end
 function c90200789.filter2(c,lv1,slv)
@@ -32,15 +32,15 @@ end
 function c90200789.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	local sg=Duel.GetMatchingGroup(c90200789.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if chk==0 then
 		if sg:GetCount()==0 then return false end
 		local mg,mlv=sg:GetMinGroup(Card.GetLevel)
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-			and Duel.IsExistingTarget(c90200789.filter1,tp,LOCATION_MZONE,0,1,nil,tp,mlv)
+		return ft>-1 and Duel.IsExistingTarget(c90200789.filter1,tp,LOCATION_MZONE,0,1,nil,tp,mlv,ft)
 	end
 	local mg,mlv=sg:GetMinGroup(Card.GetLevel)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectTarget(tp,c90200789.filter1,tp,LOCATION_MZONE,0,1,1,nil,tp,mlv)
+	local g1=Duel.SelectTarget(tp,c90200789.filter1,tp,LOCATION_MZONE,0,1,1,nil,tp,mlv,ft)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g2=Duel.SelectTarget(tp,c90200789.filter2,tp,0,LOCATION_MZONE,1,1,nil,g1:GetFirst():GetLevel(),mlv)
 	g1:Merge(g2)

@@ -46,16 +46,16 @@ function c511009106.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511009106.filter1(c,e)
-	return not c:IsImmuneToEffect(e)
+	return c:IsOnField() and not c:IsImmuneToEffect(e)
 end
 function c511009106.filter2(c,e,tp,m,f,gc)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc,tp)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc)
 end
 function c511009106.ftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
-		local mg1=Duel.GetFusionMaterial(tp)
+		local mg1=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
 		local res=Duel.IsExistingMatchingCard(c511009106.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,c)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)

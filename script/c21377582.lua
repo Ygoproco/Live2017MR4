@@ -103,8 +103,7 @@ end
 function c21377582.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c21377582.otfilter,tp,LOCATION_SZONE,0,nil)
-	g:Merge(exg)
-	local opg=Duel.GetMatchingGroup(c21377582.exfilter,tp,0,LOCATION_MZONE,nil,g)
+	g:Merge(exg)	local opg=Duel.GetMatchingGroup(c21377582.exfilter,tp,0,LOCATION_MZONE,nil,g)
 	g:Merge(opg)
 	local mi,ma=c:GetTributeRequirement()
 	if mi<1 then mi=1 end

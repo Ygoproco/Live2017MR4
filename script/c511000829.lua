@@ -14,14 +14,9 @@ function c511000829.filter(c,e,tp)
 	local ct=c.minxyzct
 	return c.minxyzct and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,true) and c:IsType(TYPE_XYZ)
 		and Duel.IsExistingTarget(c511000829.matfilter,tp,LOCATION_GRAVE,0,1,nil,tp,ct)
-		and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c511000829.matfilter(c,tp,ct)
-	return c:GetLevel()>0
-		and Duel.IsExistingTarget(c511000829.matfilter2,tp,LOCATION_GRAVE,0,ct-1,c,c:GetLevel())
-end
-function c511000829.matfilter2(c,lv)
-	return c:GetLevel()==lv
+	return c:GetLevel()>0 and Duel.IsExistingTarget(Card.IsLevel,tp,LOCATION_GRAVE,0,ct-1,c,c:GetLevel())
 end
 function c511000829.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511000829.filter(chkc,e,tp) end
@@ -38,13 +33,10 @@ function c511000829.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local mat2=Duel.SelectTarget(tp,c511000829.matfilter2,tp,LOCATION_GRAVE,0,ct-1,ct2-1,mat:GetFirst(),lv)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
-function c511000829.xyzfilter(c)
-	return not c:IsType(TYPE_XYZ)
-end
 function c511000829.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tc=g:Filter(Card.IsType,nil,TYPE_XYZ):GetFirst()
-	g=g:Filter(c511000829.xyzfilter,nil)
+	g=g:Filter(aux.NOT(Card.IsType),nil,TYPE_XYZ)
 	tc:SetMaterial(g)
 	Duel.Overlay(tc,g)
 	Duel.SpecialSummon(tc,SUMMON_TYPE_XYZ,tp,tp,false,true,POS_FACEUP)

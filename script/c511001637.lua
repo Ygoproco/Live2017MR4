@@ -18,7 +18,7 @@ function c511001637.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
 end
 function c511001637.filter(c,e,tp)
-	return c:IsType(TYPE_TUNER) and c:GetLevel()>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY) 
+	return c:IsType(TYPE_TUNER) and c:GetLevel()>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
 		and Duel.IsExistingMatchingCard(c511001637.filter2,tp,LOCATION_DECK,0,1,nil,c:GetLevel(),e,tp)
 end
 function c511001637.filter2(c,lv,e,tp)
@@ -32,7 +32,7 @@ end
 function c511001637.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g1=Duel.SelectMatchingCard(tp,c511001637.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local g1=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511001637.filter),tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	local tc=g1:GetFirst()
 	if tc then
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)

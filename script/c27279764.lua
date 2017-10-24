@@ -59,13 +59,33 @@ end
 function c27279764.tlimit(e,c)
 	return not c:IsSetCard(0xaa)
 end
+function c27279764.val(c,sc,ma)
+	local eff3={c:GetCardEffect(EFFECT_TRIPLE_TRIBUTE)}
+	if ma>=3 then
+		for _,te in ipairs(eff3) do
+			if te:GetValue()(te,sc) then return 0x30001 end
+		end
+	end
+	local eff2={c:GetCardEffect(EFFECT_DOUBLE_TRIBUTE)}
+	for _,te in ipairs(eff2) do
+		if te:GetValue()(te,sc) then return 0x20001 end
+	end
+	return 1
+end
+function c27279764.rescon(sg,e,tp,mg)
+	local ct=sg:GetCount()
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:CheckWithSumEqual(c27279764.val,3,ct,ct,e:GetHandler(),3)
+end
 function c27279764.ttcon(e,c,minc)
 	if c==nil then return true end
-	return minc<=3 and Duel.CheckTribute(c,3)
+	local tp=c:GetControler()
+	local g=Duel.GetTributeGroup(c)
+	return minc<=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and aux.SelectUnselectGroup(g,e,tp,1,3,c27279764.rescon,0)
 end
 function c27279764.ttop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g=Duel.SelectTribute(tp,c,3,3)
-	c:SetMaterial(g)
+	local g=Duel.GetTributeGroup(c)
+	local sg=aux.SelectUnselectGroup(g,e,tp,1,3,c27279764.rescon,1,tp,HINTMSG_RELEASE)
+	c:SetMaterial(sg)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
 function c27279764.immcon(e)

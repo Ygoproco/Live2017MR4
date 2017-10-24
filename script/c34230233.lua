@@ -26,7 +26,11 @@ function c34230233.spfilter(c,ft)
 end
 function c34230233.spcon(e,c)
 	if c==nil then return true end
-	if c:IsHasEffect(EFFECT_NECRO_VALLEY) then return false end
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
 	local tp=c:GetControler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	return ft>-1 and Duel.IsExistingMatchingCard(c34230233.spfilter,tp,LOCATION_MZONE,0,1,nil,ft)
@@ -39,7 +43,7 @@ function c34230233.spop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 function c34230233.descon(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(e:GetHandler():GetPreviousControler())
-	return e:GetHandler():IsPreviousLocation(LOCATION_HAND) and bit.band(r,0x4040)==0x4040
+	return e:GetHandler():IsPreviousLocation(LOCATION_HAND) and r&0x4040==0x4040
 end
 function c34230233.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end

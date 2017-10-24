@@ -20,25 +20,7 @@ function c511009110.initial_effect(c)
 	e3:SetCondition(c511009110.spcon)
 	e3:SetOperation(c511009110.spop)
 	c:RegisterEffect(e3)
-	if not c511009110.global_check then
-		c511009110.global_check=true
-		--register
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_ADJUST)
-		ge1:SetCountLimit(1)
-		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge1:SetOperation(c511009110.atkchk)
-		Duel.RegisterEffect(ge1,0)
-	end
-end
-function c511009110.atkchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
-		Duel.CreateToken(tp,419)
-		Duel.CreateToken(1-tp,419)
-		Duel.RegisterFlagEffect(tp,419,nil,0,1)
-		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
-	end
+	aux.CallToken(419)
 end
 function c511009110.fuscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,500) end
@@ -122,6 +104,12 @@ function c511009110.cfilter(c,tp)
 	return c:IsType(TYPE_FUSION) and c:IsControler(tp) and c:GetAttack()~=val
 end
 function c511009110.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
 	return eg:IsExists(c511009110.cfilter,1,nil,tp)
 end
 function c511009110.spop(e,tp,eg,ep,ev,re,r,rp)
