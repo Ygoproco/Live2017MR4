@@ -44,7 +44,7 @@ end
 function c21377582.otfilter(c)
 	return c:IsType(TYPE_CONTINUOUS) and c:IsReleasable()
 end
-function c21377582.exfilter(c,g)
+function c21377582.exfilter(c,g,sc)
 	if not c:IsReleasable() or g:IsContains(c) or c:IsHasEffect(EFFECT_EXTRA_RELEASE) then return false end
 	local rele=c:GetCardEffect(EFFECT_EXTRA_RELEASE_SUM)
 	if rele then
@@ -54,7 +54,7 @@ function c21377582.exfilter(c,g)
 	local sume={c:GetCardEffect(EFFECT_UNRELEASABLE_SUM)}
 	for _,te in ipairs(sume) do
 		if type(te:GetValue())=='function' then
-			if te:GetValue()(te,c) then return false end
+			if te:GetValue()(te,sc) then return false end
 		else return false end
 	end
 	return true
@@ -93,7 +93,7 @@ function c21377582.otcon(e,c,minc)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c21377582.otfilter,tp,LOCATION_SZONE,0,nil)
 	g:Merge(exg)
-	local opg=Duel.GetMatchingGroup(c21377582.exfilter,tp,0,LOCATION_MZONE,nil,g)
+	local opg=Duel.GetMatchingGroup(c21377582.exfilter,tp,0,LOCATION_MZONE,nil,g,c)
 	g:Merge(opg)
 	local mi,ma=c:GetTributeRequirement()
 	if mi<minc then mi=minc end
@@ -103,7 +103,7 @@ end
 function c21377582.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c21377582.otfilter,tp,LOCATION_SZONE,0,nil)
-	g:Merge(exg)	local opg=Duel.GetMatchingGroup(c21377582.exfilter,tp,0,LOCATION_MZONE,nil,g)
+	g:Merge(exg)	local opg=Duel.GetMatchingGroup(c21377582.exfilter,tp,0,LOCATION_MZONE,nil,g,c)
 	g:Merge(opg)
 	local mi,ma=c:GetTributeRequirement()
 	if mi<1 then mi=1 end

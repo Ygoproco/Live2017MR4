@@ -44,7 +44,7 @@ end
 function c57761191.otfilter(c)
 	return c:IsType(TYPE_CONTINUOUS) and c:IsReleasable()
 end
-function c57761191.exfilter(c,g)
+function c57761191.exfilter(c,g,sc)
 	if not c:IsReleasable() or g:IsContains(c) or c:IsHasEffect(EFFECT_EXTRA_RELEASE) then return false end
 	local rele=c:GetCardEffect(EFFECT_EXTRA_RELEASE_SUM)
 	if rele then
@@ -54,7 +54,7 @@ function c57761191.exfilter(c,g)
 	local sume={c:GetCardEffect(EFFECT_UNRELEASABLE_SUM)}
 	for _,te in ipairs(sume) do
 		if type(te:GetValue())=='function' then
-			if te:GetValue()(te,c) then return false end
+			if te:GetValue()(te,sc) then return false end
 		else return false end
 	end
 	return true
@@ -91,7 +91,7 @@ function c57761191.ttcon(e,c,minc)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
 	g:Merge(exg)
-	local opg=Duel.GetMatchingGroup(c57761191.exfilter,tp,0,LOCATION_MZONE,nil,g)
+	local opg=Duel.GetMatchingGroup(c57761191.exfilter,tp,0,LOCATION_MZONE,nil,g,c)
 	g:Merge(opg)
 	return minc<=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,0)
 end
@@ -99,7 +99,7 @@ function c57761191.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
 	g:Merge(exg)
-	local opg=Duel.GetMatchingGroup(c57761191.exfilter,tp,0,LOCATION_MZONE,nil,g)
+	local opg=Duel.GetMatchingGroup(c57761191.exfilter,tp,0,LOCATION_MZONE,nil,g,c)
 	g:Merge(opg)
 	local sg=aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,1,tp,HINTMSG_RELEASE)
 	local remc=sg:Filter(c57761191.unreq,nil,tp):GetFirst()
