@@ -2,7 +2,7 @@
 function c65172015.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,1561110,91998119)
-	aux.AddContactFusion(c,c65172015.contactfil,c65172015.contactop,c65172015.splimit)
+	aux.AddContactFusion(c,c65172015.contactfil,c65172015.contactop,aux.FALSE)
 	--negate
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(65172015,0))
@@ -25,13 +25,10 @@ function c65172015.initial_effect(c)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetHintTiming(0,0x1e0)
-	e3:SetCost(c65172015.spcost)
+	e3:SetCost(aux.bfgcost)
 	e3:SetTarget(c65172015.sptg)
 	e3:SetOperation(c65172015.spop2)
 	c:RegisterEffect(e3)
-end
-function c65172015.splimit(e,se,sp,st)
-	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
 end
 function c65172015.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToRemoveAsCost,tp,LOCATION_ONFIELD,0,nil)
@@ -50,7 +47,7 @@ end
 function c65172015.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
@@ -59,10 +56,6 @@ function c65172015.disop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
-end
-function c65172015.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c65172015.spfilter2(c,e,tp)
 	return c:IsFaceup() and c:IsCode(1561110) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

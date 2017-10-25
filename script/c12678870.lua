@@ -3,7 +3,7 @@ function c12678870.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcMix(c,true,true,aux.FilterBoolFunction(Card.IsFusionSetCard,0x10b5),aux.FilterBoolFunction(Card.IsFusionSetCard,0x20b5))
-	aux.AddContactFusion(c,c12678870.contactfil,c12678870.contactop,true)
+	aux.AddContactFusion(c,c12678870.contactfil,c12678870.contactop,aux.FALSE)
 	--indes
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
