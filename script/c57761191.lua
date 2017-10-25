@@ -44,6 +44,21 @@ end
 function c57761191.otfilter(c)
 	return c:IsType(TYPE_CONTINUOUS) and c:IsReleasable()
 end
+function c57761191.exfilter(c,g,sc)
+	if not c:IsReleasable() or g:IsContains(c) or c:IsHasEffect(EFFECT_EXTRA_RELEASE) then return false end
+	local rele=c:GetCardEffect(EFFECT_EXTRA_RELEASE_SUM)
+	if rele then
+		local remct,ct,flag=rele:GetCountLimit()
+		if remct<=0 then return false end
+	else return false end
+	local sume={c:GetCardEffect(EFFECT_UNRELEASABLE_SUM)}
+	for _,te in ipairs(sume) do
+		if type(te:GetValue())=='function' then
+			if te:GetValue()(te,sc) then return false end
+		else return false end
+	end
+	return true
+end
 function c57761191.val(c,sc,ma)
 	local eff3={c:GetCardEffect(EFFECT_TRIPLE_TRIBUTE)}
 	if ma>=3 then
@@ -60,9 +75,13 @@ end
 function c57761191.req(c)
 	return c:IsType(TYPE_CONTINUOUS) and c:IsLocation(LOCATION_SZONE)
 end
+function c57761191.unreq(c,tp)
+	return c:IsControler(1-tp) and not c:IsHasEffect(EFFECT_EXTRA_RELEASE) and c:IsHasEffect(EFFECT_EXTRA_RELEASE_SUM)
+end
 function c57761191.rescon(sg,e,tp,mg)
 	local c=e:GetHandler()
-	if not sg:IsExists(c57761191.req,1,nil) or not aux.ChkfMMZ(1)(sg,e,tp,mg) then return false end
+	if not sg:IsExists(c57761191.req,1,nil) or not aux.ChkfMMZ(1)(sg,e,tp,mg) 
+		or sg:FilterCount(c57761191.unreq,nil,tp)>1 then return false end
 	local ct=sg:GetCount()
 	return sg:CheckWithSumEqual(c57761191.val,3,ct,ct,c,3)
 end
@@ -72,13 +91,22 @@ function c57761191.ttcon(e,c,minc)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
 	g:Merge(exg)
+	local opg=Duel.GetMatchingGroup(c57761191.exfilter,tp,0,LOCATION_MZONE,nil,g,c)
+	g:Merge(opg)
 	return minc<=3 and Duel.GetLocationCount(tp,LOCATION_MZONE)>-3 and aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,0)
 end
 function c57761191.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetTributeGroup(c)
 	local exg=Duel.GetMatchingGroup(c57761191.otfilter,tp,LOCATION_SZONE,0,nil)
 	g:Merge(exg)
+	local opg=Duel.GetMatchingGroup(c57761191.exfilter,tp,0,LOCATION_MZONE,nil,g,c)
+	g:Merge(opg)
 	local sg=aux.SelectUnselectGroup(g,e,tp,1,3,c57761191.rescon,1,tp,HINTMSG_RELEASE)
+	local remc=sg:Filter(c57761191.unreq,nil,tp):GetFirst()
+	if remc then
+		local rele=remc:GetCardEffect(EFFECT_EXTRA_RELEASE_SUM)
+		rele:Reset()
+	end
 	c:SetMaterial(sg)
 	Duel.Release(sg,REASON_SUMMON+REASON_MATERIAL)
 end
