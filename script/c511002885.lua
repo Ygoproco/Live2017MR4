@@ -31,17 +31,25 @@ function c511002885.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
-function c511002885.setfilter(c,code)
-	return c:IsCode(code) and c:IsSummonableCard() and not c:IsStatus(STATUS_FORBIDDEN) and not c:IsHasEffect(EFFECT_CANNOT_MSET)
+function c511002885.setfilter(c,code,tp)
+	if not c:IsCode(code) or not c:IsSummonableCard() or c:IsStatus(STATUS_FORBIDDEN) then return false end
+	local eff={Duel.GetPlayerEffect(tp,EFFECT_CANNOT_MSET)}
+	for _,te in ipairs(eff) do
+		local tg=te:GetTarget()
+		if type(tg)=='function' then
+			if tg(te,c,tp,SUMMON_TYPE_NORMAL) then return false end
+		else return false end
+	end
+	return true
 end
 function c511002885.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
 	Duel.Destroy(g,REASON_EFFECT)
 	Duel.BreakEffect()
-	local g1=Duel.GetMatchingGroup(c511002885.setfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,511002783)
-	local g2=Duel.GetMatchingGroup(c511002885.setfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,511002786)
-	local g3=Duel.GetMatchingGroup(c511002885.setfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,511002781)
+	local g1=Duel.GetMatchingGroup(c511002885.setfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,511002783,tp)
+	local g2=Duel.GetMatchingGroup(c511002885.setfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,511002786,tp)
+	local g3=Duel.GetMatchingGroup(c511002885.setfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,511002781,tp)
 	if g1:GetCount()>0 and g2:GetCount()>0 and g3:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINT_SET)
 		local sg1=g1:Select(tp,1,1,nil)
