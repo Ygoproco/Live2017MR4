@@ -22,7 +22,7 @@ function c511002885.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_SINGLE)
 	e3:SetCode(EVENT_LEAVE_FIELD)
 	e3:SetCondition(c511002885.descon)
-	e3:SetTarget(c511002885.destg)
+	e3:SetTarget(c511002885.target)
 	e3:SetOperation(c511002885.desop)
 	c:RegisterEffect(e3)
 end
@@ -63,11 +63,6 @@ end
 function c511002885.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsReason(REASON_DESTROY) 
-end
-function c511002885.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c511002885.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
