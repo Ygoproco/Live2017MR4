@@ -80,16 +80,18 @@ function c66171432.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function c66171432.cfilter(c,ft,tp)
+	return ft>0 or (c:GetSequence()<5 and c:IsControler(tp))
+end
 function c66171432.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
-		and Duel.CheckReleaseGroup(tp,nil,1,nil) end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if chk==0 then return ft>-1 and e:GetHandler():IsAbleToRemoveAsCost() and Duel.CheckReleaseGroup(tp,c66171432.cfilter,1,nil,ft,tp) end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-	local g=Duel.SelectReleaseGroup(tp,nil,1,1,nil)
+	local g=Duel.SelectReleaseGroup(tp,c66171432.cfilter,1,1,nil,ft,tp)
 	Duel.Release(g,REASON_COST)
 end
 function c66171432.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c66171432.filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c66171432.filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c66171432.spop(e,tp,eg,ep,ev,re,r,rp)

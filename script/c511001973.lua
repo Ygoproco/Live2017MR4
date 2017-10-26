@@ -59,9 +59,9 @@ function c511001973.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function c511001973.mgfilter(c,e,tp,sync)
-	return not c:IsControler(tp) or not c:IsLocation(LOCATION_GRAVE)
-		or bit.band(c:GetReason(),0x80008)~=0x80008 or c:GetReasonCard()~=sync
-		or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+		and c:GetReason()&0x80008==0x80008 and c:GetReasonCard()==sync
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001973.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -79,15 +79,12 @@ function c511001973.op(e,tp,eg,ep,ev,re,r,rp)
 		op=1
 	end
 	local mg=tc:GetMaterial()
-	local sumable=true
 	local sumtype=tc:GetSummonType()
-	if op==0 and Duel.SendtoGrave(tc,REASON_EFFECT)==0 then sumable=false end
-	if op==1 and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)==0 then sumable=false end
-	if sumtype~=SUMMON_TYPE_SYNCHRO or mg:GetCount()==0 or mg:GetCount()>Duel.GetLocationCount(tp,LOCATION_MZONE)
-		or mg:IsExists(c511001973.mgfilter,1,nil,e,tp,tc) then
-		sumable=false
-	end
-	if sumable and Duel.SelectYesNo(tp,aux.Stringid(32441317,0)) then
+	local sumable=false
+	if op==0 and Duel.SendtoGrave(tc,REASON_EFFECT)>0 then sumable=true end
+	if op==1 and Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)>0 then sumable=true end
+	if sumable and sumtype==SUMMON_TYPE_SYNCHRO and mg:GetCount()>0 or mg:GetCount()<=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		and mg:FilterCount(aux.NecroValleyFilter(c511001973.mgfilter),nil,e,tp,tc)==mg:GetCount() and Duel.SelectYesNo(tp,aux.Stringid(32441317,0)) then
 		Duel.BreakEffect()
 		Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
 	end
@@ -104,8 +101,7 @@ function c511001973.drop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001973.discon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
-	if not re:IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
+	if c:IsStatus(STATUS_BATTLE_DESTROYED) or not re:IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
 	return re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS):IsContains(c)
 end
 function c511001973.disop(e,tp,eg,ep,ev,re,r,rp)

@@ -27,32 +27,40 @@ function c40542825.initial_effect(c)
 	e3:SetCondition(c40542825.condition)
 	c:RegisterEffect(e3)
 end
-function c40542825.spfilter1(c,tp)
+function c40542825.spfilter1(c)
 	return c:IsFaceup() and c:IsCode(73318863) and c:IsAbleToGraveAsCost()
-		and Duel.IsExistingMatchingCard(c40542825.spfilter2,tp,LOCATION_MZONE,0,1,c)
 end
 function c40542825.spfilter2(c)
 	return c:IsFaceup() and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsAbleToGraveAsCost()
 end
+function c40542825.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(c40542825.chk,1,nil,sg)
+end
+function c40542825.chk(c,sg)
+	return c:IsCode(73318863) and sg:IsExists(Card.IsAttribute,1,c,ATTRIBUTE_LIGHT)
+end
 function c40542825.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and Duel.IsExistingMatchingCard(c40542825.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp)
+	local g1=Duel.GetMatchingGroup(c40542825.spfilter1,tp,LOCATION_MZONE,0,nil)
+	local g2=Duel.GetMatchingGroup(c40542825.spfilter2,tp,LOCATION_MZONE,0,nil)
+	local g=g1:Clone()
+	g:Merge(g2)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and g1:GetCount()>0 and g2:GetCount()>0 
+		and aux.SelectUnselectGroup(g,e,tp,2,2,c40542825.rescon,0)
 end
 function c40542825.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectMatchingCard(tp,c40542825.spfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g2=Duel.SelectMatchingCard(tp,c40542825.spfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst())
+	local g1=Duel.GetMatchingGroup(c40542825.spfilter1,tp,LOCATION_MZONE,0,nil)
+	local g2=Duel.GetMatchingGroup(c40542825.spfilter2,tp,LOCATION_MZONE,0,nil)
 	g1:Merge(g2)
-	Duel.SendtoGrave(g1,REASON_COST)
+	local sg=aux.SelectUnselectGroup(g1,e,tp,2,2,c40542825.rescon,1,tp,HINTMSG_TOGRAVE)
+	Duel.SendtoGrave(sg,REASON_COST)
 end
 function c40542825.thfilter(c)
 	return c:GetDefense()==1500 and c:IsRace(RACE_SPELLCASTER) and not c:IsCode(40542825) and c:IsAbleToHand()
 end
 function c40542825.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1)
 end
 function c40542825.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c40542825.thfilter,tp,LOCATION_DECK,0,1,nil) end

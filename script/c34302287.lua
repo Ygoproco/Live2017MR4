@@ -46,16 +46,12 @@ function c34302287.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c34302287.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function c34302287.filter(c)
-	return c:IsFaceup() and c:IsCode(22702055)
-end
 function c34302287.handcon(e)
-	return Duel.IsExistingMatchingCard(c34302287.filter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		or Duel.IsEnvironment(22702055)
+	return Duel.IsEnvironment(22702055)
 end
 function c34302287.efilter(c,tp)
 	return c:IsFaceup() and c:IsType(TYPE_NORMAL)
@@ -72,7 +68,7 @@ function c34302287.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c34302287.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
+	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(c34302287.eqfilter,tp,LOCATION_SZONE,0,nil,tc)
 	local eq=g:GetFirst()
 	while eq do

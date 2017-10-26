@@ -11,7 +11,7 @@ function c17228908.initial_effect(c)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetTarget(c17228908.atktg)
+	e2:SetTarget(aux.NOT(aux.TargetBoolFunction(Card.IsRace,RACE_DINOSAUR)))
 	e2:SetValue(-500)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
@@ -58,9 +58,6 @@ function c17228908.initial_effect(c)
 	g:KeepAlive()
 	e7:SetLabelObject(g)
 end
-function c17228908.atktg(e,c)
-	return not c:IsRace(RACE_DINOSAUR)
-end
 function c17228908.cfilter(c,tp)
 	return c:IsFaceup() and c:IsRace(RACE_DINOSAUR)
 end
@@ -81,7 +78,7 @@ function c17228908.tkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c17228908.tgcon(e)
-	return Duel.IsExistingMatchingCard(Card.IsType,e:GetHandlerPlayer(),0,LOCATION_MZONE,1,nil,TYPE_TOKEN)
+	return Duel.IsExistingMatchingCard(Card.IsType,e:GetHandlerPlayer(),0,LOCATION_ONFIELD,1,nil,TYPE_TOKEN)
 end
 function c17228908.tglimit(e,c)
 	return not c:IsType(TYPE_TOKEN)

@@ -60,39 +60,32 @@ end
 function c511009517.cfilter(c)
 	return c:IsFaceup() and c:IsCode(13331639)
 end
-function c511009517.costfilter(c,tp,sg,tc)
-	if not c:IsSetCard(0x20f8) then return false end
-	sg:AddCard(c)
-	local res
-	if sg:GetCount()<2 then
-		res=Duel.CheckReleaseGroup(tp,c511009517.costfilter,1,sg,tp,sg,tc)
+function c511009517.rescon(sg,e,tp,mg)
+	local c=e:GetHandler()
+	if c:IsLocation(LOCATION_EXTRA) then
+		return Duel.GetLocationCountFromEx(tp,tp,sg,c)>0
 	else
-		if tc:IsLocation(LOCATION_EXTRA) then
-			res=Duel.GetLocationCountFromEx(tp,tp,sg,tc)>0
-		else
-			res=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or sg:IsExists(c511009517.fcheck,1,nil,tp)
-		end
+		return aux.ChkfMMZ(1)(sg,e,tp,mg)
 	end
-	sg:RemoveCard(c)
-	return res
-end
-function c511009517.fcheck(c,tp)
-	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:GetSequence()<5
 end
 function c511009517.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
+	local g=Duel.GetReleaseGroup(tp):Filter(Card.IsSetCard,nil,0x20f8)
 	return eg:IsExists(c511009517.spfilter,1,nil,tp) and Duel.IsExistingMatchingCard(c511009517.cfilter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.CheckReleaseGroup(tp,c511009522.costfilter,1,nil,tp,Group.CreateGroup(),c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,true)
+		and g:GetCount()>1 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,true)
+		and aux.SelectUnselectGroup(g,e,tp,2,2,c511009517.rescon,0)
 end
 function c511009517.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local sg=Group.CreateGroup()
-	if Duel.CheckReleaseGroup(tp,c511009517.costfilter,1,nil,tp,sg,c) and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,true) 
-		and Duel.SelectYesNo(tp,aux.Stringid(4003,5)) then
-		while sg:GetCount()<2 do
-			local g=Duel.SelectReleaseGroup(tp,c511009517.costfilter,1,1,sg,tp,sg,c)
-			sg:Merge(g)
-		end
+	local g=Duel.GetReleaseGroup(tp):Filter(Card.IsCode,nil,25955164,62340868,98434877)
+	if g:GetCount()>1 and aux.SelectUnselectGroup(g,e,tp,2,2,c511009517.rescon,0) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,true) 
+		and Duel.SelectEffectYesNo(tp,c) then
+		local sg=aux.SelectUnselectGroup(g,e,tp,2,2,c511009517.rescon,1,tp,HINTMSG_RELEASE)
 		Duel.Release(sg,REASON_COST)
 		Duel.SpecialSummon(c,SUMMON_TYPE_SYNCHRO,tp,tp,false,true,POS_FACEUP)
 		c:CompleteProcedure()

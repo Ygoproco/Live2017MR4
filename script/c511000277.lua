@@ -25,22 +25,18 @@ function c511000277.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e4:SetValue(c511000277.indes)
+	e4:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsSetCard,0x48)))
 	c:RegisterEffect(e4)
 end
 c511000277.xyz_number=1
-function c511000277.cfilter(c)
-	return c:IsFaceup() and c:IsCode(511000275)
-end
 function c511000277.ovfilter(c)
-	return c:IsFaceup() and c:IsCode(511000230) 
-		and (Duel.IsExistingMatchingCard(c511000277.cfilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) or Duel.IsEnvironment(511000275))
+	return c:IsFaceup() and c:IsCode(511000230) and Duel.IsEnvironment(511000275)
 end
 function c511000277.descon(e)
 	return not Duel.IsEnvironment(511000275)
 end
 function c511000277.bancon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
 function c511000277.bantg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -109,7 +105,7 @@ function c511000277.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c511000277.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1)
 end
 function c511000277.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -120,7 +116,4 @@ end
 function c511000277.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
-end
-function c511000277.indes(e,c)
-	return not c:IsSetCard(0x48)
 end

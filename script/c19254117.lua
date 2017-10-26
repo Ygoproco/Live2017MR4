@@ -38,7 +38,7 @@ end
 function c19254117.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_DEFENSE_FINAL)
@@ -73,15 +73,15 @@ function c19254117.tgcon(e,tp,eg,ep,ev,re,r,rp)
 		and (Duel.IsAbleToEnterBP() or (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE))
 end
 function c19254117.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) end
-	if chk==0 then return Duel.IsExistingTarget(nil,tp,LOCATION_MZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:GetFlagEffect(19254117)==0 end
+	if chk==0 then return Duel.IsExistingTarget(aux.FilterEqualFunction(Card.GetFlagEffect,0),tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,nil,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,aux.FilterEqualFunction(Card.GetFlagEffect,0),tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c19254117.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_RISE_TO_FULL_HEIGHT)
@@ -94,5 +94,6 @@ function c19254117.tgop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_ONLY_BE_ATTACKED)
 		e2:SetReset(RESET_EVENT+0x1fc0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2,true)
+		tc:RegisterFlagEffect(19254117,RESET_EVENT+0x1fc0000+RESET_PHASE+PHASE_END,0,0)
 	end
 end

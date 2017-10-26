@@ -22,9 +22,9 @@ function c511001546.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,at,1,0,0)
 end
 function c511001546.mgfilter(c,e,tp,fusc)
-	return not c:IsControler(tp) or not c:IsLocation(LOCATION_GRAVE)
-		or bit.band(c:GetReason(),0x40008)~=0x40008 or c:GetReasonCard()~=fusc
-		or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+		and c:GetReason()&0x40008==0x40008 and c:GetReasonCard()==fusc
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001546.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -34,14 +34,10 @@ function c511001546.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sumtype=tc:GetSummonType()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	if Duel.Destroy(tc,REASON_EFFECT)==0 or bit.band(sumtype,SUMMON_TYPE_FUSION)~=SUMMON_TYPE_FUSION or mg:GetCount()==0
-		or mg:GetCount()>ft
-		or mg:IsExists(c511001546.mgfilter,1,nil,e,tp,tc) then
-		sumable=false
-	end
-	if sumable then
+	if Duel.Destroy(tc,REASON_EFFECT)>0 and sumtype&SUMMON_TYPE_FUSION==SUMMON_TYPE_FUSION and mg:GetCount()>0
+		and mg:GetCount()<=ft and mg:FilterCount(aux.NecroValleyFilter(c511001546.mgfilter),nil,e,tp,tc)==mg:GetCount() then
 		Duel.BreakEffect()
-		if Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP) then
+		if Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)>0 then
 			Duel.BreakEffect()
 			local sum=mg:GetSum(Card.GetAttack)
 			Duel.Damage(1-tp,sum,REASON_EFFECT,true)

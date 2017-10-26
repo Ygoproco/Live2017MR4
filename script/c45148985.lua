@@ -41,36 +41,20 @@ function c45148985.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c45148985.sprfilter(c)
-	return c:IsSetCard(0x105) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
+	return c:IsSetCard(0x105) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and (c:IsLocation(LOCATION_SZONE) or aux.SpElimFilter(c,true,true))
 end
-function c45148985.mzfilter(c)
-	return c:GetSequence()<5 and c:IsLocation(LOCATION_MZONE)
+function c45148985.rescon(sg,e,tp,mg)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:GetClassCount(Card.GetCode)>=5
 end
 function c45148985.sprcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local g=Duel.GetMatchingGroup(c45148985.sprfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ct=-ft+1
-	return ft>-5 and g:GetClassCount(Card.GetCode)>=5 and (ft>0 or g:IsExists(c45148985.mzfilter,ct,nil))
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-5 and g:GetClassCount(Card.GetCode)>=5 and g:GetCount()>4 and aux.SelectUnselectGroup(g,e,tp,5,5,c45148985.rescon,0)
 end
 function c45148985.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetMatchingGroup(c45148985.sprfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	local ct=-ft+1
-	local rg=Group.CreateGroup()
-	for i=1,5 do
-		local sc=nil
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		if ct>0 then
-			sc=g:FilterSelect(tp,c45148985.mzfilter,1,1,nil):GetFirst()
-		else
-			sc=g:Select(tp,1,1,nil):GetFirst()
-		end
-		rg:AddCard(sc)
-		g:Remove(Card.IsCode,nil,sc:GetCode())
-		ct=ct-1
-	end
+	local rg=aux.SelectUnselectGroup(g,e,tp,5,5,c45148985.rescon,1,tp,HINTMSG_REMOVE)
 	Duel.Remove(rg,POS_FACEUP,REASON_COST)
 end
 function c45148985.spcon(e,tp,eg,ep,ev,re,r,rp)
@@ -89,7 +73,7 @@ function c45148985.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c45148985.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		tc:RegisterFlagEffect(45148985,RESET_EVENT+0x1fe0000,0,1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

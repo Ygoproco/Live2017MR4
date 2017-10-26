@@ -12,12 +12,11 @@ function c511002519.initial_effect(c)
 end
 function c511002519.condition(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	return at:GetControler()~=tp and at:IsOnField() and bit.band(at:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL 
+	return at:GetControler()~=tp and at:IsOnField() and at:GetSummonType()&SUMMON_TYPE_SPECIAL==SUMMON_TYPE_SPECIAL 
 		and Duel.GetAttackTarget()==nil
 end
 function c511002519.filter(c,e,tp)
-	if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or not c:IsSetCard(0xa3) 
-		or c:IsHasEffect(EFFECT_NECRO_VALLEY) then return false end
+	if not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or not c:IsSetCard(0xa3) then return false end
 	if c:IsLocation(LOCATION_EXTRA) then
 		return Duel.GetLocationCountFromEx(tp)>0
 	else
@@ -40,7 +39,7 @@ end
 function c511002519.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Draw(tp,1,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,c511002519.filter,tp,0x73,0x32,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511002519.filter),tp,0x73,0x32,1,1,nil,e,tp)
 		if g:GetCount()>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		end

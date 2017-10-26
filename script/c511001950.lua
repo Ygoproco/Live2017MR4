@@ -14,8 +14,7 @@ function c511001950.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 end
 function c511001950.filter(c,e,tp)
-	return c:IsSetCard(0x50a) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
-		and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsSetCard(0x50a) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001950.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
@@ -27,7 +26,7 @@ function c511001950.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<ct then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511001950.filter,tp,LOCATION_GRAVE,0,ct,ct,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c511001950.filter),tp,LOCATION_GRAVE,0,ct,ct,nil,e,tp)
 	if g:GetCount()==ct then
 		Duel.HintSelection(g)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)

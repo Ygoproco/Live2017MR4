@@ -9,30 +9,10 @@ function c511000276.initial_effect(c)
 	e1:SetTarget(c511000276.tg)
 	e1:SetOperation(c511000276.op)
 	c:RegisterEffect(e1)
-	if not c511000276.global_check then
-		c511000276.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511000276.archchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-end
-function c511000276.archchk(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(0,420)==0 then 
-		Duel.CreateToken(tp,420)
-		Duel.CreateToken(1-tp,420)
-		Duel.RegisterFlagEffect(0,420,0,0,0)
-	end
-end
-function c511000276.cfilter(c)
-	return c:IsFaceup() and c:IsCode(511000275)
+	aux.CallToken(420)
 end
 function c511000276.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511000276.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
-		or Duel.IsEnvironment(511000275)
+	return Duel.IsEnvironment(511000275)
 end
 function c511000276.filter(c,e,tp)
 	return c:IsAttackBelow(1000) and c:IsNumeron() and c:IsType(TYPE_XYZ) 

@@ -32,13 +32,13 @@ function c511001780.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511001780.mgfilter(c,e,tp,sync)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED)
-		and bit.band(c:GetReason(),0x80008)==0x80008 and c:GetReasonCard()==sync
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+		and c:GetReason()&0x80008==0x80008 and c:GetReasonCard()==sync
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001780.desrepop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sumtype=c:GetSummonType()
-	local mg=c:GetMaterial():Filter(c511001780.mgfilter,nil,e,tp,c)
+	local mg=c:GetMaterial():Filter(aux.NecroValleyFilter(c511001780.mgfilter),nil,e,tp,c)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if Duel.SendtoDeck(c,nil,0,REASON_EFFECT+REASON_REPLACE)>0 

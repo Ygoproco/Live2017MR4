@@ -28,6 +28,11 @@ function c100001006.initial_effect(c)
 end
 function c100001006.spcon(e,c)
 	if c==nil then return true end
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-2
 		and Duel.CheckReleaseGroup(c:GetControler(),Card.IsRace,2,nil,RACE_YOKAI)
 end
