@@ -110,7 +110,7 @@ function c16719140.cfilter(c,tp)
 	return c:IsSetCard(0x10ed) and c:IsControler(tp)
 end
 function c16719140.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c16719140.cfilter,1,nil,tp) and (bit.band(Duel.GetCurrentPhase(),PHASE_DAMAGE_CAL+PHASE_DAMAGE)==0 or re==c16719140[1])
+	return eg:IsExists(c16719140.cfilter,1,nil,tp) and (Duel.GetCurrentPhase()&PHASE_DAMAGE_CAL+PHASE_DAMAGE==0 or re==c16719140[1])
 end
 function c16719140.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -124,7 +124,7 @@ function c16719140.spop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c16719140.regop(e,tp,eg,ep,ev,re,r,rp)
-	if bit.band(Duel.GetCurrentPhase(),PHASE_DAMAGE_CAL+PHASE_DAMAGE)>0 then
+	if Duel.GetCurrentPhase()&PHASE_DAMAGE_CAL+PHASE_DAMAGE~=0 then
 		c16719140[0]:Merge(eg)
 	end
 end
