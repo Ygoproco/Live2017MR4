@@ -33,17 +33,16 @@ end
 function c96142517.filter2(c,e,tp,rk,g1)
 	local g=g1:Clone()
 	g:AddCard(c)
-	return c:IsType(TYPE_XYZ) and c:GetRank()==rk and c:IsCanBeEffectTarget(e) 
+	return c:IsType(TYPE_XYZ) and c:IsRank(rk) and c:IsCanBeEffectTarget(e) 
 		and Duel.IsExistingMatchingCard(c96142517.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,rk+1,g)
 end
 function c96142517.spfilter(c,e,tp,rk,g)
 	if c:GetRank()~=rk or (not c:IsSetCard(0x1048) and not c:IsSetCard(0x1073)) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then return false end
-	return not c.rum_limit or g:IsExists(c.rum_limit,1,nil,e)
+	return not c.rum_limit or g:IsExists(function(mc) return c.rum_limit(mc,e) end,1,nil)
 end
 function c96142517.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.GetLocationCountFromEx(tp)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetLocationCountFromEx(tp)>0
 		and Duel.IsExistingTarget(c96142517.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local g1=Duel.SelectTarget(tp,c96142517.filter1,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)

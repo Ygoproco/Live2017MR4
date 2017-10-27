@@ -11,11 +11,12 @@ function c511002080.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002080.filter1(c,e,tp)
-	return c:IsFaceup() and Duel.IsExistingMatchingCard(c511002080.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+2)
+	return c:IsFaceup() and (c:GetRank()>0 or c:IsStatus(STATUS_NO_LEVEL)) 
+		and Duel.IsExistingMatchingCard(c511002080.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+2)
 end
 function c511002080.filter2(c,e,tp,mc,rk)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return c:GetRank()==rk and c:IsSetCard(0xba) and mc:IsCanBeXyzMaterial(c,tp) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
+	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and c:IsSetCard(0xba) and mc:IsCanBeXyzMaterial(c,tp) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c511002080.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

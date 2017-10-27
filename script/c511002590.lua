@@ -12,12 +12,12 @@ function c511002590.initial_effect(c)
 end
 function c511002590.filter(c,e,tp)
 	local rk=c:GetRank()
-	return rk>0 and c:IsFaceup() and c:IsControlerCanBeChanged()
+	return c:IsFaceup() and c:IsControlerCanBeChanged() and (rk>0 or c:IsStatus(STATUS_NO_LEVEL)) 
 		and Duel.IsExistingMatchingCard(c511002590.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk+1)
 end
 function c511002590.spfilter(c,e,tp,mc,rk)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return c:GetRank()==rk and c:IsSetCard(0xba) and mc:IsCanBeXyzMaterial(c,tp)
+	return c:IsType(TYPE_XYZ) and mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and c:IsSetCard(0xba) and mc:IsCanBeXyzMaterial(c,tp)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c511002590.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -30,11 +30,9 @@ function c511002590.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511002590.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc or not tc:IsRelateToEffect(e) or not tc:IsFaceup() then return end
-	if not Duel.GetControl(tc,tp) then return end
+	if not tc or not tc:IsRelateToEffect(e) or not Duel.GetControl(tc,tp) or Duel.GetLocationCount(tp,LOCATION_MZONE)<0 
+		or tc:IsFacedown() or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	Duel.BreakEffect()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
-	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511002590.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc,tc:GetRank()+1)
 	local sc=g:GetFirst()

@@ -12,12 +12,13 @@ function c511000685.initial_effect(c)
 end
 function c511000685.filter1(c,e,tp)
 	local rk=c:GetRank()
-	return rk>0 and c:IsFaceup() and c:IsCode(84013237) and c:GetOverlayGroup():GetCount()>=2 and Duel.GetLocationCountFromEx(tp,tp,c)>1
+	return c:IsFaceup() and c:IsCode(84013237) and c:GetOverlayGroup():GetCount()>=2 and (rk>0 or c:IsStatus(STATUS_NO_LEVEL)) 
+		and Duel.GetLocationCountFromEx(tp,tp,c)>1
 		and Duel.IsExistingMatchingCard(c511000685.filter2,tp,LOCATION_EXTRA,0,2,nil,rk,e,tp,c)
 end
 function c511000685.filter2(c,rk,e,tp,mc)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return (c:GetRank()==rk+1 or c:GetRank()==rk+2) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:IsType(TYPE_XYZ) and (c:IsRank(rk+1) or c:IsRank(rk+2)) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c511000685.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511000685.filter1(chkc,e,tp) end
