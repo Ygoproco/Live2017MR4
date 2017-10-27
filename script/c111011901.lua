@@ -23,16 +23,17 @@ function c111011901.initial_effect(c)
 end
 function c111011901.filter1(c,e,tp)
 	local rk=c:GetRank()
-	return rk>0 and c:IsFaceup() and Duel.IsExistingMatchingCard(c111011901.filter2,tp,LOCATION_EXTRA,0,1,nil,rk+1,e,tp,c)
+	return c:IsFaceup() and (rk>0 or c:IsStatus(STATUS_NO_LEVEL))
+		and Duel.IsExistingMatchingCard(c111011901.filter2,tp,LOCATION_EXTRA,0,1,nil,rk+1,e,tp,c)
 		and not Duel.IsExistingMatchingCard(c111011901.filter3,tp,LOCATION_MZONE,0,1,nil,rk)
 end
 function c111011901.filter2(c,rk,e,tp,mc)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return (c:GetRank()==rk or c:GetRank()==rk+1) and mc:IsCanBeXyzMaterial(c,tp)
+	return c:IsType(TYPE_XYZ) and mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and (c:IsRank(rk) or c:IsRank(rk+1)) and mc:IsCanBeXyzMaterial(c,tp)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 end
 function c111011901.filter3(c,rk)
-	return c:IsFaceup() and c:GetRank()>rk
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetRank()>rk
 end
 function c111011901.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c111011901.filter1(chkc,e,tp) end

@@ -23,17 +23,17 @@ function c45950291.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c45950291.cfilter(c,rk)
-	return c:IsFaceup() and c:GetRank()>rk
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetRank()>rk
 end
 function c45950291.filter1(c,e,tp)
 	local rk=c:GetRank()
-	return c:IsFaceup() and not Duel.IsExistingMatchingCard(c45950291.cfilter,tp,LOCATION_MZONE,0,1,nil,rk)
+	return c:IsFaceup() and Duel.GetLocationCountFromEx(tp,tp,c)>0 and (rk>0 or c:IsStatus(STATUS_NO_LEVEL)) 
+		and not Duel.IsExistingMatchingCard(c45950291.cfilter,tp,LOCATION_MZONE,0,1,nil,rk)
 		and Duel.IsExistingMatchingCard(c45950291.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk+2)
-		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c45950291.filter2(c,e,tp,mc,rk)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:GetRank()==rk and c:IsRace(mc:GetRace(c,SUMMON_TYPE_XYZ,tp)) and c:IsAttribute(mc:GetAttribute(c,SUMMON_TYPE_XYZ,tp)) and mc:IsCanBeXyzMaterial(c,tp)
+	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and c:IsRace(mc:GetRace(c,SUMMON_TYPE_XYZ,tp)) and c:IsAttribute(mc:GetAttribute(c,SUMMON_TYPE_XYZ,tp)) and mc:IsCanBeXyzMaterial(c,tp)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c45950291.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

@@ -18,14 +18,14 @@ function c511000686.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000686.filter2(c,rk,e,tp,mc)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return c:GetRank()==rk and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:IsType(TYPE_XYZ) and mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c511000686.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=eg:GetFirst()
 	local rk=tg:GetRank()
 	if chkc then return chkc==tg end
 	if chk==0 then return tg:IsOnField() and tg:IsCanBeEffectTarget(e) and tg:IsAbleToGrave() 
-		and Duel.IsPlayerCanSpecialSummonCount(tp,2) and Duel.GetLocationCountFromEx(tp,tp,tg)>1
+		and (rk>0 or tg:IsStatus(STATUS_NO_LEVEL)) and Duel.IsPlayerCanSpecialSummonCount(tp,2) and Duel.GetLocationCountFromEx(tp,tp,tg)>1
 		and Duel.IsExistingMatchingCard(c511000686.filter2,tp,LOCATION_EXTRA,0,1,nil,rk+1,e,tp,tg)
 		and Duel.IsExistingMatchingCard(c511000686.filter2,tp,LOCATION_EXTRA,0,1,nil,rk+2,e,tp,tg) end
 	Duel.SetTargetCard(tg)
@@ -39,7 +39,6 @@ function c511000686.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc1=Duel.SelectMatchingCard(tp,c511000686.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetRank()+1,e,tp,tc):GetFirst()
 	if tc1 then
-		tc1:SetMaterial(Group.FromCards(tc))
 		Duel.SpecialSummon(tc1,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP_ATTACK)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -55,7 +54,6 @@ function c511000686.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local tc2=Duel.SelectMatchingCard(tp,c511000686.filter2,tp,LOCATION_EXTRA,0,1,1,nil,tc:GetRank()+2,e,tp,tc):GetFirst()
 	if tc2 then
-		tc2:SetMaterial(Group.FromCards(tc))
 		Duel.SpecialSummon(tc2,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		local e3=Effect.CreateEffect(e:GetHandler())
 		e3:SetType(EFFECT_TYPE_SINGLE)
