@@ -18,6 +18,7 @@ function c419.initial_effect(c)
 		atkadj:SetCode(EVENT_ADJUST)
 		atkadj:SetOperation(c419.atkraiseadj)
 		Duel.RegisterEffect(atkadj,0)
+		
 		--Armor Monsters
 		local arm1=Effect.CreateEffect(c)
 		arm1:SetType(EFFECT_TYPE_FIELD)
@@ -42,6 +43,20 @@ function c419.initial_effect(c)
 		Duel.RegisterEffect(arm3,0)
 		local arm4=arm3:Clone()
 		Duel.RegisterEffect(arm4,1)
+		
+		--Ignore Indestructability
+		local indes=Effect.CreateEffect(c)
+		indes:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		indes:SetCode(EVENT_DAMAGE_CALCULATING)
+		indes:SetOperation(c419.batregop)
+		Duel.RegisterEffect(indes,0)
+		local indes2=Effect.CreateEffect(c)
+		indes2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		indes2:SetCode(EVENT_BATTLE_END)
+		indes2:SetOperation(c419.batend)
+		Duel.RegisterEffect(indes2,0)
+		IndesTable={}
+		
 		--Anime card constants
 		TYPE_ARMOR		=	0x10000000
 		TYPE_PLUS		=	0x20000000
@@ -97,6 +112,7 @@ function c419.atkraiseeff(e,tp,eg,ep,ev,re,r,rp)
 	local g2=Group.CreateGroup() --gain atk
 	local g3=Group.CreateGroup() --lose atk
 	local g4=Group.CreateGroup() --gain atk from original
+	local g9=Group.CreateGroup() --lose atk from original
 	
 	local dg=Duel.GetMatchingGroup(c419.defcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local g5=Group.CreateGroup() --change def
@@ -114,6 +130,9 @@ function c419.atkraiseeff(e,tp,eg,ep,ev,re,r,rp)
 			g2:AddCard(tc)
 			if prevatk<=tc:GetBaseAttack() and tc:GetAttack()>tc:GetBaseAttack() then
 				g4:AddCard(tc)
+			end
+			if prevatk>=tc:GetBaseAttack() and tc:GetAttack()<tc:GetBaseAttack() then
+				g9:AddCard(tc)
 			end
 		end
 		tc:ResetFlagEffect(284)
@@ -168,6 +187,7 @@ function c419.atkraiseeff(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RaiseEvent(g4,511002546,re,REASON_EFFECT,rp,ep,0)
 	Duel.RaiseEvent(g5,511009053,re,REASON_EFFECT,rp,ep,0)
 	Duel.RaiseEvent(g5,511009565,re,REASON_EFFECT,rp,ep,0)
+	Duel.RaiseEvent(g9,511010103,re,REASON_EFFECT,rp,ep,0)
 	--Duel.RaiseEvent(g6,,re,REASON_EFFECT,rp,ep,0)
 	
 	local lvg=Duel.GetMatchingGroup(c419.lvcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
@@ -192,6 +212,7 @@ function c419.atkraiseadj(e,tp,eg,ep,ev,re,r,rp)
 	local g2=Group.CreateGroup() --gain atk
 	local g3=Group.CreateGroup() --lose atk
 	local g4=Group.CreateGroup() --gain atk from original
+	local g9=Group.CreateGroup() --lose atk from original
 	
 	local dg=Duel.GetMatchingGroup(c419.defcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local g5=Group.CreateGroup() --change def
@@ -209,6 +230,9 @@ function c419.atkraiseadj(e,tp,eg,ep,ev,re,r,rp)
 			g2:AddCard(tc)
 			if prevatk<=tc:GetBaseAttack() and tc:GetAttack()>tc:GetBaseAttack() then
 				g4:AddCard(tc)
+			end
+			if prevatk>=tc:GetBaseAttack() and tc:GetAttack()<tc:GetBaseAttack() then
+				g9:AddCard(tc)
 			end
 		end
 		tc:ResetFlagEffect(284)
@@ -259,6 +283,7 @@ function c419.atkraiseadj(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RaiseEvent(g3,511009110,e,REASON_EFFECT,rp,ep,0)
 	Duel.RaiseEvent(g4,511002546,e,REASON_EFFECT,rp,ep,0)
 	Duel.RaiseEvent(g5,511009053,e,REASON_EFFECT,rp,ep,0)
+	Duel.RaiseEvent(g9,511010103,e,REASON_EFFECT,rp,ep,0)
 	
 	local lvg=Duel.GetMatchingGroup(c419.lvcfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local lvc=lvg:GetFirst()
@@ -326,4 +351,54 @@ function c419.armatop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(g)
 		Duel.ChangeAttackTarget(g:GetFirst())
 	end
+end
+
+function c419.batregop(e,tp,eg,ep,ev,re,r,rp)
+	IndesTable={}
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	if a then
+		local aex={a:GetCardEffect(511010508)}
+		local aei={a:GetCardEffect(EFFECT_INDESTRUCTABLE_BATTLE),a:GetCardEffect(EFFECT_INDESTRUCTABLE_COUNT),a:GetCardEffect(EFFECT_DESTROY_REPLACE)}
+		for _,te in ipairs(aei) do
+			for _,ce in ipairs(aex) do
+				local val=ce:GetValue()
+				if type(val)~='function' or val(ce,te) then
+					if not IndesTable[te] then
+						table.insert(IndesTable,te)
+						IndesTable[te]=te:GetCondition()
+						te:SetCondition(aux.FALSE)
+					end
+					break
+				end
+			end
+		end
+	end
+	if d then
+		local check=false
+		local dex={d:GetCardEffect(511010508)}
+		local dei={d:GetCardEffect(EFFECT_INDESTRUCTABLE_BATTLE),d:GetCardEffect(EFFECT_INDESTRUCTABLE_COUNT),d:GetCardEffect(EFFECT_DESTROY_REPLACE)}
+		for _,te in ipairs(dei) do
+			for _,ce in ipairs(dex) do
+				local val=ce:GetValue()
+				if type(val)~='function' or val(ce,te) then
+					if not IndesTable[te] then
+						table.insert(IndesTable,te)
+						IndesTable[te]=te:GetCondition()
+						te:SetCondition(aux.FALSE)
+					end
+					break
+				end
+			end
+		end
+	end
+end
+function c419.batend(e,tp,eg,ep,ev,re,r,rp)
+	for _,te in ipairs(IndesTable) do
+		if te then
+			local con=IndesTable[te]
+			te:SetCondition(con)
+		end
+	end
+	IndesTable={}
 end

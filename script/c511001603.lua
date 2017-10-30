@@ -24,15 +24,14 @@ function c511001603.initial_effect(c)
 	e2:SetTarget(c511001603.sptg)
 	e2:SetOperation(c511001603.spop)
 	c:RegisterEffect(e2)
-	--destroy
+	--always Battle destroy
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EVENT_DAMAGE_STEP_END)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(511010508)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetCondition(c511001603.descon)
-	e3:SetOperation(c511001603.desop)
+	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	c:RegisterEffect(e3)
+	aux.CallToken(419)
 end
 function c511001603.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -80,57 +79,5 @@ function c511001603.spop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e2)
 			tc=ge:GetNext()
 		end
-	end
-end
-function c511001603.descon(e,tp,eg,ep,ev,re,r,rp)
-	local a=Duel.GetAttacker()
-	local d=Duel.GetAttackTarget()
-	return d
-end
-function c511001603.desfilter(c,ca)
-	return not c:IsStatus(STATUS_BATTLE_DESTROYED) and (not ca or ca==c)
-end
-function c511001603.desop(e,tp,eg,ep,ev,re,r,rp)
-	local a=Duel.GetAttacker()
-	local d=Duel.GetAttackTarget()
-	if not a:IsStatus(STATUS_BATTLE_DESTROYED) or not d:IsStatus(STATUS_BATTLE_DESTROYED) then
-		local g=Group.FromCards(a,d)
-		if a:IsAttackPos() and d:IsAttackPos() then
-			if a:GetAttack()==d:GetAttack()  then
-				g=g:Filter(c511001603.desfilter,nil,nil)
-			elseif a:GetAttack()<d:GetAttack() then
-				g=g:Filter(c511001603.desfilter,nil,a)
-			elseif a:GetAttack()>d:GetAttack() then
-				g=g:Filter(c511001603.desfilter,nil,d)
-			else
-				g=Group.CreateGroup()
-			end
-		elseif a:IsAttackPos() and d:IsDefensePos() then
-			if a:GetAttack()>d:GetDefense() then
-				g=g:Filter(c511001603.desfilter,nil,d)
-			else
-				g=Group.CreateGroup()
-			end
-		else
-			g=Group.CreateGroup()
-		end
-		local tc=g:GetFirst()
-		while tc do
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_DISABLE)
-			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-			e1:SetReset(RESET_CHAIN)
-			tc:RegisterEffect(e1)
-			local e2=Effect.CreateEffect(e:GetHandler())
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-			e2:SetReset(RESET_CHAIN)
-			tc:RegisterEffect(e2)
-			tc:SetStatus(STATUS_BATTLE_DESTROYED,true)
-			tc=g:GetNext()
-		end
-		Duel.Destroy(g,REASON_BATTLE)
 	end
 end
