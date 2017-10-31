@@ -13,11 +13,11 @@ function c38179121.initial_effect(c)
 end
 function c38179121.costfilter1(c)
 	return c:IsType(TYPE_MONSTER) and c:IsRace(RACE_DINOSAUR) and c:IsAbleToRemoveAsCost() 
-		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
 end
 function c38179121.costfilter2(c)
 	return c:IsType(TYPE_MONSTER) and not c:IsRace(RACE_DINOSAUR) and c:IsAbleToRemoveAsCost() 
-		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))
+		and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true))
 end
 function c38179121.filter(c,e,tp)
 	return c:IsRace(RACE_DINOSAUR) and c:IsLevelAbove(7) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
