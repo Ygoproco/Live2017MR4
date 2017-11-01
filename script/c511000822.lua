@@ -20,7 +20,7 @@ function c511000822.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(g,REASON_COST)
 end
 function c511000822.tgfilter(c)
-	return c:IsFaceup() and c:GetAttack()>=1500 and c:IsDestructable()
+	return c:IsFaceup() and c:IsAttackAbove(1500)
 end
 function c511000822.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -90,6 +90,6 @@ function c511000822.turnop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():SetTurnCounter(ct)
 	if ct==3 then
 		e:GetLabelObject():Reset()
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

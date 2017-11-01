@@ -25,7 +25,7 @@ function c511002402.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetCode(1082946)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetOperation(c511002334.resetop)
+	e3:SetOperation(c511002402.resetop)
 	c:RegisterEffect(e3)
 end
 function c511002402.regcon(e,tp,eg,ep,ev,re,r,rp)
@@ -60,7 +60,7 @@ function c511002402.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function c511002334.resetop(e,tp,eg,ep,ev,re,r,rp)
+function c511002402.resetop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	c:RegisterFlagEffect(511002402,RESET_EVENT+0x1fe0000,0,0)
 	local ct=c:GetFlagEffect(511002402)

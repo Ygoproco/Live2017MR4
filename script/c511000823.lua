@@ -90,6 +90,6 @@ function c511000823.turnop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():SetTurnCounter(ct)
 	if ct==3 then
 		e:GetLabelObject():Reset()
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

@@ -1,5 +1,4 @@
 --Spinning Wheel Spindle
---Jackpro 1.3
 function c511001420.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -11,13 +10,13 @@ function c511001420.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001420.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,0,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,0,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c511001420.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,Card.IsDestructable,tp,0,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		if Duel.Destroy(g,REASON_EFFECT)>0 then
@@ -61,6 +60,6 @@ function c511001420.retop(e,tp,eg,ep,ev,re,r,rp)
 		if tc and tc:IsLocation(LOCATION_GRAVE) then
 			Duel.SpecialSummon(tc,0,1-tp,1-tp,false,false,POS_FACEUP_ATTACK)
 		end
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

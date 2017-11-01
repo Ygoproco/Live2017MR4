@@ -14,7 +14,7 @@ function c511001125.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetCode(1082946)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetOperation(c511002334.resetop)
+	e2:SetOperation(c511001125.resetop)
 	c:RegisterEffect(e2)
 	if not c511001125.global_check then
 		c511001125.global_check=true

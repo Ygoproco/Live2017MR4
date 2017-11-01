@@ -129,7 +129,7 @@ function c10960419.retcon(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if ct>e:GetLabel() then
 		e:Reset()
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 	return false
 end

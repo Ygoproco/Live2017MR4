@@ -99,6 +99,6 @@ function c511000873.retop(e,tp,eg,ep,ev,re,r,rp)
 			tc:SetStatus(STATUS_SUMMON_TURN+STATUS_FORM_CHANGED,false)
 			tc=sg:GetNext()
 		end
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

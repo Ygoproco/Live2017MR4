@@ -41,7 +41,7 @@ function c100100065.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetLabel(0)
 	e1:SetValue(0)
 	e1:SetTargetRange(1,1)
-	e1:SetReset(RESET_PHASE+PHASE_END,20)
+	e1:SetReset(RESET_PHASE+PHASE_END,21)
 	Duel.RegisterEffect(e1,tp)
 	local descnum=tp==c:GetOwner() and 0 or 1
 	local e2=Effect.CreateEffect(c)
@@ -52,7 +52,7 @@ function c100100065.activate(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetLabelObject(e1)
 	e2:SetOwnerPlayer(tp)
 	e2:SetOperation(c100100065.reset)
-	e2:SetReset(RESET_PHASE+PHASE_END,20)
+	e2:SetReset(RESET_PHASE+PHASE_END,21)
 	c:RegisterEffect(e2)
 end
 function c100100065.reset(e,tp,eg,ep,ev,re,r,rp)
@@ -61,7 +61,7 @@ end
 function c100100065.endop(e,tp,eg,ep,ev,re,r,rp)
 	local eff={Duel.GetPlayerEffect(tp,100100065)}
 	for _,te in ipairs(eff) do
-		c100100065.checkop(te,te:GetOwnerPlayer(),nil,0,0,0,0,0)
+		c100100065.checkop(te,te:GetOwnerPlayer(),nil,0,0,nil,0,0)
 	end
 	c100100065.winop(e,tp,eg,ep,ev,re,r,rp)
 end
@@ -71,7 +71,7 @@ function c100100065.checkop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():SetTurnCounter(ct)
 	e:SetValue(ct)
 	if ct==20 then
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end
 function c100100065.winop(e,tp,eg,ep,ev,re,r,rp)

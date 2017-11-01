@@ -87,7 +87,7 @@ function c511001513.tgop(e,tp,eg,ep,ev,re,r,rp)
 	c:SetTurnCounter(ct)
 	if ct==3 then
 		Duel.SendtoGrave(c,REASON_EFFECT)
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end
 function c511001513.btcon(e,tp,eg,ep,ev,re,r,rp)
