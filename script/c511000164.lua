@@ -93,7 +93,7 @@ function c511000164.desop(e,tp,eg,ep,ev,re,r,rp)
 		if e:GetLabelObject() then e:GetLabelObject():Reset() end
 		c:ResetFlagEffect(511000164)
 		Duel.Destroy(c,REASON_EFFECT)
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end
 function c511000164.efilter(c)

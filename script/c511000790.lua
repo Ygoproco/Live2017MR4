@@ -24,13 +24,12 @@ function c511000790.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511000790.spfilter(c,e,tp)
 	return c:IsSetCard(0xb) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsLocation(LOCATION_HAND)
-		and (not c:IsLocation(LOCATION_GRAVE) or not (c:IsHasEffect(EFFECT_NECRO_VALLEY) and Duel.IsChainDisablable(0)))
 end
 function c511000790.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	if Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=g:FilterSelect(tp,c511000790.spfilter,1,1,nil,e,tp)
+		local sg=g:FilterSelect(tp,aux.NecroValleyFilter(c511000790.spfilter),1,1,nil,e,tp)
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

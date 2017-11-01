@@ -40,6 +40,12 @@ function c16719140.initial_effect(c)
 		ge2:SetCode(EVENT_BATTLED)
 		ge2:SetOperation(c16719140.trigop)
 		Duel.RegisterEffect(ge2,0)
+		local ge3=Effect.CreateEffect(c)
+		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge3:SetCode(EVENT_ATTACK_DISABLED)
+		ge3:SetOperation(c16719140.clearop)
+		ge3:SetLabelObject(ge2)
+		Duel.RegisterEffect(ge3,0)
 		c16719140[1]=ge2
 	end
 end
@@ -104,7 +110,7 @@ function c16719140.cfilter(c,tp)
 	return c:IsSetCard(0x10ed) and c:IsControler(tp)
 end
 function c16719140.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c16719140.cfilter,1,nil,tp) and (not Duel.GetAttacker() or re==c16719140[1])
+	return eg:IsExists(c16719140.cfilter,1,nil,tp) and (Duel.GetCurrentPhase()&PHASE_DAMAGE_CAL+PHASE_DAMAGE==0 or re==c16719140[1])
 end
 function c16719140.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -118,11 +124,18 @@ function c16719140.spop2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c16719140.regop(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.GetAttacker() then return end
-	c16719140[0]:Merge(eg)
+	if Duel.GetCurrentPhase()&PHASE_DAMAGE_CAL+PHASE_DAMAGE~=0 then
+		c16719140[0]:Merge(eg)
+	end
 end
 function c16719140.trigop(e,tp,eg,ep,ev,re,r,rp)
 	local g=c16719140[0]:Clone()
 	Duel.RaiseEvent(g,EVENT_FLIP,e,0,0,0,0)
+	c16719140[0]:Clear()
+end
+function c16719140.clearop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetCurrentPhase()~=PHASE_DAMAGE_CAL then
+		Duel.RaiseEvent(c16719140[0],EVENT_FLIP,e:GetLabelObject(),0,0,0,0)
+	end
 	c16719140[0]:Clear()
 end

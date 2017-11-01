@@ -65,7 +65,7 @@ function c64753157.atkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c64753157.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
+	return r&REASON_EFFECT+REASON_BATTLE~=0
 end
 function c64753157.spfilter(c,e,tp)
 	return c:IsCode(41091257) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -83,10 +83,10 @@ function c64753157.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c64753157.cfilter(c,tp)
-	return c:IsCode(41091257) and c:GetPreviousControler()==tp
+	return c:IsCode(41091257) and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP)
 end
 function c64753157.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c64753157.cfilter,1,nil,tp)
+	return not eg:IsContains(e:GetHandler()) and eg:IsExists(c64753157.cfilter,1,nil,tp)
 end
 function c64753157.thfilter(c)
 	return c:IsCode(41091257) and c:IsAbleToHand()

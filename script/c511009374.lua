@@ -84,7 +84,7 @@ function c511009374.desop(e,tp,eg,ep,ev,re,r,rp)
 	c:SetTurnCounter(ct)
 	if ct==e:GetLabel() then
 		Duel.Destroy(c,REASON_RULE)
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end
 function c511009374.damval(e,re,val,r,rp,rc)

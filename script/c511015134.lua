@@ -11,7 +11,7 @@ function c511015134.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511015134.filter(c,e)
-	return c:IsSetCard(0x1048) and c:IsType(TYPE_XYZ) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup())
+	return c:IsSetCard(0x1048) and c:IsType(TYPE_XYZ) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and (c:GetRank()>0 or c:IsStatus(STATUS_NO_LEVEL)) 
 end
 function c511015134.xyzfilter(c,sg,e,tp)
 	if not c:IsSetCard(0x1048) or Duel.GetLocationCountFromEx(tp,tp,sg,c)<=0 then return false end

@@ -22,9 +22,9 @@ function c511002476.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
 end
 function c511002476.mgfilter(c,e,tp,sync)
-	return not c:IsControler(tp) or not c:IsLocation(LOCATION_GRAVE)
-		or bit.band(c:GetReason(),0x80008)~=0x80008 or c:GetReasonCard()~=sync
-		or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or c:IsHasEffect(EFFECT_NECRO_VALLEY)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_GRAVE)
+		and c:GetReason()&0x80008==0x80008 and c:GetReasonCard()==sync
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002476.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -34,12 +34,8 @@ function c511002476.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sumtype=tc:GetSummonType()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
-	if Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)==0 or sumtype~=SUMMON_TYPE_SYNCHRO or mg:GetCount()==0 
-		or mg:GetCount()>ft
-		or mg:IsExists(c511002476.mgfilter,1,nil,e,tp,tc) then
-		sumable=false
-	end
-	if sumable and Duel.SelectYesNo(tp,aux.Stringid(32441317,0)) then
+	if Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)>0 and sumtype==SUMMON_TYPE_SYNCHRO and mg:GetCount()>0 and mg:GetCount()<=ft 
+		and mg:FilterCount(aux.NecroValleyFilter(c511002476.mgfilter),nil,e,tp,tc)==mg:GetCount() and Duel.SelectYesNo(tp,aux.Stringid(32441317,0)) then
 		Duel.BreakEffect()
 		local spc=mg:GetFirst()
 		while spc do

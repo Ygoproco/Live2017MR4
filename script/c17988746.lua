@@ -14,12 +14,11 @@ function c17988746.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c17988746.condition(e,tp,eg,ep,ev,re,r,rp)
-	return ep==tp and tp~=rp and bit.band(r,REASON_BATTLE)~=0
+	return ep==tp and tp~=rp and r&REASON_BATTLE~=0 and Duel.GetAttacker():IsControler(1-tp)
 end
 function c17988746.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c17988746.filter(c,e,tp,atk)

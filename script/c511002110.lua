@@ -113,6 +113,6 @@ function c511002110.winop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():SetTurnCounter(ct)
 	if ct==3 then
 		Duel.Win(tp,0x12)
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

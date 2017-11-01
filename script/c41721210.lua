@@ -3,7 +3,7 @@
 function c41721210.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcMix(c,false,false,46986414,aux.FilterBoolFunctionEx(Card.IsRace,RACE_DRAGON))
+	aux.AddFusionProcMix(c,true,true,46986414,aux.FilterBoolFunctionEx(Card.IsRace,RACE_DRAGON))
 	--change name
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -29,6 +29,7 @@ function c41721210.initial_effect(c)
 	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
 end
+c41721210.material_setcode=0x10a2
 function c41721210.indval(e,re,rp)
 	return rp~=e:GetHandlerPlayer()
 end

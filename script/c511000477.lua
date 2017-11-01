@@ -50,15 +50,7 @@ function c511000477.seqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 end
 function c511000477.seqop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local s=Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0)
-	local nseq=0
-	if s==1 then nseq=0
-	elseif s==2 then nseq=1
-	elseif s==4 then nseq=2
-	elseif s==8 then nseq=3
-	else nseq=4 end
-	Duel.MoveSequence(c,nseq)
+	Duel.MoveSequence(e:GetHandler(),math.log(Duel.SelectDisableField(tp,1,LOCATION_MZONE,0,0),2))
 end
 function c511000477.dircon(e)
 	local p=1-e:GetHandlerPlayer()

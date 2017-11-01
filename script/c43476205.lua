@@ -24,7 +24,7 @@ function c43476205.filter2(c,e,tp)
 end
 function c43476205.filter3(c,e,tp,mc,rk)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return c:GetRank()==rk and c:IsSetCard(0xba) and mc:IsCanBeXyzMaterial(c,tp)
+	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and c:IsSetCard(0xba) and mc:IsCanBeXyzMaterial(c,tp)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c43476205.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -48,7 +48,7 @@ end
 function c43476205.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if Duel.GetTurnPlayer()~=tp then
-		if not tc:IsRelateToEffect(e) or not tc:IsFaceup() then return end
+		if not tc or not tc:IsRelateToEffect(e) or not tc:IsFaceup() then return end
 		if Duel.GetControl(tc,tp)==0 then return end
 		Duel.BreakEffect()
 	end

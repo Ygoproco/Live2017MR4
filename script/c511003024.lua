@@ -15,6 +15,11 @@ function c511003024.filter(c)
 end
 function c511003024.spcon(e,c)
 	if c==nil then return true end
+	local eff={c:GetCardEffect(EFFECT_NECRO_VALLEY)}
+	for _,te in ipairs(eff) do
+		local op=te:GetOperation()
+		if not op or op(e,c) then return false end
+	end
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 		and	Duel.IsExistingMatchingCard(c511003024.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end

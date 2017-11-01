@@ -1,37 +1,30 @@
 --天空聖騎士アークパーシアス
 --Angel Paladin Arch-Parshath
 function c16261341.initial_effect(c)
-	--counter
-	local e01=Effect.CreateEffect(c)
-	e01:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e01:SetCode(EVENT_CHAINING)
-	e01:SetRange(LOCATION_HAND+LOCATION_GRAVE)
-	e01:SetOperation(c16261341.chop1)
-	c:RegisterEffect(e01)
-	local e02=Effect.CreateEffect(c)
-	e02:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e02:SetCode(EVENT_CHAIN_SOLVED)
-	e02:SetRange(LOCATION_HAND+LOCATION_GRAVE)
-	e02:SetOperation(c16261341.chop2)
-	c:RegisterEffect(e02)
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(16261341,0))
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_CHAINING)
 	e1:SetRange(LOCATION_HAND+LOCATION_GRAVE)
-	e1:SetCode(EVENT_CHAIN_END)
-	e1:SetCondition(c16261341.spcon1)
-	e1:SetCost(c16261341.spcost)
-	e1:SetTarget(c16261341.sptg)
-	e1:SetOperation(c16261341.spop)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetOperation(aux.chainreg)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EVENT_CHAIN_NEGATED)
-	e2:SetCondition(c16261341.spcon2)
-	c:RegisterEffect(e2)
-	e01:SetLabelObject(e1)
-	e02:SetLabelObject(e1)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(16261341,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetRange(LOCATION_HAND+LOCATION_GRAVE)
+	e3:SetCode(EVENT_CHAIN_SOLVED)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCondition(c16261341.spcon1)
+	e3:SetCost(c16261341.spcost)
+	e3:SetTarget(c16261341.sptg)
+	e3:SetOperation(c16261341.spop)
+	c:RegisterEffect(e3)
+	local e4=e3:Clone()
+	e4:SetCode(EVENT_CHAIN_NEGATED)
+	e4:SetCondition(c16261341.spcon2)
+	c:RegisterEffect(e4)
 	--pierce
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -48,20 +41,12 @@ function c16261341.initial_effect(c)
 	e4:SetOperation(c16261341.thop)
 	c:RegisterEffect(e4)
 end
-function c16261341.chop1(e,tp,eg,ep,ev,re,r,rp)
-	e:GetLabelObject():SetLabel(0)
+function c16261341.spcon1(e,tp,eg,ep,ev,re,r,rp)
+	return rp==tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_COUNTER) and e:GetHandler():GetFlagEffect(1)>0
 end
-function c16261341.chop2(e,tp,eg,ep,ev,re,r,rp)
-	if rp~=tp or not re:IsActiveType(TYPE_COUNTER) then return end
-	e:GetLabelObject():SetLabel(1)
-end
-function c16261341.spcon1(e,tp,eg,ep,ev,re,r,rp,chk)
-	return e:GetLabel()==1
-end
-function c16261341.spcon2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if not re:IsActiveType(TYPE_MONSTER) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
-	local de,dp=Duel.GetChainInfo(ev,CHAININFO_DISABLE_REASON,CHAININFO_DISABLE_PLAYER)
-	return dp==tp
+function c16261341.spcon2(e,tp,eg,ep,ev,re,r,rp)
+	local dp=Duel.GetChainInfo(ev,CHAININFO_DISABLE_PLAYER)
+	return dp==tp and (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE))
 end
 function c16261341.cfilter(c)
 	return c:IsRace(RACE_FAIRY) and c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_HAND) or aux.SpElimFilter(c,true,true))

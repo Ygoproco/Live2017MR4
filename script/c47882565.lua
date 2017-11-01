@@ -12,17 +12,16 @@ function c47882565.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c47882565.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.GetCurrentPhase()&PHASE_MAIN1+PHASE_MAIN2>0
 end
 function c47882565.filter1(c,e,tp)
 	local rk=c:GetRank()
-	return rk>0 and c:IsFaceup() and c:IsSetCard(0xe5)
+	return rk>0 and c:IsFaceup() and c:IsSetCard(0xe5) and (rk>0 or c:IsStatus(STATUS_NO_LEVEL)) and Duel.GetLocationCountFromEx(tp,tp,c)>0 
 		and Duel.IsExistingMatchingCard(c47882565.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk+1)
-		and Duel.GetLocationCountFromEx(tp,tp,c)>0
 end
 function c47882565.filter2(c,e,tp,mc,rk)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return c:GetRank()==rk and c:IsSetCard(0xe5) and mc:IsCanBeXyzMaterial(c,tp)
+	return c:IsType(TYPE_XYZ) and mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and c:IsSetCard(0xe5) and mc:IsCanBeXyzMaterial(c,tp)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c47882565.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

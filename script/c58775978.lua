@@ -58,6 +58,6 @@ function c58775978.desop(e,tp,eg,ep,ev,re,r,rp)
 	c:SetTurnCounter(ct)
 	if ct==2 then
 		Duel.Destroy(c,REASON_RULE)
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

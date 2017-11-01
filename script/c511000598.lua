@@ -107,6 +107,6 @@ function c511000598.turnop(e,tp,eg,ep,ev,re,r,rp)
 				break
 			end
 		end
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

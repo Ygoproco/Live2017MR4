@@ -23,11 +23,12 @@ function c511009054.initial_effect(c)
 end
 function c511009054.filter1(c,e,tp)
 	local rk=c:GetRank()
-	return c:IsFaceup() and Duel.IsExistingMatchingCard(c511009054.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk+1)
+	return c:IsFaceup() and (rk>0 or c:IsStatus(STATUS_NO_LEVEL)) 
+		and Duel.IsExistingMatchingCard(c511009054.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk+1)
 end
 function c511009054.filter2(c,e,tp,mc,rk)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:GetRank()==rk and mc:IsCanBeXyzMaterial(c,tp) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
+	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and mc:IsCanBeXyzMaterial(c,tp) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c511009054.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -70,7 +71,6 @@ end
 function c511009054.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=e:GetLabelObject()
-	
 	if tc:IsLocation(LOCATION_MZONE) then
 		Duel.Overlay(tc,Group.FromCards(c))
 	end

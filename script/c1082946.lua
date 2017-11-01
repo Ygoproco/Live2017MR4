@@ -30,5 +30,5 @@ function c1082946.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if not turne then return end
 	local op=turne:GetOperation()
-	op(turne,turne:GetOwnerPlayer(),nil,0,1082946,0,0,0)
+	op(turne,turne:GetOwnerPlayer(),nil,0,1082946,nil,0,0)
 end
