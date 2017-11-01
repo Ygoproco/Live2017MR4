@@ -1,4 +1,5 @@
---Magical Contract Door (Anime)
+--魔導契約の扉
+--fixed by MLD
 function c511247020.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -10,30 +11,27 @@ function c511247020.initial_effect(c)
 	e1:SetOperation(c511247020.activate)
 	c:RegisterEffect(e1)
 end
-function c511247020.filter(c)
-	return c:IsAbleToHand()
-end
 function c511247020.costfilter(c)
-	return c:IsType(TYPE_SPELL)
+	return c:IsType(TYPE_SPELL) and not c:IsHasEffect(EFFECT_CANNOT_USE_AS_COST)
 end
 function c511247020.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511247020.costfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(511247020,0))
-	local ag=Duel.SelectMatchingCard(tp,Card.IsType,tp,LOCATION_HAND,0,1,1,nil,TYPE_SPELL)
-	if ag:GetCount()>0 then
-		Duel.SendtoHand(ag,1-tp,REASON_EFFECT)
-		Duel.ConfirmCards(tp,ag)
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(9032529,0))
+	local g=Duel.SelectMatchingCard(tp,c511247020.costfilter,tp,LOCATION_HAND,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,1-tp,REASON_EFFECT)
+		Duel.ConfirmCards(tp,g)
 		Duel.ShuffleHand(tp)
 		Duel.ShuffleHand(1-tp)
 	end
 end
 function c511247020.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511247020.filter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c511247020.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c511247020.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

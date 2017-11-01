@@ -1,4 +1,4 @@
---Galaxy Zero (Anime)
+--銀河零式
 function c511247004.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -19,7 +19,7 @@ function c511247004.initial_effect(c)
 	c:RegisterEffect(e3)
 	--atk down
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetCategory(CATEGORY_ATKCHANGE)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e4:SetRange(LOCATION_SZONE)
@@ -35,10 +35,8 @@ function c511247004.initial_effect(c)
 	c:RegisterEffect(e5)
 	--leave
 	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(511247004,0))
-	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e6:SetCode(EVENT_LEAVE_FIELD)
-	e6:SetCondition(c511247004.atkcon)
 	e6:SetOperation(c511247004.atkop)
 	c:RegisterEffect(e6)
 end
@@ -60,7 +58,7 @@ end
 function c511247004.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)==0 then return end
 		Duel.Equip(tp,c,tc)
 		--Add Equip limit
@@ -74,20 +72,10 @@ function c511247004.operation(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e1)
 	end
 end
-function c511247004.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=c:GetFirstCardTarget()
-	if tc and tc:IsLocation(LOCATION_MZONE) and tc:IsFaceup() and not c:IsLocation(LOCATION_DECK) then
-		e:SetLabelObject(tc)
-		tc:CreateEffectRelation(e)
-		return true
-	else return false end
-end
 function c511247004.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=e:GetLabelObject()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local e1=Effect.CreateEffect(c)
+	local tc=e:GetHandler():GetEquipTarget()
+	if tc and tc:IsFaceup() then
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(0)
@@ -106,15 +94,14 @@ function c511247004.atop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetValue(-800)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
 	tc:RegisterEffect(e1)
 end
 function c511247004.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local ec=c:GetEquipTarget()
-	local ph=Duel.GetCurrentPhase()
-	if chk==0 then return (ph>PHASE_MAIN1 and ph<PHASE_MAIN2) and not c:IsStatus(STATUS_DESTROY_CONFIRMED) end
-	return Duel.SelectYesNo(tp,aux.Stringid(511247004,1))
+	if chk==0 then return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE 
+		and not c:IsStatus(STATUS_DESTROY_CONFIRMED) end
+	return Duel.SelectEffectYesNo(tp,c,96)
 end
 function c511247004.desrepop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(e:GetHandler(),REASON_EFFECT+REASON_REPLACE)

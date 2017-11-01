@@ -1,6 +1,7 @@
---Mozarta the Melodious Maestra (Anime)
+--幻奏の音姫プロディジー・モーツァルト
+--cleaned up by MLD
 function c511247018.initial_effect(c)
-		--special summon
+	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(511247018,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)

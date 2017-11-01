@@ -1,62 +1,60 @@
---Dark Cure (Anime)
+--ダーク・キュア
+--fixed by MLD
 function c511247006.initial_effect(c)
+	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetTarget(c511247006.target)
 	c:RegisterEffect(e1)
-	--Activate
+	--gain LP
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(511247006,0))
 	e2:SetCategory(CATEGORY_RECOVER)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetRange(LOCATION_SZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetTarget(c511247006.rectg1)
-	e2:SetOperation(c511247006.recop1)
+	e2:SetTarget(c511247006.rectg)
+	e2:SetOperation(c511247006.recop)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(511247006,0))
-	e4:SetCategory(CATEGORY_RECOVER)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e4:SetRange(LOCATION_SZONE)
+	local e4=e2:Clone()
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e4:SetTarget(c511247006.rectg2)
-	e4:SetOperation(c511247006.recop2)
 	c:RegisterEffect(e4)
 end
-function c511247006.rectg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return rp~=tp end
-	Duel.SetTargetCard(eg)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,1-tp,0)
-end
-function c511247006.recop1(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tc=eg:GetFirst()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
-		local rec=tc:GetAttack()/2
-		Duel.Recover(1-tp,rec,REASON_EFFECT)
+function c511247006.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return c511247006.rectg(e,tp,eg,ep,ev,re,r,rp,0,chkc) end
+	if chk==0 then return true end
+	local res,teg,tep,tev,tre,tr,trp=Duel.CheckEvent(EVENT_SPSUMMON_SUCCESS,true)
+	if res and c511247006.rectg(e,tp,teg,tep,tev,tre,tr,trp,0) and Duel.SelectYesNo(tp,94) then
+		e:SetCategory(CATEGORY_RECOVER)
+		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
+		e:SetOperation(c511247006.recop)
+		c511247006.rectg(e,tp,teg,tep,tev,tre,tr,trp,1)
+	else
+		e:SetCategory(0)
+		e:SetProperty(0)
+		e:SetOperation(nil)
 	end
 end
-function c511247006.filter(c,e,tp)
-	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and c:GetSummonPlayer()==1-tp
-		and (not e or c:IsRelateToEffect(e))
+function c511247006.filter(c,te,re,tp)
+	return c:IsFaceup() and c:GetSummonPlayer()==1-tp and (not te or c:IsCanBeEffectTarget(te)) and (not re or c:IsRelateToEffect(re))
 end
-function c511247006.rectg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(c511247006.filter,1,nil,nil,tp) end
-	Duel.SetTargetCard(eg)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,1-tp,0)
+function c511247006.rectg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return eg:IsContains(chkc) and c511247006.filter(chkc,e,nil,tp) end
+	if chk==0 then return eg:IsExists(c511247006.filter,1,nil,e,nil,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(80161395,1))
+	local g=eg:FilterSelect(tp,c511247006.filter,1,1,nil,e,nil,tp)
+	Duel.SetTargetCard(g)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,1-tp,g:GetFirst():GetAttack()/2)
 end
-function c511247006.recop2(e,tp,eg,ep,ev,re,r,rp)
+function c511247006.recop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=eg:Filter(c511247006.filter,nil,e,tp)
-	if g:GetCount()>0 then
-		if g:GetCount()>1 then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-			g=g:Select(tp,1,1,nil)
-		end
-		Duel.Recover(1-tp,g:GetFirst():GetAttack()/2,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc and c511247006.filter(tc,nil,e,tp) then
+		Duel.Recover(1-tp,tc:GetAttack()/2,REASON_EFFECT)
 	end
 end

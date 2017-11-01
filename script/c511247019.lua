@@ -1,6 +1,7 @@
---Sargasso the D.D. Battlefield (Anime)
+--異次元の古戦場－サルガッソ
+--fixed by MLD
 function c511247019.initial_effect(c)
-		--Activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -25,25 +26,28 @@ function c511247019.initial_effect(c)
 	e2:SetOperation(c511247019.damop2)
 	c:RegisterEffect(e2)
 end
+function c511247019.cfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+end
 function c511247019.damcon1(e,tp,eg,ep,ev,re,r,rp)
-	return eg:GetFirst():GetSummonType()==SUMMON_TYPE_SPECIAL and eg:GetFirst():GetType()==TYPE_XYZ
+	local g=eg:Filter(c511247019.cfilter,nil)
+	return g:GetCount()==1
 end
 function c511247019.damtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetTargetPlayer(eg:GetFirst():GetSummonPlayer())
+	local tc=eg:Filter(c511247019.cfilter,nil):GetFirst()
+	Duel.SetTargetPlayer(tc:GetControler())
 	Duel.SetTargetParam(500)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,0,0,eg:GetFirst():GetSummonPlayer(),500)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,0,0,tc:GetControler(),500)
 end
 function c511247019.damop1(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
-		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+		local tc=eg:Filter(c511247019.cfilter,nil):GetFirst()
+		local p=tc:GetControler()
 		if not Duel.IsPlayerAffectedByEffect(p,37511832) then
-			Duel.Damage(p,d,REASON_EFFECT)
+			Duel.Damage(p,500,REASON_EFFECT)
 		end
 	end
-end
-function c511247019.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function c511247019.damcon2(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511247019.cfilter,Duel.GetTurnPlayer(),LOCATION_MZONE,0,1,nil)
