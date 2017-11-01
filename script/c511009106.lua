@@ -26,8 +26,7 @@ function c511009106.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511009106.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c511009106.operation(e,tp,eg,ep,ev,re,r,rp)
@@ -41,9 +40,18 @@ function c511009106.operation(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(1)
 			e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
 			c:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(c)
+			e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+			e2:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+			e2:SetOperation(c511009106.damop)
+			e2:SetReset(RESET_PHASE+PHASE_DAMAGE)
+			Duel.RegisterEffect(e2,tp)
 			Duel.CalculateDamage(a,c)
 		end
 	end
+end
+function c511009106.damop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(tp,0)
 end
 function c511009106.filter1(c,e)
 	return c:IsOnField() and not c:IsImmuneToEffect(e)

@@ -13,7 +13,7 @@ function c511009445.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009445.cfilter(c,tp)
-	return c:IsOnField() and c:IsControler(tp)
+	return c:IsOnField() and c:IsControler(1-tp)
 end
 function c511009445.confilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xad)
