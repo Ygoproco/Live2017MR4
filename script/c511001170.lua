@@ -72,6 +72,6 @@ function c511001170.reset(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001170.endop(e,tp,eg,ep,ev,re,r,rp)
 	for _,te in ipairs(c511001170[0]) do
-		c511001170.reset(te,te:GetOwnerPlayer(),nil,0,0,0,0,0)
+		c511001170.reset(te,te:GetOwnerPlayer(),nil,0,0,nil,0,0)
 	end
 end

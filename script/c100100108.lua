@@ -74,6 +74,6 @@ function c100100108.turnop(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if ct==2 then
 		e:GetLabelObject():Reset()
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

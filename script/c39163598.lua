@@ -24,7 +24,7 @@ end
 function c39163598.endop(e,tp,eg,ep,ev,re,r,rp)
 	for _,te in ipairs(c39163598[0]) do
 		if Duel.GetTurnPlayer()~=te:GetOwnerPlayer() then
-			c39163598.reset(te,te:GetOwnerPlayer(),nil,0,0,0,0,0)
+			c39163598.reset(te,te:GetOwnerPlayer(),nil,0,0,nil,0,0)
 		end
 	end
 end

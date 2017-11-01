@@ -58,6 +58,6 @@ function c511001149.disop(e,tp,eg,ep,ev,re,r,rp)
 	if ct>=5 then
 		local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 		Duel.SendtoGrave(g,REASON_EFFECT+REASON_DISCARD)
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end

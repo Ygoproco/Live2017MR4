@@ -57,6 +57,6 @@ function c49587034.thop(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabel(ct+1)
 	if ct==4 then
 		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-		if re and re.Reset then re:Reset() end
+		if re then re:Reset() end
 	end
 end
