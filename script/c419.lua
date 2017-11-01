@@ -52,7 +52,7 @@ function c419.initial_effect(c)
 		Duel.RegisterEffect(indes,0)
 		local indes2=Effect.CreateEffect(c)
 		indes2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		indes2:SetCode(EVENT_BATTLE_END)
+		indes2:SetCode(EVENT_BATTLED)
 		indes2:SetOperation(c419.batend)
 		Duel.RegisterEffect(indes2,0)
 		IndesTable={}
