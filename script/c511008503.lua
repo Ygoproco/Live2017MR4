@@ -12,6 +12,7 @@ function c511008503.initial_effect(c)
 	e2:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetCondition(c511008503.con)
 	e2:SetTarget(c511008503.tg)
 	e2:SetLabelObject(e1)
 	e2:SetValue(1)
@@ -34,7 +35,11 @@ function c511008503.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINGMSG_NUMBER)
 	local lv=Duel.AnnounceLevel(tp,0,63)
 	e:SetLabel(lv)
+	e:GetHandler():RegisterFlagEffect(511008503,RESET_EVENT+0x1fe0000,0,0)
+end
+function c511008503.con(e)
+	return e:GetHandler():GetFlagEffect(511008503)>0
 end
 function c511008503.tg(e,c)
-	return c:GetLevel()==e:GetLabelObject():GetLabel()
+	return c:IsLevel(e:GetLabelObject():GetLabel())
 end

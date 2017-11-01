@@ -1,4 +1,5 @@
---Fortune Lady Water (Anime)
+--フォーチュンレディ・ウォーテリー
+--fixed by MLD
 function c511247003.initial_effect(c)
 	--atk,def
 	local e1=Effect.CreateEffect(c)
@@ -58,13 +59,14 @@ function c511247003.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x31)
 end
 function c511247003.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroupCount(c511247003.filter,tp,LOCATION_MZONE,0,nil)
-	if chk==0 then return g>0 end
+	local ct=Duel.GetMatchingGroupCount(c511247003.filter,tp,LOCATION_MZONE,0,nil)
+	if chk==0 then return ct>0 end
 	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(g)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,g)
+	Duel.SetTargetParam(ct)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
 end
 function c511247003.drop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	local ct=Duel.GetMatchingGroupCount(c511247003.filter,tp,LOCATION_MZONE,0,nil)
+	Duel.Draw(p,ct,REASON_EFFECT)
 end

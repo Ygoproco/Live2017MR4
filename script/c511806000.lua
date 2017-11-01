@@ -1,5 +1,6 @@
 --Kuriphoton
 --クリフォトン
+--fixed by MLD
 function c511806000.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -12,6 +13,7 @@ function c511806000.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Salvage
 	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetDescription(aux.Stringid(35112613,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
@@ -21,7 +23,7 @@ function c511806000.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511806000.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,math.floor(Duel.GetLP(tp)/2)) and e:GetHandler():IsAbleToGraveAsCost() end
+	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
