@@ -8,7 +8,7 @@ TYPE_EXTRA=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
 function Group.SelectUnselect(g1,g2,p,button,cancel)
 	local min = 1
 	if cancel then min = 0 end
-	return Group.Select(g2,p,1,1,nil)
+	return Group.Select(g1,p,1,1,nil)
 end
 
 function Auxiliary.GetMustBeMaterialGroup(tp,eg,sump,sc,mg,r)
