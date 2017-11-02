@@ -5,6 +5,12 @@ POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
 RACE_CYBERS=RACE_CYBERSE
 TYPE_EXTRA=TYPE_FUSION+TYPE_SYNCHRO+TYPE_XYZ+TYPE_LINK
 
+function Group.SelectUnselect(g1,g2,p,button,cancel)
+	local min = 1
+	if cancel then min = 0 end
+	return Group.Select(g2,p,1,1,nil)
+end
+
 function Auxiliary.GetMustBeMaterialGroup(tp,eg,sump,sc,mg,r)
 	--- eg all default materials, mg - valid materials
 	local eff={Duel.GetPlayerEffect(tp,EFFECT_MUST_BE_MATERIAL)}
