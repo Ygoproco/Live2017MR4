@@ -11,18 +11,18 @@ function c511009027.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009027.filter(c,e,tp)
-	return c:IsFaceup() 
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and (c:GetRank()>0 or c:IsStatus(STATUS_NO_LEVEL)) 
 		and Duel.IsExistingMatchingCard(c511009027.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+1)
 end
 function c511009027.filter2(c,e,tp,mc,rk)
 	if c.rum_limit and not c.rum_limit(mc,e) then return false end
-	return mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:GetRank()==rk and mc:IsCanBeXyzMaterial(c,tp) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
+	return c:IsType(TYPE_XYZ) and mc:IsType(TYPE_XYZ,c,SUMMON_TYPE_XYZ,tp) and c:IsRank(rk) and mc:IsCanBeXyzMaterial(c,tp) and Duel.GetLocationCountFromEx(tp,tp,mc,c)>0
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c511009027.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tg=Duel.GetAttackTarget()
-	if chkc then return chkc==tg and c511009027.filter(chkc,e,tp) end
-	if chk==0 then return tg and tg:IsOnField() and tg:IsCanBeEffectTarget(e) and c511009027.filter(tg,e,tp) end
+	if chkc then return chkc==tg and chkc:IsControler(tp) and c511009027.filter(chkc,e,tp) end
+	if chk==0 then return tg and tg:IsOnField() and tg:IsControler(tp) and tg:IsCanBeEffectTarget(e) and c511009027.filter(tg,e,tp) end
 	Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
