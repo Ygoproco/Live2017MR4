@@ -46,13 +46,18 @@ function c39980304.chain_target(e,te,tp)
 		return Duel.GetMatchingGroup(c39980304.filter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK,0,nil,te)
 	end
 end
-function c39980304.chain_operation(e,te,tp,tc,mat,sumtype)
+function c39980304.chain_operation(e,te,tp,tc,mat,sumtype,sg)
 	if not sumtype then sumtype=SUMMON_TYPE_FUSION end
 	tc:SetMaterial(mat)
 	Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 	Duel.BreakEffect()
-	Duel.SpecialSummon(tc,sumtype,tp,tp,false,false,POS_FACEUP)
-	tc:RegisterFlagEffect(39980304,RESET_EVENT+0x1fc0000,0,1)
+	if sg then
+		sg:AddCard(tc)
+		tc:RegisterFlagEffect(39980304,RESET_EVENT+0xfc0000,0,1)
+	else
+		Duel.SpecialSummon(tc,sumtype,tp,tp,false,false,POS_FACEUP)
+		tc:RegisterFlagEffect(39980304,RESET_EVENT+0x1fc0000,0,1)
+	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)

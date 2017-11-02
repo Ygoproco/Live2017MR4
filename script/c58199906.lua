@@ -37,11 +37,15 @@ function c58199906.chain_target(e,te,tp)
 		return Duel.GetMatchingGroup(c58199906.filter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_HAND,0,nil,te)
 	end
 end
-function c58199906.chain_operation(e,te,tp,tc,mat,sumtype)
+function c58199906.chain_operation(e,te,tp,tc,mat,sumtype,sg)
 	if not sumtype then sumtype=SUMMON_TYPE_FUSION end
 	tc:SetMaterial(mat)
 	Duel.Remove(mat,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 	Duel.BreakEffect()
-	Duel.SpecialSummon(tc,sumtype,tp,tp,false,false,POS_FACEUP)
+	if sg then
+		sg:AddCard(tc)
+	else
+		Duel.SpecialSummon(tc,sumtype,tp,tp,false,false,POS_FACEUP)
+	end
 	e:Reset()
 end
