@@ -63,6 +63,7 @@ function c511002825.activate(e,tp,eg,ep,ev,re,r,rp)
 			fop(ce,e,tp,tc,mat2)
 		end
 		tc:CompleteProcedure()
+		tc:RegisterFlagEffect(511002825,RESET_EVENT+0x1fe0000,0,0)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -91,5 +92,7 @@ function c511002825.damcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511002825.damop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	Duel.Damage(tc:GetControler(),tc:GetBaseAttack(),REASON_EFFECT)
+	if tc:GetFlagEffect(511002825)>0 then
+		Duel.Damage(tc:GetControler(),tc:GetBaseAttack(),REASON_EFFECT)
+	end
 end
