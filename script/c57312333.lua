@@ -40,7 +40,7 @@ function c57312333.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function c57312333.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c57312333.atkfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x4)
