@@ -89,8 +89,8 @@ function c511005633.coinop(e,tp,eg,ep,ev,re,r,rp)
 	local res=0
 	res=Duel.TossCoin(tp,1) 
 	c:RegisterFlagEffect(511005633,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,res,63-res)-- set hint to the coin flip
-	if res==0 then
-		c:RegisterFlagEffect(73206828,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,2)
+	if res==1 then
+		c:RegisterFlagEffect(73206828,RESET_EVENT+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,2)
 	end
 end
 --e3
