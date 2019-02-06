@@ -26,8 +26,8 @@ end
 function c511015113.filter2(c,e,tp,m,f,chkf,mg1,mg2)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
-		and (not mg1 or mg1:IsExists(c511015113.fuschk,1,nil,c,g))
-		and (not mg2 or mg2:IsExists(c511015113.fuschk,1,nil,c,g))
+		and (not mg1 or mg1:IsExists(c511015113.fuschk,1,nil,c,m))
+		and (not mg2 or mg2:IsExists(c511015113.fuschk,1,nil,c,m))
 end
 function c511015113.fuschk(c,fc,g)
 	return fc:CheckFusionMaterial(g,c)
